@@ -19,6 +19,9 @@ const interestSchema = z.object({
   }),
 });
 
+// Replace this URL with your deployed Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL";
+
 type InterestFormData = z.infer<typeof interestSchema>;
 
 interface RegistrationFormProps {
@@ -49,17 +52,49 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
   });
 
   const onSubmit = async (data: InterestFormData) => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setSubmittedData(data);
-    setIsSuccess(true);
+    try {
+      if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("https://script.google.com")) {
+        // Send data using URLSearchParams to avoid CORS preflight check errors with no-cors mode
+        const params = new URLSearchParams();
+        params.append("name", data.name);
+        params.append("email", data.email);
+        params.append("phone", data.phone);
+        params.append("age", String(data.age));
+        params.append("joiningAs", data.joiningAs);
+        params.append("timeSlot", data.timeSlot);
+        params.append("hearAboutUs", data.hearAboutUs);
 
-    // Dispatch toast notification
-    window.dispatchEvent(
-      new CustomEvent("show-toast", {
-        detail: { message: "Interest registered successfully!", type: "success" },
-      })
-    );
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        });
+      } else {
+        // Simulate API delay for demo/testing when URL is not configured
+        console.warn("Google Script URL is not configured. Simulating API request locally.");
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+
+      setSubmittedData(data);
+      setIsSuccess(true);
+
+      // Dispatch toast notification
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Interest registered successfully!", type: "success" },
+        })
+      );
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Failed to submit interest. Please try again.", type: "error" },
+        })
+      );
+    }
   };
 
   const handleReset = () => {
