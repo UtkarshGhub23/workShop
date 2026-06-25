@@ -1,4 +1,4 @@
-import { Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone, Send, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 const Instagram = (props: any) => (
@@ -20,11 +20,60 @@ const Instagram = (props: any) => (
 
 export default function Contact() {
   const [msgSent, setMsgSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMsgSent(true);
-    setTimeout(() => setMsgSent(false), 3000);
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const name = formData.get("name") as string;
+      const email = formData.get("email") as string;
+      const message = formData.get("message") as string;
+
+      const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
+      if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("https://script.google.com")) {
+        const params = new URLSearchParams();
+        params.append("formType", "contact");
+        params.append("name", name);
+        params.append("email", email);
+        params.append("message", message);
+
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        });
+      } else {
+        // Simulate API delay locally if script URL not set
+        console.warn("Google Script URL is not configured. Simulating API request locally.");
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+
+      setMsgSent(true);
+      e.currentTarget.reset();
+
+      // Dispatch toast notification
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Message sent successfully!", type: "success" },
+        })
+      );
+
+      setTimeout(() => setMsgSent(false), 3000);
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Failed to send message. Please try again.", type: "error" },
+        })
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -90,12 +139,14 @@ export default function Contact() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <input
                   required
+                  name="name"
                   placeholder="Your Name"
                   type="text"
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all shadow-sm"
                 />
                 <input
                   required
+                  name="email"
                   placeholder="Your Email"
                   type="email"
                   className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all shadow-sm"
@@ -103,6 +154,7 @@ export default function Contact() {
               </div>
               <textarea
                 required
+                name="message"
                 rows={3}
                 placeholder="How can we help you?"
                 className="w-full px-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all resize-none shadow-sm"
@@ -110,9 +162,15 @@ export default function Contact() {
               
               <button
                 type="submit"
-                className="py-3 px-6 rounded-xl bg-[#FAF6F0] hover:bg-[#F5EFEB] border border-[#8C6A5C]/15 text-[#8C6A5C] hover:text-[#2D1E1A] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                disabled={isSubmitting}
+                className="py-3 px-6 rounded-xl bg-[#FAF6F0] hover:bg-[#F5EFEB] border border-[#8C6A5C]/15 text-[#8C6A5C] hover:text-[#2D1E1A] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {msgSent ? (
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Sending...
+                  </>
+                ) : msgSent ? (
                   <span className="text-emerald-600 font-bold">Message Sent!</span>
                 ) : (
                   <>

@@ -20,7 +20,7 @@ const interestSchema = z.object({
 });
 
 // Replace this URL with your deployed Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL";
+const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
 
 type InterestFormData = z.infer<typeof interestSchema>;
 
@@ -56,6 +56,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
       if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("https://script.google.com")) {
         // Send data using URLSearchParams to avoid CORS preflight check errors with no-cors mode
         const params = new URLSearchParams();
+        params.append("formType", "registration");
         params.append("name", data.name);
         params.append("email", data.email);
         params.append("phone", data.phone);
