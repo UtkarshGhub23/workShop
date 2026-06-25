@@ -11,8 +11,6 @@ import Learn from "./components/Learn";
 import Make from "./components/Make";
 import Pricing from "./components/Pricing";
 import Schedule from "./components/Schedule";
-import Gallery from "./components/Gallery";
-import Testimonials from "./components/Testimonials";
 import Team from "./components/Team";
 import FAQ from "./components/FAQ";
 import RegistrationForm from "./components/RegistrationForm";
@@ -151,8 +149,6 @@ export default function App() {
         <Make />
         <Pricing />
         <Schedule />
-        <Gallery />
-        <Testimonials />
         <Team />
         <FAQ />
         <RegistrationForm />

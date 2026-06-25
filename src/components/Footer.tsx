@@ -84,9 +84,8 @@ export default function Footer() {
             {[
               { id: "about", lbl: "About" },
               { id: "make", lbl: "Workshop" },
-              { id: "highlights", lbl: "Highlights" },
               { id: "register", lbl: "Register" },
-              { id: "contact", lbl: "Location" },
+              { id: "contact", lbl: "Contact" },
             ].map((item) => (
               <button
                 key={item.id}
