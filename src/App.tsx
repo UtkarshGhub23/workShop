@@ -103,7 +103,7 @@ export default function App() {
     // 4. Loading state timeout
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 10000);
 
     return () => {
       window.removeEventListener("online", handleOnline);
