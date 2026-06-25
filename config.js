@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════╗
- * ║         WORKSHOP 2026 — TELEGRAM NOTIFICATION CONFIG        ║
+ * ║      FRIENDSHIP DAY 2026 — TELEGRAM NOTIFICATION CONFIG      ║
  * ╚══════════════════════════════════════════════════════════════╝
  *
  * HOW TO SET THIS UP (takes ~3 minutes):
@@ -9,8 +9,8 @@
  *   1. Open Telegram on your phone
  *   2. Search for @BotFather → tap Start
  *   3. Type:  /newbot
- *   4. Enter any name  →  e.g. "Workshop Alerts"
- *   5. Enter a username ending in 'bot'  →  e.g. "workshop2026_bot"
+ *   4. Enter any name  →  e.g. "Friendship Day Alerts"
+ *   5. Enter a username ending in 'bot'  →  e.g. "friendshipday2026_bot"
  *   6. Copy the Bot Token it gives you  (e.g. 7123456789:AAGx...)
  *   7. Paste it below as TELEGRAM_BOT_TOKEN
  *

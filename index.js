@@ -75,21 +75,24 @@ document.addEventListener('DOMContentLoaded', () => {
       return { skipped: true };
     }
 
-    const trackMap = {
-      aesthetics: '🎨 Interfaces That Impress — Visual Design & CSS',
-      frontend:   '⚙️ Components That Convert — Advanced Frontend',
-      agents:     '🤖 AI That Ships — Agentic Systems',
+    const activityMap = {
+      stories: '💬 Sharing stories & memories',
+      games:   '🎮 Games & fun challenges',
+      crafts:  '🎨 Creative crafts & art',
+      music:   '🎵 Music & dancing',
+      food:    '🍕 Food & feasting together',
     };
 
     const msg = [
-      '🎟 *New WORKSHOP 2026 Registration*',
+      '💛 *New Friendship Day 2026 Registration*',
       '',
-      `👤 *Name:*    ${esc(data.name)}`,
-      `📧 *Email:*   ${esc(data.email)}`,
-      `📞 *Phone:*   ${esc(data.phone)}`,
-      `🏠 *Address:* ${esc(data.address)}`,
-      `🎯 *Track:*   ${trackMap[data.track] || esc(data.track)}`,
-      `🕐 *Time:*    ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST`,
+      `👤 *Name:*     ${esc(data.name)}`,
+      `📧 *Email:*    ${esc(data.email)}`,
+      `📞 *Phone:*    ${esc(data.phone)}`,
+      `📍 *City:*     ${esc(data.address)}`,
+      `🎉 *Excited:*  ${activityMap[data.track] || esc(data.track)}`,
+      `🤝 *Friend:*   ${data.friend ? esc(data.friend) : 'Coming solo'}`,
+      `🕐 *Time:*     ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST`,
     ].join('\n');
 
     const res = await fetch(
@@ -178,20 +181,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneVal   = document.getElementById('reg-phone').value.trim();
     const addressVal = document.getElementById('reg-address').value.trim();
     const focusVal   = document.getElementById('reg-focus').value;
+    const friendEl   = document.getElementById('reg-friend');
+    const friendVal  = friendEl ? friendEl.value.trim() : '';
 
     // Loading state
     submitBtn.disabled = true;
     form.classList.add('submitting');
 
     try {
-      await sendToTelegram({ name: nameVal, email: emailVal, phone: phoneVal, address: addressVal, track: focusVal });
+      await sendToTelegram({ name: nameVal, email: emailVal, phone: phoneVal, address: addressVal, track: focusVal, friend: friendVal });
 
       // Show success
       form.style.display = 'none';
       successEl.hidden = false;
-      if (successMsg) successMsg.textContent = `Thank you, ${nameVal}! Confirmation sent to ${emailVal}.`;
+      if (successMsg) successMsg.textContent = `You're all set, ${nameVal}! 💛 Check ${emailVal} for details. Can't wait to see you!`;
 
-      showToast(`✅ Registered successfully! Welcome, ${nameVal}.`, 'success', 7000);
+      showToast(`🎉 Welcome to the crew, ${nameVal}! See you on Friendship Day!`, 'success', 7000);
 
     } catch (err) {
       console.error(err);
