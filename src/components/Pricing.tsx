@@ -1,61 +1,8 @@
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
-const PLANS = [
-  {
-    id: "basic",
-    name: "Starter Pass",
-    price: "$29",
-    billing: "One-time payment",
-    popular: false,
-    color: "border-slate-200/60 shadow-sm",
-    features: [
-      "Access to standard DIY crafting session",
-      "Basic crafting kit & decorative items",
-      "Guidance from experienced instructors",
-      "Take home 2 handmade creations",
-    ],
-  },
-  {
-    id: "pro",
-    name: "Creator Pass",
-    price: "$49",
-    billing: "One-time payment",
-    popular: true,
-    color: "border-gold/60 shadow-xl shadow-gold/10",
-    features: [
-      "Access to extended DIY session",
-      "Premium DIY crafting kit & tools",
-      "Access to all premium decorative accessories",
-      "Take home 5 handmade creations",
-      "Digital workshop completion certificate",
-      "Complimentary refreshments",
-    ],
-  },
-  {
-    id: "vip",
-    name: "VIP Craft Pass",
-    price: "$79",
-    billing: "One-time payment",
-    popular: false,
-    color: "border-slate-200/60 shadow-sm",
-    features: [
-      "Access to full-day creative session",
-      "Unlimited DIY crafting materials & kits",
-      "1-on-1 guidance & custom personalization support",
-      "Take home unlimited handmade creations",
-      "Access to VIP photography corner & instant prints",
-      "Premium certificate + custom gift pack",
-    ],
-  },
-];
-
 export default function Pricing() {
-  const handleSelectPlan = (planId: string) => {
-    // Select the plan in form state by firing custom event
-    window.dispatchEvent(new CustomEvent("select-plan", { detail: planId }));
-    
-    // Smooth scroll to register form
+  const handleScrollToRegister = () => {
     const element = document.getElementById("register");
     if (element) {
       const offset = 70;
@@ -72,78 +19,77 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-24 px-4 bg-transparent border-t border-slate-200/50">
+    <section id="pricing" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
-            Pricing plans
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
+            Workshop Pricing
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-            Flexible Ticket Options
+          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
+            Pass Options & Access
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Select the ticket tier that fits your creative style. All passes include a take-home package of your beautiful creations.
+          <p className="text-[#8C6A5C] text-base sm:text-lg mt-4 leading-relaxed">
+            Register your interest today to receive updates and secure a slot. Early-bird slots are highly limited.
           </p>
         </div>
 
-        {/* Plans Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
-          {PLANS.map((plan) => (
-            <motion.div
-              key={plan.id}
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5 }}
-              className={`relative rounded-3xl border bg-white/60 hover:bg-white p-8 flex flex-col justify-between transition-all duration-300 ${plan.color}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold via-orange to-rose text-white text-[10px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md border border-white/20 select-none">
-                  Most Popular
-                </div>
-              )}
+        {/* Unified pricing card */}
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-[32px] border border-[#8C6A5C]/15 bg-[#FFFDFB] p-8 sm:p-12 shadow-sm text-center flex flex-col items-center gap-6 overflow-hidden"
+          >
+            {/* Top Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-olive/10 text-olive text-[10px] font-extrabold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              Limited Slots Available
+            </div>
 
-              <div>
-                {/* Plan Header */}
-                <div className="text-left mb-6">
-                  <h3 className="font-display font-bold text-xl text-slate-900">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1 mt-4">
-                    <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">{plan.price}</span>
-                    <span className="text-xs text-slate-400 font-medium">/ person</span>
-                  </div>
-                  <span className="block text-[11px] text-slate-400 mt-1.5 font-semibold uppercase tracking-wider">
-                    {plan.billing}
-                  </span>
-                </div>
-
-                {/* Plan Features */}
-                <div className="border-t border-slate-100 pt-6 flex flex-col gap-4 text-left">
-                  {plan.features.map((feat) => (
-                    <div key={feat} className="flex items-start gap-2.5">
-                      <div className="w-5 h-5 rounded-full bg-gold/5 flex items-center justify-center shrink-0 border border-gold/15 mt-0.5">
-                        <Check className="w-3 h-3 text-gold" />
-                      </div>
-                      <span className="text-xs sm:text-sm text-slate-600 leading-normal font-medium">{feat}</span>
-                    </div>
-                  ))}
-                </div>
+            {/* Price range */}
+            <div className="flex flex-col items-center gap-1 mt-2">
+              <span className="text-[11px] uppercase tracking-widest text-[#8C6A5C] font-semibold">Passes Starting From</span>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-5xl sm:text-6xl font-extrabold text-[#2D1E1A] tracking-tight">₹599–₹699</span>
+                <span className="text-xs text-[#8C6A5C] font-medium">/ person</span>
               </div>
+            </div>
 
-              {/* Select Action */}
-              <button
-                onClick={() => handleSelectPlan(plan.id)}
-                className={`w-full mt-8 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-sm ${
-                  plan.popular
-                    ? "bg-slate-900 hover:bg-slate-800 text-white"
-                    : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800"
-                }`}
-              >
-                Select Pass Tier
-              </button>
-            </motion.div>
-          ))}
+            <p className="text-xs text-[#8C6A5C] leading-relaxed max-w-lg">
+              Final pricing tiers and duo discounts will be announced soon. Register your interest below to lock in priority access and receive notification the moment ticket sales go live.
+            </p>
+
+            {/* Features preview */}
+            <div className="w-full max-w-lg border-y border-[#8C6A5C]/10 py-6 my-2 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+              {[
+                "All premium craft materials provided",
+                "Customize pouch or waist bag",
+                "Make two friendship bracelets",
+                "Access to interactive mini games",
+                "Aesthetic photography corner",
+                "Complimentary take-home keepsakes",
+              ].map((feat) => (
+                <div key={feat} className="flex items-center gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-terracotta/5 flex items-center justify-center shrink-0 border border-terracotta/15">
+                    <Check className="w-3 h-3 text-terracotta" />
+                  </div>
+                  <span className="text-xs text-[#3C2E2A] font-semibold">{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Select Action */}
+            <button
+              onClick={handleScrollToRegister}
+              className="px-8 py-4 rounded-full bg-terracotta hover:bg-brown text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer w-full sm:w-auto mt-4"
+            >
+              Notify Me When Registrations Open
+            </button>
+          </motion.div>
         </div>
 
       </div>

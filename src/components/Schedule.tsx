@@ -1,117 +1,84 @@
 import { motion } from "framer-motion";
-import { Clock, Play, FileCode, CheckCircle, Package, Palette, Sparkles, Smile, Scissors, Heart, Award } from "lucide-react";
+import { Heart, Sparkles, Clock, Gift, Users, Palette, Award } from "lucide-react";
 
-const SESSIONS = [
+const WHY_JOIN_ITEMS = [
   {
-    time: "09:00 AM - 09:30 AM",
-    title: "Registration & Welcome",
-    icon: <Play className="w-4 h-4 text-gold" />,
-    desc: "Check-in at the creative lounge, receive your name tag, and meet your fellow crafters.",
+    title: "Celebrate Friendship Day Differently",
+    icon: <Heart className="w-6 h-6 text-terracotta" />,
+    desc: "Move past the standard weekend text message or cafe plans. Spend a creative afternoon crafting side-by-side with your favorite people.",
   },
   {
-    time: "09:30 AM - 10:00 AM",
-    title: "Introduction",
-    icon: <Smile className="w-4 h-4 text-orange" />,
-    desc: "Meet the instructors and review the crafting plan, layouts, and design inspirations for the day.",
+    title: "Create Memories Together",
+    icon: <Sparkles className="w-6 h-6 text-terracotta" />,
+    desc: "Build strong emotional bonds with your friend, partner, or sibling through collaborative art and shared design decisions.",
   },
   {
-    time: "10:00 AM - 10:30 AM",
-    title: "Material Distribution",
-    icon: <Package className="w-4 h-4 text-pink" />,
-    desc: "Collect your custom DIY kit containing premium fabrics, charms, beads, and special decorative pieces.",
+    title: "Enjoy Quality Offline Time",
+    icon: <Clock className="w-6 h-6 text-olive" />,
+    desc: "Disconnect from screens, notifications, and work stress. Ground yourself in the calming, tactile process of physical creation.",
   },
   {
-    time: "10:30 AM - 12:30 PM",
-    title: "DIY Session",
-    icon: <Scissors className="w-4 h-4 text-lavender" />,
-    desc: "Get hands-on! Start crafting, stitching, or assembling your chosen base products under expert guidance.",
+    title: "Take Home Handmade Creations",
+    icon: <Gift className="w-6 h-6 text-olive" />,
+    desc: "Carry home your custom canvas pouches and woven friendship bands as tangible tokens of a special afternoon.",
   },
   {
-    time: "12:30 PM - 01:00 PM",
-    title: "Creative Guidance",
-    icon: <Sparkles className="w-4 h-4 text-rose" />,
-    desc: "Work one-on-one with instructors to refine your designs and learn specialized craft secrets.",
+    title: "Meet Creative People",
+    icon: <Users className="w-6 h-6 text-brown" />,
+    desc: "Connect with Mathura's welcoming local art community. Share stories, ideas, and laughs in a warm creative environment.",
   },
   {
-    time: "01:00 PM - 02:30 PM",
-    title: "Decoration & Finishing",
-    icon: <Palette className="w-4 h-4 text-gold" />,
-    desc: "Apply personalized accessories, letters, coatings, and finishing polish for a clean, store-bought look.",
+    title: "Try Something New",
+    icon: <Palette className="w-6 h-6 text-terracotta" />,
+    desc: "Step outside your comfort zone. Learn how to weave custom beads and paint fabric under the care of supportive organizers.",
   },
   {
-    time: "02:30 PM - 03:00 PM",
-    title: "Showcase Your Creation",
-    icon: <Heart className="w-4 h-4 text-orange" />,
-    desc: "Display your handmade items on the showcase table and share your creative journey with the group.",
-  },
-  {
-    time: "03:00 PM - 03:30 PM",
-    title: "Photography",
-    icon: <FileCode className="w-4 h-4 text-pink" />, // using FileCode as placeholder or replace with Camera if we want. Let's use FileCode/Camera? Wait, we can use Clock/CheckCircle, or let's import Camera. Wait, Camera is imported! Let's render <Camera />
-    desc: "Capture professional photos of your creations at our dedicated aesthetic photography corner.",
-  },
-  {
-    time: "03:30 PM - 04:00 PM",
-    title: "Certificate Distribution",
-    icon: <Award className="w-4 h-4 text-lavender" />,
-    desc: "Receive your custom DIY Workshop Completion Certificate and pack your beautiful creations to take home!",
+    title: "Win Exciting Prizes",
+    icon: <Award className="w-6 h-6 text-brown" />,
+    desc: "Show off your teamwork skills during our mini games and surprise activities to take home beautiful bonus rewards.",
   },
 ];
 
 export default function Schedule() {
   return (
-    <section id="schedule" className="py-24 px-4 bg-transparent border-t border-slate-200/50">
-      <div className="max-w-4xl mx-auto">
+    <section id="schedule" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
+      <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
-            Workshop Schedule
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
+            Why Join Us?
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-            Hourly Workshop Routine
+          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
+            An Experience Made for Connection
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Here's what our fun-filled DIY session looks like. We balance structure, 
-            creative exploration, and personalized guidance.
+          <p className="text-[#8C6A5C] text-base sm:text-lg mt-4 leading-relaxed">
+            Our workshop is designed from the ground up to feel warm, inclusive, and deeply memorable. Here is why you should spend your afternoon with us.
           </p>
         </div>
 
-        {/* Timeline Stack */}
-        <div className="relative border-l border-slate-200 ml-3 md:ml-32 pl-8 flex flex-col gap-10">
-          {SESSIONS.map((session, idx) => (
+        {/* Why Join Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {WHY_JOIN_ITEMS.map((item, idx) => (
             <motion.div
-              key={session.title}
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              key={item.title}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="relative flex flex-col md:flex-row md:items-start gap-4 md:gap-8 group text-left"
+              className={`p-8 rounded-3xl border border-[#8C6A5C]/10 bg-[#FFFDFB] hover:border-terracotta/30 transition-all duration-300 flex flex-col gap-4 text-left shadow-sm hover:shadow-md ${
+                idx === 6 ? "md:col-span-2 lg:col-span-3 lg:max-w-md lg:mx-auto" : ""
+              }`}
             >
-              {/* Timeline marker node */}
-              <div className="absolute -left-[41px] top-1.5 w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-300 shadow-sm">
-                <div className="w-2.5 h-2.5 rounded-full bg-gold/50 group-hover:bg-gold transition-colors"></div>
+              <div className="w-12 h-12 rounded-2xl bg-[#FAF6F0] border border-[#8C6A5C]/5 flex items-center justify-center">
+                {item.icon}
               </div>
-
-              {/* Time display left aligned for desktop */}
-              <div className="md:w-32 md:-ml-[160px] md:text-right shrink-0 flex items-center gap-1.5 text-xs font-bold text-slate-500 group-hover:text-gold transition-colors">
-                <Clock className="w-3.5 h-3.5 inline md:hidden" />
-                <span>{session.time.split(" - ")[0]}</span>
-              </div>
-
-              {/* Card Container */}
-              <div className="flex-grow p-6 rounded-2xl border border-slate-200/50 bg-white/60 group-hover:bg-white transition-colors shadow-sm">
-                <div className="flex items-center gap-2 mb-2 text-xs font-bold text-gold/70 group-hover:text-gold transition-colors">
-                  {session.icon}
-                  <span>{session.time}</span>
-                </div>
-                <h3 className="font-display font-bold text-lg text-slate-900">
-                  {session.title}
-                </h3>
-                <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                  {session.desc}
-                </p>
-              </div>
+              <h3 className="font-display font-bold text-lg text-[#2D1E1A] mt-2">
+                {item.title}
+              </h3>
+              <p className="text-xs text-[#8C6A5C] leading-relaxed">
+                {item.desc}
+              </p>
             </motion.div>
           ))}
         </div>

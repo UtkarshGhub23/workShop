@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X, Code2, Download, Share, Plus, MoreVertical, Monitor, Smartphone } from "lucide-react";
+import { Menu, X, Download, Share, Plus, MoreVertical, Monitor, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
   { id: "about", label: "About" },
-  { id: "highlights", label: "What's Included" },
-  { id: "learn", label: "What You'll Learn" },
   { id: "make", label: "What You'll Create" },
-  { id: "pricing", label: "Packages" },
-  { id: "schedule", label: "Schedule" },
-  { id: "gallery", label: "Gallery" },
+  { id: "highlights", label: "Highlights" },
+  { id: "learn", label: "Mini Games" },
+  { id: "schedule", label: "Why Join" },
+  { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
-  { id: "contact", label: "Contact" },
+  { id: "contact", label: "Location" },
 ];
 
 export default function Header() {
@@ -57,7 +56,7 @@ export default function Header() {
       // Trigger a custom toast for PWA installed successfully
       window.dispatchEvent(
         new CustomEvent("show-toast", {
-          detail: { message: "TrayyaAI App installed successfully!", type: "success" },
+          detail: { message: "Trayyaai × Ayra App installed successfully!", type: "success" },
         })
       );
     };
@@ -128,7 +127,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-[#fcfbfd]/85 backdrop-blur-md border-b border-slate-200/50 py-3 shadow-sm"
+            ? "bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#8C6A5C]/15 py-3 shadow-sm"
             : "bg-transparent py-5"
         }`}
       >
@@ -139,11 +138,14 @@ export default function Header() {
             onClick={() => window.location.reload()}
             className="flex items-center gap-2 group cursor-pointer focus:outline-none"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold to-rose flex items-center justify-center shadow-md shadow-orange/10 group-hover:scale-105 transition-transform">
-              <Smartphone className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-md shadow-terracotta/15 group-hover:scale-105 transition-transform">
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                <path d="M12 6v12M6 12h12"/>
+              </svg>
             </div>
-            <span className="font-display font-extrabold text-xl tracking-wider text-slate-900">
-              TRAYYA<span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-pink">AI</span>
+            <span className="font-display font-bold text-lg tracking-widest text-[#2D1E1A] uppercase">
+              Trayyaai <span className="text-terracotta font-light">×</span> Ayra
             </span>
           </button>
 
@@ -153,7 +155,7 @@ export default function Header() {
               <button
                 key={link.id}
                 onClick={() => scrollTo(link.id)}
-                className="text-sm font-medium text-slate-600 hover:text-slate-950 cursor-pointer transition-colors focus:outline-none"
+                className="text-xs font-semibold uppercase tracking-wider text-[#8C6A5C] hover:text-[#C87A53] cursor-pointer transition-colors focus:outline-none"
               >
                 {link.label}
               </button>
@@ -163,18 +165,18 @@ export default function Header() {
             {showInstallBtn && (
               <button
                 onClick={handleInstallApp}
-                className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 text-sm font-bold transition-all cursor-pointer focus:outline-none"
+                className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-full border border-terracotta/25 hover:border-terracotta/55 hover:bg-offwhite text-terracotta text-xs font-bold uppercase tracking-wider transition-all cursor-pointer focus:outline-none"
               >
-                <Download className="w-4 h-4 text-gold" />
+                <Download className="w-3.5 h-3.5" />
                 Install App
               </button>
             )}
 
             <button
               onClick={() => scrollTo("register")}
-              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold via-orange to-rose text-white text-sm font-bold shadow-md shadow-orange/15 hover:shadow-orange/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
+              className="px-5 py-2.5 rounded-full bg-terracotta hover:bg-brown text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
             >
-              Register Now
+              I'm Interested
             </button>
           </nav>
 
@@ -183,16 +185,16 @@ export default function Header() {
             {showInstallBtn && (
               <button
                 onClick={handleInstallApp}
-                className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 transition-colors focus:outline-none cursor-pointer"
+                className="w-10 h-10 rounded-lg flex items-center justify-center border border-terracotta/25 bg-white hover:bg-slate-50 text-terracotta transition-colors focus:outline-none cursor-pointer"
                 aria-label="Install App"
               >
-                <Download className="w-5 h-5 text-gold" />
+                <Download className="w-5 h-5" />
               </button>
             )}
             
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 transition-colors focus:outline-none"
+              className="w-10 h-10 rounded-lg flex items-center justify-center border border-terracotta/25 bg-white hover:bg-slate-50 text-terracotta transition-colors focus:outline-none"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -208,13 +210,13 @@ export default function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.25 }}
-              className="lg:hidden fixed inset-x-0 top-[70px] bg-[#fcfbfd]/98 backdrop-blur-xl border-b border-slate-200/80 py-6 px-4 flex flex-col gap-5 shadow-2xl z-40 max-h-[calc(100vh-70px)] overflow-y-auto"
+              className="lg:hidden fixed inset-x-0 top-[70px] bg-[#FAF6F0]/98 backdrop-blur-xl border-b border-terracotta/15 py-6 px-4 flex flex-col gap-5 shadow-2xl z-40 max-h-[calc(100vh-70px)] overflow-y-auto"
             >
               {LINKS.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
-                  className="text-left py-2.5 text-base font-semibold text-slate-700 hover:text-slate-900 border-b border-slate-100 focus:outline-none"
+                  className="text-left py-2.5 text-base font-semibold text-[#8C6A5C] hover:text-[#C87A53] border-b border-slate-200/50 focus:outline-none"
                 >
                   {link.label}
                 </button>
@@ -226,18 +228,18 @@ export default function Header() {
                     setIsOpen(false);
                     handleInstallApp();
                   }}
-                  className="w-full py-3 rounded-xl border border-slate-200 text-slate-800 font-bold flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-xl border border-terracotta/25 text-[#8C6A5C] font-bold flex items-center justify-center gap-2"
                 >
-                  <Download className="w-5 h-5 text-gold" />
+                  <Download className="w-5 h-5 text-terracotta" />
                   Install App Shortcut
                 </button>
               )}
 
               <button
                 onClick={() => scrollTo("register")}
-                className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-gold via-orange to-rose text-white font-bold text-center shadow-lg shadow-orange/15 focus:outline-none"
+                className="w-full mt-2 py-3 rounded-xl bg-terracotta hover:bg-brown text-white font-bold text-center shadow-lg shadow-terracotta/15 focus:outline-none"
               >
-                Register Now
+                I'm Interested
               </button>
             </motion.div>
           )}
@@ -255,7 +257,7 @@ export default function Header() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#fcfbfd] border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-md w-full text-left relative cursor-default shadow-2xl"
+              className="bg-[#FAF6F0] border border-terracotta/20 rounded-3xl p-6 sm:p-8 max-w-md w-full text-left relative cursor-default shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -265,10 +267,10 @@ export default function Header() {
                 <X className="w-4 h-4" />
               </button>
 
-              <h3 className="font-display font-extrabold text-xl text-slate-900 mb-2 flex items-center gap-2">
-                Install TrayyaAI App <Download className="w-5 h-5 text-gold" />
+              <h3 className="font-display font-extrabold text-xl text-[#2D1E1A] mb-2 flex items-center gap-2">
+                Install Trayyaai × Ayra App <Download className="w-5 h-5 text-terracotta" />
               </h3>
-              <p className="text-slate-500 text-xs mb-6">
+              <p className="text-[#8C6A5C] text-xs mb-6">
                 Add this application to your home screen or desktop to browse instantly and work offline.
               </p>
 
@@ -287,7 +289,7 @@ export default function Header() {
                       onClick={() => setModalTab(tab.id as any)}
                       className={`flex-1 pb-3 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 cursor-pointer transition-colors ${
                         active
-                          ? "border-gold text-slate-900"
+                          ? "border-terracotta text-slate-900"
                           : "border-transparent text-slate-400 hover:text-slate-600"
                       }`}
                     >

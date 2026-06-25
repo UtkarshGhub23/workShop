@@ -1,106 +1,72 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Layers, Palette, ShoppingBag, Briefcase, Heart, Sparkles, Key, Flower, Scissors, LucideIcon } from "lucide-react";
+import { ShoppingBag, Heart, Users, Sparkles, Layers, Gift } from "lucide-react";
 
-interface Project {
-  title: string;
-  icon: LucideIcon;
-  iconColor: string;
-  gradient: string;
-  tech: string;
-  desc: string;
-}
-
-const PROJECTS: Project[] = [
+const PROJECTS = [
   {
-    title: "Mini Bags",
+    title: "Personalized Pouch or Waist Bag",
     icon: ShoppingBag,
-    iconColor: "text-amber-500",
-    gradient: "from-amber-400 to-orange-500",
-    tech: "Vegan Leather + Stitching",
-    desc: "Design, stitch, and decorate your own compact, trendy mini bags using premium vegan leather or heavy felt.",
+    iconColor: "text-terracotta",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "Canvas Customization",
+    desc: "Design and personalize your own aesthetic canvas pouch or multi-purpose waist bag using modern textile paints, custom patches, and minimalist accents.",
   },
   {
-    title: "Tote Bags",
-    icon: Briefcase,
-    iconColor: "text-pink",
-    gradient: "from-pink-400 to-rose-500",
-    tech: "Canvas + Fabric Painting",
-    desc: "Customize canvas tote bags with fabric paint, stencils, embroidery, or iron-on custom designs.",
-  },
-  {
-    title: "Pouches",
-    icon: Layers,
-    iconColor: "text-lavender",
-    gradient: "from-purple-400 to-indigo-500",
-    tech: "Felt + Zippers",
-    desc: "Create beautiful multi-purpose makeup or pencil pouches, fitted with custom zippers and decorative patches.",
-  },
-  {
-    title: "Friendship Bracelets",
+    title: "Two Friendship Bracelets",
     icon: Heart,
-    iconColor: "text-blue-500",
-    gradient: "from-blue-400 to-cyan-500",
-    tech: "Beading + Weaving",
-    desc: "Weave intricate thread patterns, customize with lettered beads, and make matching wristbands for friends.",
+    iconColor: "text-terracotta",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "Weaving & Beading",
+    desc: "Craft two unique friendship bracelets using a collection of premium lettering beads, colorful threads, metallic spacers, and tassels to wear or share.",
   },
   {
-    title: "Phone Charms",
+    title: "Fun Interactive Mini Games",
+    icon: Users,
+    iconColor: "text-olive",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "Teamwork & Icebreakers",
+    desc: "Participate in engaging teamwork games and quick-fire creative tasks designed to help you connect and celebrate together.",
+  },
+  {
+    title: "Surprise Creative Activities",
     icon: Sparkles,
-    iconColor: "text-rose-500",
-    gradient: "from-rose-400 to-red-500",
-    tech: "Beaded Chains + Charms",
-    desc: "Assemble colorful, aesthetic beaded phone wristlets with customized lettering and metallic spacers.",
+    iconColor: "text-olive",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "Special Collaborations",
+    desc: "Enjoy mystery design rounds and cooperative crafting activities that spark spontaneous joy and laughter.",
   },
   {
-    title: "Keychains",
-    icon: Key,
-    iconColor: "text-yellow-500",
-    gradient: "from-yellow-400 to-amber-500",
-    tech: "Acrylic + Resin Art",
-    desc: "Design leather or acrylic keychains customized with resin art, metal charms, and personalized initials.",
+    title: "Aesthetic Photo Corner",
+    icon: Layers,
+    iconColor: "text-brown",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "Pinterest Photo Booth",
+    desc: "Capture beautiful polaroids and aesthetic social photos of your handiwork and memories at our custom-designed photogenic corner.",
   },
   {
-    title: "Decorative Flowers",
-    icon: Flower,
-    iconColor: "text-emerald-500",
-    gradient: "from-emerald-400 to-teal-500",
-    tech: "Crepe Paper + Wire Framing",
-    desc: "Handcraft lifelike decorative flowers using felt, crepe paper, wire framing, and fabric sprays.",
-  },
-  {
-    title: "Mini Canvas Art",
-    icon: Palette,
-    iconColor: "text-indigo-500",
-    gradient: "from-indigo-400 to-violet-500",
-    tech: "Acrylic Paint + Easels",
-    desc: "Paint your own miniature easel canvases using professional acrylics, modeling paste, and gold leaf.",
-  },
-  {
-    title: "Personalized DIY Accessories",
-    icon: Scissors,
-    iconColor: "text-pink-500",
-    gradient: "from-pink-500 to-fuchsia-600",
-    tech: "Aesthetic Clips & Mirrors",
-    desc: "Bespoke hair clips, custom mirrors, or decorative patches crafted to match your signature aesthetic.",
+    title: "Complimentary Surprises",
+    icon: Gift,
+    iconColor: "text-terracotta",
+    bgClass: "bg-[#FFFDFB]",
+    tech: "All Materials Included",
+    desc: "Every registration includes premium craft materials, step-by-step guidance, and lovely complimentary surprise gifts to take home.",
   },
 ];
 
 export default function Make() {
   return (
-    <section id="make" className="py-24 px-4 bg-transparent border-t border-slate-200/50">
+    <section id="make" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
-            Workshop Items
+          <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
+            Creative Keepsakes
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
+          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
             What You'll Create
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Gain practical hands-on experience. Customize and decorate beautiful handcrafted items 
-            that you get to take home at the end of the session.
+          <p className="text-[#8C6A5C] text-base sm:text-lg mt-4 leading-relaxed">
+            Every participant will receive a complete kit of premium supplies, detailed instructions, and guidance to design aesthetic items you'll take home.
           </p>
         </div>
 
@@ -113,16 +79,15 @@ export default function Make() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: idx * 0.08 }}
-              className="group rounded-3xl border border-slate-200/60 bg-white/60 hover:bg-white shadow-sm hover:shadow-md overflow-hidden transition-all duration-300 flex flex-col text-left hover:border-gold/30"
+              className="group rounded-3xl border border-[#8C6A5C]/10 bg-[#FFFDFB] hover:bg-[#FFFDFB] shadow-sm hover:shadow-md transition-all duration-300 flex flex-col text-left hover:border-terracotta/30 overflow-hidden"
             >
               {/* Card visual showcase */}
-              <div className={`h-48 bg-gradient-to-br ${proj.gradient} flex items-center justify-center relative overflow-hidden group-hover:scale-[1.01] transition-transform duration-300`}>
-                {/* Visual grid backdrop inside card visual */}
-                <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
-                <proj.icon className="w-20 h-20 text-white/90 filter drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 select-none" />
+              <div className="h-44 bg-[#F5EFEB] flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(rgba(140,106,92,0.1)_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
+                <proj.icon className={`w-16 h-16 ${proj.iconColor} filter drop-shadow-sm group-hover:scale-110 transition-transform duration-500`} />
                 
                 {/* Tech tag floating */}
-                <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-700">
+                <div className="absolute bottom-3 left-3 bg-[#FFFDFB] px-3 py-1 rounded-lg border border-[#8C6A5C]/10 text-[10px] font-bold text-[#8C6A5C] uppercase tracking-wider">
                   {proj.tech}
                 </div>
               </div>
@@ -130,21 +95,20 @@ export default function Make() {
               {/* Card content details */}
               <div className="p-6 flex flex-col gap-3 flex-grow justify-between">
                 <div>
-                  <div className="flex items-center gap-2 mb-2 text-gold">
-                    <proj.icon className={`w-6 h-6 ${proj.iconColor}`} />
-                    <span className="text-xs font-bold uppercase tracking-wider">Item {idx + 1}</span>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold text-terracotta uppercase tracking-wider">Activity {idx + 1}</span>
                   </div>
-                  <h3 className="font-display font-bold text-xl text-slate-900 group-hover:text-gold transition-colors">
+                  <h3 className="font-display font-bold text-lg text-[#2D1E1A] group-hover:text-terracotta transition-colors">
                     {proj.title}
                   </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed mt-2">
+                  <p className="text-xs text-[#8C6A5C] leading-relaxed mt-1">
                     {proj.desc}
                   </p>
                 </div>
                 
-                <div className="border-t border-slate-100 pt-4 mt-4 flex items-center justify-between text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">
-                  <span>View Material Details</span>
-                  <ExternalLink className="w-4 h-4" />
+                <div className="border-t border-[#8C6A5C]/5 pt-4 mt-2 flex items-center justify-between text-[11px] font-semibold text-[#8C6A5C] group-hover:text-terracotta transition-colors">
+                  <span>Take Home Creations</span>
+                  <span className="text-[9px] uppercase tracking-wider text-olive bg-olive/5 px-2 py-0.5 rounded-full font-bold">Included</span>
                 </div>
               </div>
             </motion.div>

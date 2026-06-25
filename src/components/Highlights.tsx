@@ -1,65 +1,64 @@
 import { motion } from "framer-motion";
-import { Package, Palette, Sparkles, Heart, Award, Gift, Smile, Camera } from "lucide-react";
+import { Package, Gift, Users, Sparkles, Award, Palette, Camera, Heart } from "lucide-react";
 
 const CARDS = [
   {
-    icon: <Package className="w-8 h-8 text-gold" />,
-    title: "Complete DIY Kit",
-    desc: "Every attendee receives a curated craft kit with all necessary bases, adhesives, tools, and stencils.",
+    icon: <Package className="w-8 h-8 text-terracotta" />,
+    title: "All Materials Included",
+    desc: "We supply all bases, canvas pouches, leather bands, needles, yarns, beads, paints, and tools.",
   },
   {
-    icon: <Palette className="w-8 h-8 text-orange" />,
-    title: "Premium Craft Materials",
-    desc: "Access a wide selection of leather, canvas, paints, fabric dyes, resins, and structural components.",
+    icon: <Gift className="w-8 h-8 text-terracotta" />,
+    title: "Take Your Creations Home",
+    desc: "Everything you stitch, paint, bead, or customize goes home with you in our custom premium bags.",
   },
   {
-    icon: <Sparkles className="w-8 h-8 text-pink" />,
-    title: "Professional Guidance",
-    desc: "Learn from professional artisans and experienced craft creators who assist you throughout the process.",
+    icon: <Users className="w-8 h-8 text-olive" />,
+    title: "Limited Seats",
+    desc: "We keep group sizes small to ensure everyone receives personal guidance and a cozy crafting space.",
   },
   {
-    icon: <Heart className="w-8 h-8 text-lavender" />,
-    title: "Decorative Accessories",
-    desc: "Thousands of beads, custom letter tiles, glitters, ribbons, tassels, and charms to style your pieces.",
+    icon: <Sparkles className="w-8 h-8 text-olive" />,
+    title: "Games & Challenges",
+    desc: "Participate in quick-fire creative icebreakers, collaborative teamwork games, and trivia.",
   },
   {
-    icon: <Award className="w-8 h-8 text-gold" />,
-    title: "Workshop Certificate",
-    desc: "Receive an elegant printed DIY Creative Workshop Badge and Certificate of Completion.",
+    icon: <Award className="w-8 h-8 text-brown" />,
+    title: "Prizes",
+    desc: "Exciting awards and special handcrafted surprises await the winners of our interaction rounds.",
   },
   {
-    icon: <Gift className="w-8 h-8 text-orange" />,
-    title: "Take Home Your Creations",
-    desc: "Everything you design, stitch, paint, or assemble is yours to take home in our aesthetic paper bags.",
+    icon: <Palette className="w-8 h-8 text-terracotta" />,
+    title: "Creative Atmosphere",
+    desc: "Craft inside a cozy, beautiful space surrounded by soft music, warm aesthetics, and visual inspiration.",
   },
   {
-    icon: <Smile className="w-8 h-8 text-pink" />,
-    title: "Fun Activities & Games",
-    desc: "Break the ice with social crafting rounds, community design challenges, and music.",
+    icon: <Camera className="w-8 h-8 text-brown" />,
+    title: "Photo Moments",
+    desc: "Take aesthetic polaroids and share-worthy social media snapshots at our curated photo spots.",
   },
   {
-    icon: <Camera className="w-8 h-8 text-lavender" />,
-    title: "Photography Corner",
-    desc: "Shoot aesthetic high-resolution photos of your crafted accessories at our ring-lit photo backdrops.",
+    icon: <Heart className="w-8 h-8 text-olive" />,
+    title: "Beginner Friendly",
+    desc: "No prior experience or craft skills needed. Our warm instructors will help you step-by-step.",
   },
 ];
 
 export default function Highlights() {
   return (
-    <section id="highlights" className="py-24 px-4 bg-transparent border-t border-slate-200/50">
+    <section id="highlights" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
-            What's Included
+          <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
+            Workshop Highlights
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-            Premium Crafting Experience
+          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
+            Designed For Connection
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            We provide everything required to unlock your imagination. Check out the perks, supplies, and 
-            creative facilities included in your registration ticket.
+          <p className="text-[#8C6A5C] text-base sm:text-lg mt-4 leading-relaxed">
+            Experience a curated blend of creative hands-on craftwork, friendly interaction, and offline relaxation that goes beyond a standard class.
           </p>
         </div>
 
@@ -72,15 +71,15 @@ export default function Highlights() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="group p-6 rounded-3xl border border-slate-200/60 bg-white/60 hover:bg-white shadow-sm hover:shadow-md hover:border-gold/30 transition-all duration-300 flex flex-col gap-4 text-left"
+              className="group p-6 rounded-3xl border border-[#8C6A5C]/10 bg-[#FFFDFB] hover:bg-[#FFFDFB] shadow-sm hover:shadow-md hover:border-terracotta/30 transition-all duration-300 flex flex-col gap-4 text-left"
             >
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center border border-slate-200/50 group-hover:scale-105 group-hover:bg-slate-200/55 transition-all duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-[#FAF6F0] flex items-center justify-center border border-[#8C6A5C]/5 group-hover:scale-105 group-hover:bg-[#F5EFEB] transition-all duration-300">
                 {card.icon}
               </div>
-              <h3 className="font-display font-bold text-xl text-slate-900 group-hover:text-gold transition-colors">
+              <h3 className="font-display font-bold text-lg text-[#2D1E1A] group-hover:text-terracotta transition-colors">
                 {card.title}
               </h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
+              <p className="text-xs text-[#8C6A5C] leading-relaxed">
                 {card.desc}
               </p>
             </motion.div>

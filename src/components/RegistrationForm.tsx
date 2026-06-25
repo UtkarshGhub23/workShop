@@ -1,80 +1,59 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Ticket, CheckSquare, Calendar, Users, MapPin, AlignLeft } from "lucide-react";
+import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, CheckSquare } from "lucide-react";
 
-// 1. Define Zod validation schema
-const registerSchema = z.object({
+// Define Zod validation schema for the Interest Form
+const interestSchema = z.object({
   name: z.string().min(2, "Full Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(8, "Phone number must be at least 8 digits"),
-  age: z.coerce.number({ invalid_type_error: "Age is required" }).min(8, "Participants must be at least 8 years old").max(120, "Please enter a valid age"),
-  gender: z.string().min(1, "Please select a gender"),
-  city: z.string().min(2, "City must be at least 2 characters"),
-  participants: z.coerce.number({ invalid_type_error: "Number of participants is required" }).min(1, "At least 1 participant is required").max(20, "Maximum 20 participants per group"),
-  date: z.string().min(1, "Preferred Workshop Date is required"),
-  emergencyContact: z.string().min(8, "Emergency Contact must be at least 8 digits"),
-  specialRequirements: z.string().optional(),
-  plan: z.enum(["basic", "pro", "vip"]),
+  email: z.string().email("Please enter a valid email address"),
+  age: z.coerce.number().min(5, "Please enter a valid age").max(100, "Please enter a valid age"),
+  joiningAs: z.enum(["Solo", "Duo"]),
+  timeSlot: z.string().min(1, "Preferred Time Slot is required"),
+  hearAboutUs: z.string().min(1, "Please let us know how you heard about us"),
   terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
+    message: "You must accept the terms to receive notifications",
   }),
 });
 
-type RegisterFormData = z.infer<typeof registerSchema>;
+type InterestFormData = z.infer<typeof interestSchema>;
 
 export default function RegistrationForm() {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submittedData, setSubmittedData] = useState<RegisterFormData | null>(null);
+  const [submittedData, setSubmittedData] = useState<InterestFormData | null>(null);
 
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<InterestFormData>({
+    resolver: zodResolver(interestSchema) as any,
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      age: undefined,
-      gender: "",
-      city: "",
-      participants: 1,
-      date: "",
-      emergencyContact: "",
-      specialRequirements: "",
-      plan: "pro",
-      terms: undefined,
+      age: undefined as any,
+      joiningAs: "Solo",
+      timeSlot: "",
+      hearAboutUs: "",
+      terms: false,
     },
   });
 
-  // Listen to select-plan event from Pricing component
-  useEffect(() => {
-    const handleSelectPlan = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      if (customEvent.detail === "basic" || customEvent.detail === "pro" || customEvent.detail === "vip") {
-        setValue("plan", customEvent.detail);
-      }
-    };
-
-    window.addEventListener("select-plan", handleSelectPlan);
-    return () => window.removeEventListener("select-plan", handleSelectPlan);
-  }, [setValue]);
-
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: InterestFormData) => {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setSubmittedData(data);
     setIsSuccess(true);
-    // Dispatch custom event to notify PWA successful registration
+
+    // Dispatch toast notification
     window.dispatchEvent(
       new CustomEvent("show-toast", {
-        detail: { message: "Pass secured successfully!", type: "success" },
+        detail: { message: "Interest registered successfully!", type: "success" },
       })
     );
   };
@@ -86,14 +65,14 @@ export default function RegistrationForm() {
   };
 
   return (
-    <section id="register" className="py-24 px-4 bg-transparent border-t border-slate-200/50 relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <section id="register" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-terracotta/5 blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-2xl mx-auto relative">
-        <div className="glassmorphic border border-slate-200/60 rounded-3xl p-8 sm:p-10 shadow-xl relative">
+        <div className="rounded-[32px] border border-[#8C6A5C]/15 bg-[#FFFDFB] p-8 sm:p-10 shadow-sm relative">
           
-          {/* Shimmer loading border effect */}
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold via-orange to-rose rounded-t-3xl"></div>
+          {/* Accent Line */}
+          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-terracotta to-brown rounded-t-[32px]"></div>
 
           <AnimatePresence mode="wait">
             {!isSuccess ? (
@@ -106,24 +85,12 @@ export default function RegistrationForm() {
               >
                 {/* Form Header */}
                 <div className="mb-8">
-                  <h2 className="font-display font-extrabold text-3xl text-slate-900 tracking-tight flex items-center gap-2">
-                    Claim Your Pass <Sparkles className="w-6 h-6 text-gold" />
+                  <h2 className="font-display font-extrabold text-3xl text-[#2D1E1A] tracking-tight flex items-center gap-2">
+                    Register Your Interest <Sparkles className="w-6 h-6 text-terracotta" />
                   </h2>
-                  <p className="text-slate-500 text-sm mt-2 leading-relaxed">
-                    Reserve your interactive DIY crafting pass. Fill in your details below and secure 
-                    your materials package.
+                  <p className="text-[#8C6A5C] text-xs sm:text-sm mt-2 leading-relaxed">
+                    Be the first to know when official registrations open. Fill in your details below to lock in priority ticket bookings and early-bird notifications.
                   </p>
-
-                  {/* Seat meter */}
-                  <div className="mt-5 p-3 rounded-2xl bg-slate-50 border border-slate-200/60 flex flex-col gap-2 shadow-sm">
-                    <div className="flex justify-between items-center text-xs font-bold text-slate-600">
-                      <span>Workshop Capacity</span>
-                      <span className="text-gold">42 / 60 Slots Booked</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
-                      <div className="h-full w-[70%] bg-gradient-to-r from-gold to-rose rounded-full"></div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Main Form element */}
@@ -131,19 +98,19 @@ export default function RegistrationForm() {
                   
                   {/* Name field */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Full Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Full Name</label>
                     <div className="relative">
-                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                       <input
                         {...register("name")}
-                        placeholder="John Doe"
+                        placeholder="Your full name"
                         type="text"
-                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
                         aria-invalid={errors.name ? "true" : "false"}
                       />
                     </div>
                     {errors.name && (
-                      <span className="text-rose text-xs mt-1 block">{errors.name.message}</span>
+                      <span className="text-rose-600 text-xs mt-1 block">{errors.name.message}</span>
                     )}
                   </div>
 
@@ -151,196 +118,120 @@ export default function RegistrationForm() {
                   <div className="grid md:grid-cols-2 gap-5">
                     {/* Email field */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Email Address</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Email Address</label>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <input
                           {...register("email")}
-                          placeholder="john@example.com"
+                          placeholder="name@domain.com"
                           type="email"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
                           aria-invalid={errors.email ? "true" : "false"}
                         />
                       </div>
                       {errors.email && (
-                        <span className="text-rose text-xs mt-1 block">{errors.email.message}</span>
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.email.message}</span>
                       )}
                     </div>
 
                     {/* Phone field */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Phone Number</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Phone Number</label>
                       <div className="relative">
-                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <input
                           {...register("phone")}
-                          placeholder="+1 (555) 019-2834"
+                          placeholder="Phone number"
                           type="tel"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
                           aria-invalid={errors.phone ? "true" : "false"}
                         />
                       </div>
                       {errors.phone && (
-                        <span className="text-rose text-xs mt-1 block">{errors.phone.message}</span>
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.phone.message}</span>
                       )}
                     </div>
                   </div>
 
-                  {/* Age & Gender */}
+                  {/* Age & Joining As */}
                   <div className="grid md:grid-cols-2 gap-5">
                     {/* Age field */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Age</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Age</label>
                       <div className="relative">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <input
                           {...register("age")}
-                          placeholder="24"
+                          placeholder="Age (e.g. 24)"
                           type="number"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
                           aria-invalid={errors.age ? "true" : "false"}
                         />
                       </div>
                       {errors.age && (
-                        <span className="text-rose text-xs mt-1 block">{errors.age.message}</span>
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.age.message}</span>
                       )}
                     </div>
 
-                    {/* Gender dropdown */}
+                    {/* Joining As */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Gender</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Joining As</label>
                       <div className="relative">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <select
-                          {...register("gender")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                          {...register("joiningAs")}
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
                         >
-                          <option value="">Select Gender</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                          <option value="prefer-not-to-say">Prefer not to say</option>
+                          <option value="Solo">Solo</option>
+                          <option value="Duo">Duo (With a Friend/Partner)</option>
                         </select>
                       </div>
-                      {errors.gender && (
-                        <span className="text-rose text-xs mt-1 block">{errors.gender.message}</span>
+                      {errors.joiningAs && (
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.joiningAs.message}</span>
                       )}
                     </div>
                   </div>
 
-                  {/* City & Number of Participants */}
+                  {/* Preferred Time Slot & Hear About Us */}
                   <div className="grid md:grid-cols-2 gap-5">
-                    {/* City field */}
+                    {/* Preferred Time Slot */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">City</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Preferred Time Slot</label>
                       <div className="relative">
-                        <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
-                        <input
-                          {...register("city")}
-                          placeholder="San Francisco"
-                          type="text"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
-                          aria-invalid={errors.city ? "true" : "false"}
-                        />
-                      </div>
-                      {errors.city && (
-                        <span className="text-rose text-xs mt-1 block">{errors.city.message}</span>
-                      )}
-                    </div>
-
-                    {/* Number of Participants */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Number of Participants</label>
-                      <div className="relative">
-                        <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
-                        <input
-                          {...register("participants")}
-                          placeholder="1"
-                          type="number"
-                          min="1"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
-                          aria-invalid={errors.participants ? "true" : "false"}
-                        />
-                      </div>
-                      {errors.participants && (
-                        <span className="text-rose text-xs mt-1 block">{errors.participants.message}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Preferred Date & Emergency Contact */}
-                  <div className="grid md:grid-cols-2 gap-5">
-                    {/* Preferred Workshop Date */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Preferred Date</label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <select
-                          {...register("date")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                          {...register("timeSlot")}
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
                         >
-                          <option value="">Select Preferred Date</option>
-                          <option value="aug-24">August 24, 2026</option>
-                          <option value="aug-25">August 25, 2026</option>
-                          <option value="aug-26">August 26, 2026</option>
-                          <option value="aug-27">August 27, 2026</option>
-                          <option value="aug-28">August 28, 2026</option>
+                          <option value="">Select Time Slot</option>
+                          <option value="morning">Morning Session (11:00 AM - 02:00 PM)</option>
+                          <option value="afternoon">Afternoon Session (03:00 PM - 06:00 PM)</option>
                         </select>
                       </div>
-                      {errors.date && (
-                        <span className="text-rose text-xs mt-1 block">{errors.date.message}</span>
+                      {errors.timeSlot && (
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.timeSlot.message}</span>
                       )}
                     </div>
 
-                    {/* Emergency Contact */}
+                    {/* How did you hear about us */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Emergency Contact</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">How did you hear about us?</label>
                       <div className="relative">
-                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
-                        <input
-                          {...register("emergencyContact")}
-                          placeholder="Name & Phone Number"
-                          type="text"
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
-                          aria-invalid={errors.emergencyContact ? "true" : "false"}
-                        />
+                        <HelpCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                        <select
+                          {...register("hearAboutUs")}
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                        >
+                          <option value="">Choose Options</option>
+                          <option value="Instagram">Instagram</option>
+                          <option value="WhatsApp">WhatsApp</option>
+                          <option value="Friend/Family">Friends / Family</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
-                      {errors.emergencyContact && (
-                        <span className="text-rose text-xs mt-1 block">{errors.emergencyContact.message}</span>
+                      {errors.hearAboutUs && (
+                        <span className="text-rose-600 text-xs mt-1 block">{errors.hearAboutUs.message}</span>
                       )}
-                    </div>
-                  </div>
-
-                  {/* Choose Plan Tier */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Choose Ticket Tier</label>
-                    <div className="relative">
-                      <Ticket className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
-                      <select
-                        {...register("plan")}
-                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
-                      >
-                        <option value="basic">Starter Pass — $29</option>
-                        <option value="pro">Creator Pass — $49</option>
-                        <option value="vip">VIP Craft Pass — $79</option>
-                      </select>
-                    </div>
-                    {errors.plan && (
-                      <span className="text-rose text-xs mt-1 block">{errors.plan.message}</span>
-                    )}
-                  </div>
-
-                  {/* Special Requirements */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Special Requirements (Optional)</label>
-                    <div className="relative">
-                      <AlignLeft className="absolute left-3.5 top-3 w-4.5 h-4.5 text-slate-400" />
-                      <textarea
-                        {...register("specialRequirements")}
-                        placeholder="Allergies, access needs, or specific accessory requests..."
-                        rows={2}
-                        className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all resize-none shadow-sm"
-                      ></textarea>
                     </div>
                   </div>
 
@@ -352,38 +243,38 @@ export default function RegistrationForm() {
                         {...register("terms")}
                         className="peer sr-only"
                       />
-                      <div className="w-5 h-5 rounded-md border border-slate-200 bg-white flex items-center justify-center peer-checked:bg-gold peer-checked:border-gold transition-colors shadow-sm">
-                        <CheckSquare className="w-3.5 h-3.5 text-slate-900 opacity-0 peer-checked:opacity-100 transition-opacity" />
+                      <div className="w-5 h-5 rounded-md border border-[#8C6A5C]/25 bg-white flex items-center justify-center peer-checked:bg-terracotta peer-checked:border-terracotta transition-colors shadow-sm">
+                        <CheckSquare className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
                       </div>
                     </div>
-                    <span className="text-xs text-slate-500 leading-normal text-left">
-                      I agree to the Terms & Conditions and understand that workshop tickets are subject to the Refund Policy.
+                    <span className="text-xs text-[#8C6A5C] leading-normal text-left">
+                      I agree to receive booking opening alerts and updates regarding the Trayyaai × Ayra workshop.
                     </span>
                   </label>
                   {errors.terms && (
-                    <span className="text-rose text-xs mt-1 text-left block">{errors.terms.message}</span>
+                    <span className="text-rose-600 text-xs mt-1 text-left block">{errors.terms.message}</span>
                   )}
 
                   {/* Submit button */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-gold via-orange to-rose text-white text-base font-bold shadow-xl shadow-orange/15 hover:shadow-orange/25 hover:-translate-y-0.5 active:translate-y-0 disabled:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 mt-4 cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full py-4 rounded-xl bg-terracotta hover:bg-[#8C6A5C] text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 disabled:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 mt-4 cursor-pointer flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Securing Ticket...
+                        Saving Preferences...
                       </>
                     ) : (
-                      "Confirm My Pass"
+                      "Notify Me When Registrations Open"
                     )}
                   </button>
 
                   {/* Secure connection note */}
-                  <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 mt-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>SSL Secured connection. Your information is 100% private.</span>
+                  <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#8C6A5C]/60 mt-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-olive" />
+                    <span>Your contact information is strictly private and secure.</span>
                   </div>
 
                 </form>
@@ -396,42 +287,41 @@ export default function RegistrationForm() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="text-center py-10 flex flex-col items-center gap-5"
               >
-                {/* Circular success badge */}
-                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-gold to-rose flex items-center justify-center shadow-2xl shadow-gold/25 animate-bounce">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-lg shadow-terracotta/15 animate-bounce">
                   <ShieldCheck className="w-10 h-10 text-white" />
                 </div>
                 
-                <h3 className="font-display font-extrabold text-3xl text-slate-900 mt-4">
-                  Pass Secured!
+                <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-4">
+                  Interest Registered!
                 </h3>
-                <p className="text-slate-600 text-sm max-w-md leading-relaxed">
-                  Thank you, <strong className="text-slate-900">{submittedData?.name}</strong>! Your DIY Workshop Pass is confirmed. We've sent a welcome email with preferred date confirmation and workshop guidelines to <strong className="text-slate-900">{submittedData?.email}</strong>.
+                <p className="text-[#8C6A5C] text-xs sm:text-sm max-w-md leading-relaxed">
+                  Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your preference details have been saved. We will contact you at <strong className="text-[#2D1E1A]">{submittedData?.email}</strong> or <strong className="text-[#2D1E1A]">{submittedData?.phone}</strong> the moment ticket bookings launch!
                 </p>
 
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 w-full text-left max-w-sm mt-4 flex flex-col gap-2 shadow-sm">
-                  <div className="flex justify-between text-xs text-slate-500">
-                    <span>Selected Plan:</span>
-                    <span className="font-bold text-slate-800 uppercase">{submittedData?.plan} Pass</span>
+                <div className="p-4 rounded-2xl bg-[#FAF6F0] border border-[#8C6A5C]/10 w-full text-left max-w-sm mt-4 flex flex-col gap-2 shadow-sm">
+                  <div className="flex justify-between text-xs text-[#8C6A5C]">
+                    <span>Format Option:</span>
+                    <span className="font-bold text-[#2D1E1A]">{submittedData?.joiningAs}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-500">
-                    <span>Preferred Date:</span>
-                    <span className="font-bold text-gold uppercase">{submittedData?.date}</span>
+                  <div className="flex justify-between text-xs text-[#8C6A5C]">
+                    <span>Preferred Slot:</span>
+                    <span className="font-bold text-terracotta uppercase">{submittedData?.timeSlot}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-500">
-                    <span>Participants:</span>
-                    <span className="font-bold text-slate-800">{submittedData?.participants}</span>
+                  <div className="flex justify-between text-xs text-[#8C6A5C]">
+                    <span>Age:</span>
+                    <span className="font-bold text-[#2D1E1A]">{submittedData?.age} Years</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-500">
+                  <div className="flex justify-between text-xs text-[#8C6A5C]">
                     <span>Status:</span>
-                    <span className="font-bold text-emerald-600">Confirmed</span>
+                    <span className="font-bold text-olive uppercase">Priority Waitlist</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleReset}
-                  className="mt-6 px-6 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+                  className="mt-6 px-6 py-2.5 rounded-xl border border-[#8C6A5C]/20 bg-white text-[#8C6A5C] hover:text-[#2D1E1A] hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
                 >
-                  Register Another Participant
+                  Register Another Interest Form
                 </button>
               </motion.div>
             )}

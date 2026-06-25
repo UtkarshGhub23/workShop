@@ -1,4 +1,4 @@
-import { Code2, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Footer() {
@@ -27,22 +27,23 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#f5f3f7] border-t border-slate-200/50 py-16 px-4 relative z-10">
+    <footer className="bg-[#F5EFEB] border-t border-[#8C6A5C]/15 py-16 px-4 relative z-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
         
         {/* Left Column: Brand details */}
         <div className="md:col-span-5 flex flex-col items-start gap-4 text-left">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-gold to-rose flex items-center justify-center">
-              <Code2 className="w-4.5 h-4.5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center">
+              <svg className="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+              </svg>
             </div>
-            <span className="font-display font-extrabold text-lg tracking-wider text-slate-900">
-              TRAYYA<span className="text-gold">AI</span>
+            <span className="font-display font-bold text-lg tracking-widest text-[#2D1E1A] uppercase">
+              Trayyaai <span className="text-terracotta font-light">×</span> Ayra
             </span>
           </div>
-          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-sm">
-            Empowering hands-on craft exploration. Learn creative designing, personalization, 
-            and decorative styling in an interactive workshop environment.
+          <p className="text-[#8C6A5C] text-xs sm:text-sm leading-relaxed max-w-sm">
+            Celebrate friendship with creativity. Spend a screen-free afternoon in Mathura customizing accessories, playing fun teamwork games, and taking home memories you'll keep forever.
           </p>
           
           {/* Social Icons */}
@@ -51,35 +52,21 @@ export default function Footer() {
               { 
                 icon: (
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke="currentColor" strokeWidth="2" fill="none" />
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 ), 
-                href: "#",
-                label: "Twitter"
-              },
-              { 
-                icon: (
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                  </svg>
-                ), 
-                href: "#",
-                label: "GitHub"
-              },
-              { 
-                icon: (
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.387-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
-                ), 
-                href: "#",
-                label: "YouTube"
+                href: "https://instagram.com",
+                label: "Instagram"
               },
             ].map((soc, idx) => (
               <a
                 key={idx}
                 href={soc.href}
-                className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors shadow-sm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-lg border border-[#8C6A5C]/20 bg-white hover:bg-[#FAF6F0] flex items-center justify-center text-[#8C6A5C] hover:text-terracotta transition-colors shadow-sm"
                 aria-label={soc.label}
               >
                 {soc.icon}
@@ -90,21 +77,21 @@ export default function Footer() {
 
         {/* Center Column: Quick Links */}
         <div className="md:col-span-4 flex flex-col items-start gap-3 text-left">
-          <h4 className="font-display font-bold text-sm text-slate-900 uppercase tracking-wider mb-1">
+          <h4 className="font-display font-bold text-xs text-[#2D1E1A] uppercase tracking-wider mb-1">
             Quick Links
           </h4>
           <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             {[
               { id: "about", lbl: "About" },
               { id: "make", lbl: "Workshop" },
-              { id: "gallery", lbl: "Gallery" },
+              { id: "highlights", lbl: "Highlights" },
               { id: "register", lbl: "Register" },
-              { id: "contact", lbl: "Contact" },
+              { id: "contact", lbl: "Location" },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
+                className="text-xs sm:text-sm text-[#8C6A5C] hover:text-[#C87A53] transition-colors cursor-pointer text-left focus:outline-none"
               >
                 {item.lbl}
               </button>
@@ -114,24 +101,24 @@ export default function Footer() {
 
         {/* Right Column: Legals */}
         <div className="md:col-span-3 flex flex-col items-start gap-3 text-left">
-          <h4 className="font-display font-bold text-sm text-slate-900 uppercase tracking-wider mb-1">
+          <h4 className="font-display font-bold text-xs text-[#2D1E1A] uppercase tracking-wider mb-1">
             Legal & Support
           </h4>
           <button
             onClick={() => setModalType("privacy")}
-            className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
+            className="text-xs sm:text-sm text-[#8C6A5C] hover:text-terracotta transition-colors cursor-pointer text-left focus:outline-none"
           >
             Privacy Policy
           </button>
           <button
             onClick={() => setModalType("terms")}
-            className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
+            className="text-xs sm:text-sm text-[#8C6A5C] hover:text-terracotta transition-colors cursor-pointer text-left focus:outline-none"
           >
             Terms & Conditions
           </button>
           <button
             onClick={() => setModalType("refund")}
-            className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
+            className="text-xs sm:text-sm text-[#8C6A5C] hover:text-terracotta transition-colors cursor-pointer text-left focus:outline-none"
           >
             Refund Policy
           </button>
@@ -139,15 +126,15 @@ export default function Footer() {
           {showInstallBtn && (
             <button
               onClick={() => window.dispatchEvent(new CustomEvent("trigger-install"))}
-              className="text-xs sm:text-sm text-gold font-bold hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1.5 mt-2"
+              className="text-xs sm:text-sm text-terracotta font-bold hover:text-brown transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1.5 mt-2"
             >
               <Download className="w-3.5 h-3.5" />
               Install App Shortcut
             </button>
           )}
 
-          <span className="text-[11px] text-slate-400 font-medium mt-4">
-            © 2026 TrayyaAI. All rights reserved.
+          <span className="text-[11px] text-[#8C6A5C]/60 font-semibold mt-4">
+            © 2026 Trayyaai × Ayra. All rights reserved.
           </span>
         </div>
 
@@ -160,43 +147,43 @@ export default function Footer() {
           onClick={() => setModalType(null)}
         >
           <div
-            className="bg-[#fcfbfd] border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-left relative cursor-default shadow-2xl"
+            className="bg-[#FAF6F0] border border-[#8C6A5C]/20 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-left relative cursor-default shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="font-display font-bold text-2xl text-slate-900 mb-4">
+            <h3 className="font-display font-bold text-2xl text-[#2D1E1A] mb-4">
               {modalType === "privacy" && "Privacy Policy"}
               {modalType === "terms" && "Terms & Conditions"}
               {modalType === "refund" && "Refund Policy"}
             </h3>
             
-            <div className="max-h-[300px] overflow-y-auto text-slate-600 text-xs leading-relaxed pr-2 flex flex-col gap-3">
+            <div className="max-h-[300px] overflow-y-auto text-[#8C6A5C] text-xs leading-relaxed pr-2 flex flex-col gap-3">
               {modalType === "privacy" && (
                 <>
                   <p>
-                    Welcome to TrayyaAI. We prioritize your privacy. Your name, email address, and phone details are encrypted during registration.
+                    Welcome to the Trayyaai × Ayra Workshop website. We prioritize your privacy. Your name, email address, age, and phone details are encrypted during registration interest logging.
                   </p>
                   <p>
-                    <strong>Information Sharing:</strong> We do not sell or lease registration inputs to third-party tracking services.
+                    <strong>Information Sharing:</strong> We do not sell or lease registration inputs to third-party advertising or tracking services.
                   </p>
                 </>
               )}
               {modalType === "terms" && (
                 <>
                   <p>
-                    Welcome to the DIY Creative Workshop. By registering, you agree to comply with our workshop safety guidelines and code of conduct.
+                    By registering your interest for the Trayyaai × Ayra Friendship Day DIY Experience, you agree to receive notification alerts when ticket bookings open.
                   </p>
                   <p>
-                    All materials provided are for workshop activities, and final creations can be taken home upon successful check-out.
+                    All materials are supplied on-site, and final customized creations belong to the participant to take home.
                   </p>
                 </>
               )}
               {modalType === "refund" && (
                 <>
                   <p>
-                    <strong>Cancellation & Refunds:</strong> We offer a 100% full refund for cancellations requested up to 48 hours before the scheduled workshop date.
+                    <strong>Cancellation & Refunds:</strong> Since this is a specialized experience, final pass purchases are subject to refund policies which will be shared when bookings go live.
                   </p>
                   <p>
-                    Cancellations made within 48 hours of the workshop are subject to a 50% kit recovery fee, or you can reschedule to a future date at no extra cost.
+                    If you register interest and book an early-bird pass, cancellations can typically be requested up to 48 hours before the workshop for a full refund or rescheduling options.
                   </p>
                 </>
               )}
@@ -204,7 +191,7 @@ export default function Footer() {
 
             <button
               onClick={() => setModalType(null)}
-              className="mt-6 px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold w-full cursor-pointer focus:outline-none"
+              className="mt-6 px-6 py-2.5 rounded-xl bg-[#2D1E1A] text-white text-xs font-bold w-full cursor-pointer focus:outline-none"
             >
               I Understand
             </button>

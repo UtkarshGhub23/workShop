@@ -31,10 +31,9 @@ export default function BackgroundThree() {
     const colors = new Float32Array(particleCount * 3);
 
     const warmColors = [
-      new THREE.Color("#c27803"), // gold
-      new THREE.Color("#ea580c"), // orange
-      new THREE.Color("#d01c6f"), // pink
-      new THREE.Color("#7c3aed"), // purple
+      new THREE.Color("#C87A53"), // Terracotta
+      new THREE.Color("#606C38"), // Olive Green
+      new THREE.Color("#8C6A5C"), // Soft Brown
     ];
 
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -71,10 +70,10 @@ export default function BackgroundThree() {
     // 4. Glowing Wireframe Torus Knot in Center
     const knotGeom = new THREE.TorusKnotGeometry(2, 0.4, 120, 16);
     const knotMat = new THREE.MeshBasicMaterial({
-      color: 0x7c3aed,
+      color: 0xC87A53, // Terracotta
       wireframe: true,
       transparent: true,
-      opacity: 0.05,
+      opacity: 0.04,
     });
     const torusKnot = new THREE.Mesh(knotGeom, knotMat);
     scene.add(torusKnot);
@@ -160,7 +159,7 @@ export default function BackgroundThree() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#fcfbfd]"
+      className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#FAF6F0]"
       style={{ display: "block" }}
     />
   );

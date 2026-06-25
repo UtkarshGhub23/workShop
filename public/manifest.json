@@ -1,12 +1,12 @@
 {
-  "name": "TrayyaAI Workshop",
-  "short_name": "TrayyaAI",
+  "name": "Trayyaai x Ayra DIY Experience",
+  "short_name": "Trayyaai x Ayra",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#FAF6F0",
+  "theme_color": "#FAF6F0",
   "orientation": "portrait",
-  "description": "Premium 3D Web Design & Creative Development masterclass. Build WebGL, Three.js, shaders, and responsive UI portfolios.",
+  "description": "This Friendship Day, Make Memories, Not Just Plans. Premium DIY Workshop organized by Trayyaai in collaboration with Ayra.",
   "icons": [
     {
       "src": "/icon-192.png",

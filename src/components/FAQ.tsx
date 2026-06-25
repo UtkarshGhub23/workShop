@@ -4,32 +4,32 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const FAQS = [
   {
-    q: "Is the workshop beginner-friendly?",
-    a: "Yes, absolutely! No prior crafting or design experience is required. Our experienced instructors will guide you step-by-step through the entire process.",
+    q: "Who can participate?",
+    a: "Anyone! This experience is open to individuals, friends, couples, siblings, and families. Everyone is welcome regardless of age or crafting background.",
   },
   {
-    q: "What materials are provided?",
-    a: "Every registration includes a complete DIY kit containing premium base items (bags, canvases, charms), high-quality paints, safe adhesives, stencils, glitter, and other decorative accessories.",
+    q: "Do I need previous experience?",
+    a: "Not at all. The workshop is designed to be fully beginner-friendly. Our instructors will provide step-by-step guidance to help you craft your items with ease.",
+  },
+  {
+    q: "Will materials be provided?",
+    a: "Yes. Every participant receives a complete crafting kit. We provide the canvas pouches, waist bags, threads, beads, tassels, paints, stencils, and all necessary tools.",
+  },
+  {
+    q: "Can I take my creations home?",
+    a: "Absolutely! Every item you design, craft, and personalize during the session is yours to keep and take home.",
+  },
+  {
+    q: "How long will the workshop last?",
+    a: "The workshop lasts approximately 2.5 to 3 hours. This leaves plenty of time for hands-on crafting, playing mini games, taking photos, and relaxing.",
   },
   {
     q: "Can children participate?",
-    a: "Yes, children aged 8 and above are welcome to join. We design our activities to be safe and engaging for all age groups.",
+    a: "Yes! Children of all ages are welcome to join. It is a fantastic offline creative weekend activity for kids and families.",
   },
   {
-    q: "Can I come with friends?",
-    a: "Of course! Crafting is a fantastic social activity. You can register as a group, come with friends, family, or partners to share a fun creative session.",
-  },
-  {
-    q: "Will I take my creations home?",
-    a: "Yes, every single handmade item you design and customize during the workshop is yours to take home in our aesthetic paper bags.",
-  },
-  {
-    q: "Is prior experience required?",
-    a: "No prior crafting, sewing, or painting experience is required. Just bring your enthusiasm and imagination!",
-  },
-  {
-    q: "Will certificates be provided?",
-    a: "Yes, all participants will receive a beautiful DIY Creative Workshop Certificate of Completion upon finishing their handcrafted items.",
+    q: "Will there be prizes?",
+    a: "Yes. We have fun interactive mini games and creative challenges throughout the session, with exciting surprise prizes for the winners.",
   },
 ];
 
@@ -41,20 +41,19 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="py-24 px-4 bg-transparent border-t border-slate-200/50">
+    <section id="faq" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-3xl mx-auto">
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
+          <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
             Common Questions
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
+          <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base mt-4 leading-relaxed">
-            Can't find what you are looking for? Reach out on our WhatsApp or drop us an 
-            email in our contact section.
+          <p className="text-[#8C6A5C] text-xs sm:text-sm mt-4 leading-relaxed">
+            Need more details? Feel free to reach out to us on WhatsApp or Instagram in our location and contact section.
           </p>
         </div>
 
@@ -65,16 +64,16 @@ export default function FAQ() {
             return (
               <div
                 key={faq.q}
-                className="rounded-2xl border border-slate-200/60 bg-white/60 hover:bg-white shadow-sm transition-colors overflow-hidden text-left"
+                className="rounded-2xl border border-[#8C6A5C]/10 bg-[#FFFDFB] hover:border-terracotta/20 shadow-sm transition-all duration-300 overflow-hidden text-left"
               >
                 <button
                   onClick={() => toggle(idx)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-slate-800 font-bold text-base sm:text-lg focus:outline-none cursor-pointer"
+                  className="w-full px-6 py-5 flex items-center justify-between text-[#2D1E1A] font-bold text-base sm:text-lg focus:outline-none cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${
-                      isOpen ? "rotate-180 text-gold" : ""
+                    className={`w-5 h-5 text-[#8C6A5C] transition-transform duration-300 ${
+                      isOpen ? "rotate-180 text-terracotta" : ""
                     }`}
                   />
                 </button>
@@ -87,7 +86,7 @@ export default function FAQ() {
                       exit={{ height: 0 }}
                       transition={{ duration: 0.25 }}
                     >
-                      <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                      <div className="px-6 pb-6 text-xs sm:text-sm text-[#8C6A5C] leading-relaxed border-t border-[#8C6A5C]/5 pt-4">
                         {faq.a}
                       </div>
                     </motion.div>

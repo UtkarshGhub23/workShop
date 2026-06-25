@@ -1,27 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Outfit", system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   
-  --color-dark-bg: #fcfbfd;
-  --color-dark-surface: rgba(0, 0, 0, 0.02);
-  --color-dark-surface-hover: rgba(0, 0, 0, 0.04);
-  --color-dark-border: rgba(0, 0, 0, 0.06);
+  --color-dark-bg: #FAF6F0;
+  --color-dark-surface: #FFFDFB;
+  --color-dark-surface-hover: #F5EFEB;
+  --color-dark-border: rgba(140, 106, 92, 0.15);
   
-  --color-gold: #c27803;       /* High-contrast gold for light mode */
-  --color-orange: #ea580c;     /* High-contrast orange */
-  --color-pink: #d01c6f;       /* High-contrast pink */
-  --color-rose: #be123c;       /* High-contrast rose */
-  --color-lavender: #7c3aed;   /* High-contrast purple */
+  --color-terracotta: #C87A53;
+  --color-olive: #606C38;
+  --color-brown: #8C6A5C;
+  --color-beige: #FAF6F0;
+  --color-offwhite: #FFFDFB;
+  
+  /* Fallbacks for existing color aliases in Tailwind classes */
+  --color-gold: #C87A53;       
+  --color-orange: #C87A53;     
+  --color-pink: #8C6A5C;       
+  --color-rose: #606C38;       
+  --color-lavender: #8C6A5C;   
 }
 
 /* Custom Base Styles */
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: var(--color-dark-bg);
-    color: #1a1523;
+    background-color: var(--color-beige);
+    color: #3C2E2A;
   }
   
   body {
@@ -33,7 +40,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    color: #0b0713;
+    color: #2D1E1A;
   }
 
   /* Custom scrollbar for light theme premium feel */
@@ -41,36 +48,36 @@
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #fcfbfd;
+    background: #FAF6F0;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(140, 106, 92, 0.2);
     border-radius: 100px;
-    border: 2px solid #fcfbfd;
+    border: 2px solid #FAF6F0;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(194, 120, 3, 0.4);
+    background: rgba(200, 122, 83, 0.6);
   }
 }
 
 /* Glassmorphism Light Mode */
 .glassmorphic {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 253, 251, 0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.025);
+  border: 1px solid rgba(140, 106, 92, 0.15);
+  box-shadow: 0 10px 30px rgba(140, 106, 92, 0.04);
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #c27803, #d01c6f, #be123c);
+  background: linear-gradient(135deg, #C87A53, #8C6A5C, #606C38);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-warm {
-  background: linear-gradient(135deg, #ea580c, #c27803);
+  background: linear-gradient(135deg, #C87A53, #8C6A5C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
