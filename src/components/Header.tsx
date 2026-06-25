@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Menu, X, Code2, Download, Share, Plus } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Menu, X, Code2, Download, Share, Plus, MoreVertical, Monitor, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
@@ -21,7 +21,8 @@ export default function Header() {
   // PWA Installation State
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
-  const [showIOSInstructions, setShowIOSInstructions] = useState(false);
+  const [showInstallInstructions, setShowInstallInstructions] = useState(false);
+  const [modalTab, setModalTab] = useState<"android" | "ios" | "desktop">("android");
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
@@ -39,8 +40,7 @@ export default function Header() {
 
     if (isStandalone) {
       setShowInstallBtn(false);
-    } else if (iosDevice) {
-      // iOS Safari doesn't support beforeinstallprompt but we want to show install instructions button
+    } else {
       setShowInstallBtn(true);
     }
 
@@ -72,24 +72,39 @@ export default function Header() {
     };
   }, []);
 
-  const handleInstallApp = async () => {
+  const handleInstallApp = useCallback(async () => {
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User choice result: ${outcome}`);
+        setDeferredPrompt(null);
+        return;
+      } catch (err) {
+        console.error("Installation prompt error:", err);
+      }
+    }
+
+    // Fallback: show instructions modal
+    let detectTab: "android" | "ios" | "desktop" = "android";
     if (isIOS) {
-      setShowIOSInstructions(true);
-      return;
+      detectTab = "ios";
+    } else if (!/Mobi|Android/i.test(navigator.userAgent)) {
+      detectTab = "desktop";
     }
+    setModalTab(detectTab);
+    setShowInstallInstructions(true);
+  }, [deferredPrompt, isIOS]);
 
-    if (!deferredPrompt) {
-      // If prompt not supported/failed but button clicked, show general tips
-      alert("To install, tap the three dots (menu) in your browser address bar and select 'Add to Home screen'.");
-      return;
-    }
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User choice result: ${outcome}`);
-    setDeferredPrompt(null);
-    setShowInstallBtn(false);
-  };
+  useEffect(() => {
+    const handleTriggerInstall = () => {
+      handleInstallApp();
+    };
+    window.addEventListener("trigger-install", handleTriggerInstall);
+    return () => {
+      window.removeEventListener("trigger-install", handleTriggerInstall);
+    };
+  }, [handleInstallApp]);
 
   const scrollTo = (id: string) => {
     setIsOpen(false);
@@ -229,61 +244,135 @@ export default function Header() {
         </AnimatePresence>
       </header>
 
-      {/* iOS Safari PWA Instructions Modal */}
+      {/* Unified PWA Instructions Modal */}
       <AnimatePresence>
-        {showIOSInstructions && (
+        {showInstallInstructions && (
           <div
             className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer"
-            onClick={() => setShowIOSInstructions(false)}
+            onClick={() => setShowInstallInstructions(false)}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#fcfbfd] border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-left relative cursor-default shadow-2xl"
+              className="bg-[#fcfbfd] border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-md w-full text-left relative cursor-default shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                onClick={() => setShowIOSInstructions(false)}
+                onClick={() => setShowInstallInstructions(false)}
                 className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 cursor-pointer hover:bg-slate-200"
               >
                 <X className="w-4 h-4" />
               </button>
 
-              <h3 className="font-display font-extrabold text-xl text-slate-900 mb-4 flex items-center gap-2">
-                Install on your iPhone <Download className="w-5 h-5 text-gold" />
+              <h3 className="font-display font-extrabold text-xl text-slate-900 mb-2 flex items-center gap-2">
+                Install TrayyaAI App <Download className="w-5 h-5 text-gold" />
               </h3>
+              <p className="text-slate-500 text-xs mb-6">
+                Add this application to your home screen or desktop to browse instantly and work offline.
+              </p>
 
+              {/* Tabs */}
+              <div className="flex border-b border-slate-200 mb-6">
+                {[
+                  { id: "android", label: "Android", icon: Smartphone },
+                  { id: "ios", label: "iPhone/iPad", icon: Smartphone },
+                  { id: "desktop", label: "Desktop", icon: Monitor }
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const active = modalTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setModalTab(tab.id as any)}
+                      className={`flex-1 pb-3 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 cursor-pointer transition-colors ${
+                        active
+                          ? "border-gold text-slate-900"
+                          : "border-transparent text-slate-400 hover:text-slate-600"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Content */}
               <div className="flex flex-col gap-4 text-slate-700 text-sm leading-relaxed">
-                <p>
-                  Safari on iOS doesn't support automatic PWA installs. You can add the shortcut manually in 3 simple steps:
-                </p>
-                
-                <div className="flex gap-3.5 items-start">
-                  <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">1</div>
-                  <p className="text-xs">
-                    Tap the <strong>Share</strong> button in the bottom Safari navigation bar <Share className="w-4 h-4 inline text-blue-500 mx-1" />.
-                  </p>
-                </div>
+                {modalTab === "android" && (
+                  <>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">1</div>
+                      <p className="text-xs">
+                        Tap the browser menu button (three vertical dots <MoreVertical className="w-4 h-4 inline text-slate-500 mx-0.5" /> in Chrome's address bar).
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">2</div>
+                      <p className="text-xs">
+                        Select <strong>Install app</strong> or <strong>Add to Home screen</strong> from the list.
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">3</div>
+                      <p className="text-xs">
+                        Tap <strong>Install</strong> or <strong>Add</strong> in the pop-up to place the launcher icon on your Home Screen.
+                      </p>
+                    </div>
+                  </>
+                )}
 
-                <div className="flex gap-3.5 items-start">
-                  <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">2</div>
-                  <p className="text-xs">
-                    Scroll down the options list and select <strong>Add to Home Screen</strong> <Plus className="w-4 h-4 inline text-slate-900 mx-1" />.
-                  </p>
-                </div>
+                {modalTab === "ios" && (
+                  <>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">1</div>
+                      <p className="text-xs">
+                        Tap the <strong>Share</strong> button in Safari's bottom toolbar <Share className="w-4 h-4 inline text-blue-500 mx-1" />.
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">2</div>
+                      <p className="text-xs">
+                        Scroll down and select <strong>Add to Home Screen</strong> <Plus className="w-4 h-4 inline text-slate-900 mx-1" />.
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">3</div>
+                      <p className="text-xs">
+                        Tap <strong>Add</strong> in the top-right corner to complete the installation.
+                      </p>
+                    </div>
+                  </>
+                )}
 
-                <div className="flex gap-3.5 items-start">
-                  <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">3</div>
-                  <p className="text-xs">
-                    Tap <strong>Add</strong> in the top right corner to install the TrayyaAI launcher on your home screen.
-                  </p>
-                </div>
+                {modalTab === "desktop" && (
+                  <>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">1</div>
+                      <p className="text-xs">
+                        Look at the right-hand side of your browser's address bar at the top of this window.
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">2</div>
+                      <p className="text-xs">
+                        Click the <strong>Install</strong> icon (typically a computer screen with an arrow, or a plus icon next to the bookmark star).
+                      </p>
+                    </div>
+                    <div className="flex gap-3.5 items-start">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 font-bold text-slate-900 text-xs">3</div>
+                      <p className="text-xs">
+                        Click <strong>Install</strong> to launch the application as a standalone desktop shortcut.
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <button
-                onClick={() => setShowIOSInstructions(false)}
-                className="mt-6 w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-center text-xs cursor-pointer hover:bg-slate-800"
+                onClick={() => setShowInstallInstructions(false)}
+                className="mt-8 w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-center text-xs cursor-pointer transition-colors"
               >
                 Okay, I Got It
               </button>

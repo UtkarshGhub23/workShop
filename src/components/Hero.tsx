@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, MapPin, Users } from "lucide-react";
+import { ArrowRight, Calendar, MapPin, Users, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Hero() {
   const [showStickyBtn, setShowStickyBtn] = useState(false);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -11,6 +12,11 @@ export default function Hero() {
       setShowStickyBtn(window.scrollY > 300);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Standalone check to hide button if already installed
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone;
+    setShowInstallBtn(!isStandalone);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -84,6 +90,16 @@ export default function Hero() {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           
+          {showInstallBtn && (
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("trigger-install"))}
+              className="w-full sm:w-auto px-8 py-4 rounded-full border border-gold/30 bg-gold/5 hover:bg-gold/10 text-gold font-bold cursor-pointer transition-colors flex items-center justify-center gap-2"
+            >
+              <Download className="w-5 h-5" />
+              Install App
+            </button>
+          )}
+
           <button
             onClick={() => {
               const el = document.getElementById("about");

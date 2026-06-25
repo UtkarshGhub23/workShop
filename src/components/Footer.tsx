@@ -1,8 +1,14 @@
-import { Code2 } from "lucide-react";
-import { useState } from "react";
+import { Code2, Download } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
   const [modalType, setModalType] = useState<"privacy" | "terms" | null>(null);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
+
+  useEffect(() => {
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone;
+    setShowInstallBtn(!isStandalone);
+  }, []);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -126,6 +132,17 @@ export default function Footer() {
           >
             Terms & Conditions
           </button>
+          
+          {showInstallBtn && (
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("trigger-install"))}
+              className="text-xs sm:text-sm text-gold font-bold hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none flex items-center gap-1.5 mt-2"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Install App Shortcut
+            </button>
+          )}
+
           <span className="text-[11px] text-slate-400 font-medium mt-4">
             © 2026 TrayyaAI. All rights reserved.
           </span>
