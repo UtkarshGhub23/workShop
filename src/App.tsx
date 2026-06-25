@@ -13,6 +13,7 @@ import Pricing from "./components/Pricing";
 import Schedule from "./components/Schedule";
 import Gallery from "./components/Gallery";
 import Testimonials from "./components/Testimonials";
+import Team from "./components/Team";
 import FAQ from "./components/FAQ";
 import RegistrationForm from "./components/RegistrationForm";
 import Contact from "./components/Contact";
@@ -152,6 +153,7 @@ export default function App() {
         <Schedule />
         <Gallery />
         <Testimonials />
+        <Team />
         <FAQ />
         <RegistrationForm />
         <Contact />

@@ -9,6 +9,7 @@ const LINKS = [
   { id: "learn", label: "Mini Games" },
   { id: "schedule", label: "Why Join" },
   { id: "pricing", label: "Pricing" },
+  { id: "team", label: "Team" },
   { id: "faq", label: "FAQ" },
   { id: "contact", label: "Location" },
 ];
