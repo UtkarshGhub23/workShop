@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, MapPin, Users, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export default function Hero() {
+interface HeroProps {
+  onNavigate: (view: "home" | "team" | "faq" | "register") => void;
+}
+
+export default function Hero({ onNavigate }: HeroProps) {
   const [showStickyBtn, setShowStickyBtn] = useState(false);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
 
@@ -83,7 +87,7 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-12"
           >
             <button
-              onClick={() => scrollToSection("register")}
+              onClick={() => onNavigate("register")}
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#C87A53] hover:bg-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-lg shadow-terracotta/10 hover:shadow-terracotta/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group"
             >
               I'm Interested
@@ -178,7 +182,7 @@ export default function Hero() {
         }`}
       >
         <button
-          onClick={() => scrollToSection("register")}
+          onClick={() => onNavigate("register")}
           className="w-full py-4 rounded-2xl bg-[#C87A53] hover:bg-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-2xl flex items-center justify-center gap-2"
         >
           I'm Interested

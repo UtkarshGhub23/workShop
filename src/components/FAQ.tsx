@@ -33,7 +33,11 @@ const FAQS = [
   },
 ];
 
-export default function FAQ() {
+interface FAQProps {
+  onBackToHome: () => void;
+}
+
+export default function FAQ({ onBackToHome }: FAQProps) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const toggle = (idx: number) => {
@@ -44,6 +48,19 @@ export default function FAQ() {
     <section id="faq" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-3xl mx-auto">
         
+        {/* Back Button */}
+        <div className="mb-10 text-left">
+          <button
+            onClick={onBackToHome}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-terracotta/25 hover:border-terracotta/55 bg-[#FFFDFB] hover:bg-white text-terracotta text-xs font-bold uppercase tracking-wider transition-all cursor-pointer focus:outline-none"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Home
+          </button>
+        </div>
+
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">

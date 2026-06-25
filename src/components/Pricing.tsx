@@ -1,22 +1,11 @@
 import { Check, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function Pricing() {
-  const handleScrollToRegister = () => {
-    const element = document.getElementById("register");
-    if (element) {
-      const offset = 70;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+interface PricingProps {
+  onNavigate: (view: "home" | "team" | "faq" | "register") => void;
+}
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
+export default function Pricing({ onNavigate }: PricingProps) {
 
   return (
     <section id="pricing" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
@@ -84,7 +73,7 @@ export default function Pricing() {
 
             {/* Select Action */}
             <button
-              onClick={handleScrollToRegister}
+              onClick={() => onNavigate("register")}
               className="px-8 py-4 rounded-full bg-terracotta hover:bg-brown text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer w-full sm:w-auto mt-4"
             >
               Notify Me When Registrations Open

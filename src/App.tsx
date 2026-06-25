@@ -28,10 +28,15 @@ export default function App() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [toasts, setToasts] = useState<ToastState[]>([]);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<"home" | "team" | "faq" | "register">("home");
   
   // Service Worker Update State
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const [updateAvailable, setUpdateAvailable] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [view]);
 
   useEffect(() => {
     // 1. Network Status Observers
@@ -138,21 +143,25 @@ export default function App() {
       <BackgroundThree />
 
       {/* Navigation Header (includes PWA prompt) */}
-      <Header />
+      <Header currentView={view} onNavigate={setView} />
 
       {/* Main Page Layout */}
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Highlights />
-        <Learn />
-        <Make />
-        <Pricing />
-        <Schedule />
-        <Team />
-        <FAQ />
-        <RegistrationForm />
-        <Contact />
+      <main className="relative z-10 min-h-[60vh]">
+        {view === "home" && (
+          <>
+            <Hero onNavigate={setView} />
+            <About />
+            <Make />
+            <Highlights />
+            <Learn />
+            <Schedule />
+            <Pricing onNavigate={setView} />
+            <Contact />
+          </>
+        )}
+        {view === "team" && <Team onBackToHome={() => setView("home")} />}
+        {view === "faq" && <FAQ onBackToHome={() => setView("home")} />}
+        {view === "register" && <RegistrationForm onBackToHome={() => setView("home")} />}
       </main>
 
       {/* Footer Block */}
