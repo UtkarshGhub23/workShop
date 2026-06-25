@@ -1,347 +1,216 @@
 document.addEventListener('DOMContentLoaded', () => {
-  
-  // ==========================================
-  // 1. Mobile Menu Toggle
-  // ==========================================
-  const menuToggle = document.getElementById('menu-toggle');
-  const navMenu = document.getElementById('nav-menu');
-
-  if (menuToggle && navMenu) {
-    menuToggle.addEventListener('click', () => {
-      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-      menuToggle.setAttribute('aria-expanded', !isExpanded);
-      navMenu.classList.toggle('open');
-    });
-
-    // Close menu when clicking navigation links on mobile
-    const navLinks = navMenu.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        menuToggle.setAttribute('aria-expanded', 'false');
-        navMenu.classList.remove('open');
-      });
-    });
-  }
 
   // ==========================================
-  // 2. Shrinking Header & Active Nav State
+  // 1. Scroll Reveal (subtle entrance)
   // ==========================================
-  const header = document.getElementById('site-header');
-  const sections = document.querySelectorAll('section[id]');
-
-  window.addEventListener('scroll', () => {
-    // Shrink header
-    if (window.scrollY > 50) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-
-    // Active link highlighting
-    let currentId = '';
-    const scrollPos = window.scrollY + 120; // offset for nav height
-
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-        currentId = section.getAttribute('id');
-      }
-    });
-
-    if (currentId) {
-      const navLinks = document.querySelectorAll('.nav-link');
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentId}`) {
-          link.classList.add('active');
-        }
-      });
-    }
-  });
-
-  // ==========================================
-  // 3. Scroll Reveal (Intersection Observer)
-  // ==========================================
-  const revealElements = document.querySelectorAll('.reveal');
-  
-  const revealObserver = new IntersectionObserver((entries, observer) => {
+  const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('reveal-active');
-        observer.unobserve(entry.target); // Reveal once
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        obs.unobserve(entry.target);
       }
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-  revealElements.forEach(el => revealObserver.observe(el));
-
-  // ==========================================
-  // 4. Interactive Tabs (Schedule)
-  // ==========================================
-  const tabList = document.querySelector('[role="tablist"]');
-  if (tabList) {
-    const tabs = tabList.querySelectorAll('[role="tab"]');
-    const panels = document.querySelectorAll('[role="tabpanel"]');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        switchTab(tab);
-      });
-
-      // Keyboard navigation support
-      tab.addEventListener('keydown', (e) => {
-        const index = Array.prototype.indexOf.call(tabs, tab);
-        let targetIndex = null;
-
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          targetIndex = (index + 1) % tabs.length;
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          targetIndex = (index - 1 + tabs.length) % tabs.length;
-        } else if (e.key === 'Home') {
-          targetIndex = 0;
-        } else if (e.key === 'End') {
-          targetIndex = tabs.length - 1;
-        }
-
-        if (targetIndex !== null) {
-          e.preventDefault();
-          tabs[targetIndex].focus();
-          switchTab(tabs[targetIndex]);
-        }
-      });
-    });
-
-    function switchTab(newTab) {
-      // Deactivate all tabs & panels
-      tabs.forEach(t => {
-        t.setAttribute('aria-selected', 'false');
-        t.setAttribute('tabindex', '-1');
-      });
-      panels.forEach(p => p.classList.remove('active'));
-
-      // Activate selected tab & corresponding panel
-      newTab.setAttribute('aria-selected', 'true');
-      newTab.removeAttribute('tabindex');
-      const targetPanelId = newTab.getAttribute('aria-controls');
-      const targetPanel = document.getElementById(targetPanelId);
-      if (targetPanel) {
-        targetPanel.classList.add('active');
-      }
-    }
-  }
-
-  // ==========================================
-  // 5. Accordion (FAQ)
-  // ==========================================
-  const faqItems = document.querySelectorAll('.faq-item');
-
-  faqItems.forEach(item => {
-    const btn = item.querySelector('.faq-question-btn');
-    
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-        
-        // Close other items (optional, but creates an accordion feel)
-        faqItems.forEach(otherItem => {
-          if (otherItem !== item && otherItem.classList.contains('expanded')) {
-            otherItem.classList.remove('expanded');
-            otherItem.querySelector('.faq-question-btn').setAttribute('aria-expanded', 'false');
-          }
-        });
-
-        // Toggle state
-        btn.setAttribute('aria-expanded', !isExpanded);
-        item.classList.toggle('expanded');
-      });
-    }
+  document.querySelectorAll('.agenda-card, .perk-item, .stat-pill').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transitionDelay = `${i * 50}ms`;
+    el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+    // Trigger immediately for elements already in view
+    requestAnimationFrame(() => observer.observe(el));
   });
 
   // ==========================================
-  // 6. Toast Notification System
+  // 2. Day card expand on click (mobile-friendly)
+  // ==========================================
+  // Already visible by default; day cards are always open.
+
+  // ==========================================
+  // 3. Toast System
   // ==========================================
   const toastContainer = document.getElementById('toast-container');
 
-  function showToast(message, type = 'success') {
+  function showToast(message, type = 'success', duration = 5000) {
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type} glass`;
+    toast.className = `toast toast-${type}`;
     toast.setAttribute('role', 'alert');
 
-    // Create Icon (Success checkmark or Info)
-    const iconContainer = document.createElement('div');
-    iconContainer.className = 'toast-icon';
-    if (type === 'success') {
-      iconContainer.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      `;
-    } else {
-      iconContainer.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-      `;
-    }
+    const icon = type === 'success'
+      ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
 
-    const messageContainer = document.createElement('div');
-    messageContainer.className = 'toast-message';
-    messageContainer.textContent = message;
+    toast.innerHTML = `
+      <div class="toast-icon">${icon}</div>
+      <div class="toast-message">${message}</div>
+      <button class="toast-close" aria-label="Dismiss">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>`;
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'toast-close';
-    closeBtn.setAttribute('aria-label', 'Close notification');
-    closeBtn.innerHTML = `
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    `;
-
-    closeBtn.addEventListener('click', () => {
-      removeToast(toast);
-    });
-
-    toast.appendChild(iconContainer);
-    toast.appendChild(messageContainer);
-    toast.appendChild(closeBtn);
     toastContainer.appendChild(toast);
 
-    // Auto-remove toast after 4.5 seconds
-    const timerId = setTimeout(() => {
-      removeToast(toast);
-    }, 4500);
+    const dismiss = () => {
+      toast.style.transition = 'opacity 0.3s, transform 0.3s';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(110%)';
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    };
 
-    // Stop auto-remove if hovered
-    toast.addEventListener('mouseenter', () => clearTimeout(timerId));
-  }
-
-  function removeToast(toast) {
-    toast.style.animation = 'none';
-    toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateY(20px)';
-    
-    // Remove element after transition completes
-    toast.addEventListener('transitionend', () => {
-      toast.remove();
-    });
+    toast.querySelector('.toast-close').addEventListener('click', dismiss);
+    const timer = setTimeout(dismiss, duration);
+    toast.addEventListener('mouseenter', () => clearTimeout(timer));
   }
 
   // ==========================================
-  // 7. Form Validation & Submission
+  // 4. Send to Telegram
   // ==========================================
-  const form = document.getElementById('registration-form');
-  const submitBtn = document.getElementById('submit-button');
+  async function sendToTelegram(data) {
+    const cfg    = window.WORKSHOP_CONFIG || {};
+    const token  = cfg.TELEGRAM_BOT_TOKEN || '';
+    const chatId = cfg.TELEGRAM_CHAT_ID   || '';
 
-  if (form) {
-    const inputs = form.querySelectorAll('.form-input, input[type="checkbox"]');
-
-    // Add live check on blur
-    inputs.forEach(input => {
-      input.addEventListener('blur', () => {
-        validateField(input);
-      });
-
-      // Clear custom error on typing/checking
-      input.addEventListener('input', () => {
-        const errorContainer = input.parentElement.querySelector('.input-error-msg');
-        if (input.validity.valid) {
-          if (errorContainer) {
-            errorContainer.style.opacity = '0';
-            errorContainer.style.transform = 'translateY(-5px)';
-          }
-          input.removeAttribute('aria-invalid');
-        }
-      });
-    });
-
-    function validateField(input) {
-      const errorContainer = input.parentElement.querySelector('.input-error-msg');
-      if (!input.validity.valid) {
-        input.setAttribute('aria-invalid', 'true');
-        if (errorContainer) {
-          errorContainer.style.opacity = '1';
-          errorContainer.style.transform = 'translateY(0)';
-        }
-        return false;
-      } else {
-        input.removeAttribute('aria-invalid');
-        if (errorContainer) {
-          errorContainer.style.opacity = '0';
-          errorContainer.style.transform = 'translateY(-5px)';
-        }
-        return true;
-      }
+    if (!token || token.startsWith('YOUR_') || !chatId || chatId.startsWith('YOUR_')) {
+      console.warn('⚠️ Telegram not configured. Fill in config.js to enable notifications.');
+      return { skipped: true };
     }
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      let isFormValid = true;
+    const trackMap = {
+      aesthetics: '🎨 Interfaces That Impress — Visual Design & CSS',
+      frontend:   '⚙️ Components That Convert — Advanced Frontend',
+      agents:     '🤖 AI That Ships — Agentic Systems',
+    };
 
-      // Validate all fields on submit
-      inputs.forEach(input => {
-        const isValid = validateField(input);
-        if (!isValid) {
-          isFormValid = false;
-        }
-      });
+    const msg = [
+      '🎟 *New WORKSHOP 2026 Registration*',
+      '',
+      `👤 *Name:*    ${esc(data.name)}`,
+      `📧 *Email:*   ${esc(data.email)}`,
+      `📞 *Phone:*   ${esc(data.phone)}`,
+      `🏠 *Address:* ${esc(data.address)}`,
+      `🎯 *Track:*   ${trackMap[data.track] || esc(data.track)}`,
+      `🕐 *Time:*    ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST`,
+    ].join('\n');
 
-      if (!isFormValid) {
-        showToast('Please correct the validation errors in the form.', 'error');
-        return;
+    const res = await fetch(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'Markdown' }),
       }
+    );
 
-      // Simulate submission state
-      form.classList.add('submitting');
-      submitBtn.disabled = true;
+    const json = await res.json();
+    if (!json.ok) throw new Error(`Telegram error: ${json.description}`);
+    return { ok: true };
+  }
 
-      setTimeout(() => {
-        // Successful submission simulation
-        form.classList.remove('submitting');
-        submitBtn.disabled = false;
-
-        const nameValue = document.getElementById('reg-name').value;
-        showToast(`Thank you, ${nameValue}! Your registration for WORKSHOP 2026 was successful.`, 'success');
-        
-        // Reset form values
-        form.reset();
-        
-        // Clear focus outline styling
-        inputs.forEach(input => {
-          input.removeAttribute('aria-invalid');
-          const errorContainer = input.parentElement.querySelector('.input-error-msg');
-          if (errorContainer) {
-            errorContainer.style.opacity = '0';
-            errorContainer.style.transform = 'translateY(-5px)';
-          }
-        });
-      }, 1500);
-    });
+  function esc(str) {
+    return String(str).replace(/([_*[\]()~`>#+=|{}.!-])/g, '\\$1');
   }
 
   // ==========================================
-  // 8. Newsletter Subscription Validation
+  // 5. Registration Form — Validate & Submit
   // ==========================================
-  const newsletterForm = document.getElementById('newsletter-form');
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const emailInput = newsletterForm.querySelector('.newsletter-input');
-      
-      if (emailInput.validity.valid) {
-        showToast(`Subscribed! Updates will be sent to: ${emailInput.value}`, 'success');
-        newsletterForm.reset();
-      } else {
-        showToast('Please enter a valid email address.', 'error');
-      }
+  const form      = document.getElementById('registration-form');
+  const submitBtn = document.getElementById('submit-button');
+  const successEl = document.getElementById('success-state');
+  const resetBtn  = document.getElementById('reset-btn');
+  const successMsg = document.getElementById('success-message');
+
+  if (!form) return;
+
+  // ── Field validation helpers ──
+  function getError(input) {
+    return input.closest('.field-group')?.querySelector('.field-error');
+  }
+
+  function showError(input) {
+    input.setAttribute('aria-invalid', 'true');
+    getError(input)?.classList.add('visible');
+  }
+
+  function clearError(input) {
+    input.removeAttribute('aria-invalid');
+    getError(input)?.classList.remove('visible');
+  }
+
+  function validateField(input) {
+    if (input.type === 'checkbox') {
+      return input.checked;
+    }
+    if (!input.validity.valid) {
+      showError(input);
+      return false;
+    }
+    clearError(input);
+    return true;
+  }
+
+  // Live validation
+  form.querySelectorAll('.field-input').forEach(input => {
+    input.addEventListener('blur',  () => validateField(input));
+    input.addEventListener('input', () => {
+      if (input.validity.valid) clearError(input);
+    });
+  });
+
+  // ── Submit ──
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const inputs  = [...form.querySelectorAll('.field-input')];
+    const terms   = document.getElementById('reg-terms');
+    const allValid = inputs.every(inp => validateField(inp)) && terms.checked;
+
+    if (!allValid) {
+      if (!terms.checked) showToast('Please accept the Code of Conduct to continue.', 'error');
+      else showToast('Please fill in all highlighted fields.', 'error');
+      // Scroll to first error
+      const firstInvalid = form.querySelector('[aria-invalid="true"]');
+      firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const nameVal    = document.getElementById('reg-name').value.trim();
+    const emailVal   = document.getElementById('reg-email').value.trim();
+    const phoneVal   = document.getElementById('reg-phone').value.trim();
+    const addressVal = document.getElementById('reg-address').value.trim();
+    const focusVal   = document.getElementById('reg-focus').value;
+
+    // Loading state
+    submitBtn.disabled = true;
+    form.classList.add('submitting');
+
+    try {
+      await sendToTelegram({ name: nameVal, email: emailVal, phone: phoneVal, address: addressVal, track: focusVal });
+
+      // Show success
+      form.style.display = 'none';
+      successEl.hidden = false;
+      if (successMsg) successMsg.textContent = `Thank you, ${nameVal}! Confirmation sent to ${emailVal}.`;
+
+      showToast(`✅ Registered successfully! Welcome, ${nameVal}.`, 'success', 7000);
+
+    } catch (err) {
+      console.error(err);
+      showToast('Could not send notification. Check your Bot Token & Chat ID in config.js', 'error', 8000);
+
+    } finally {
+      submitBtn.disabled = false;
+      form.classList.remove('submitting');
+    }
+  });
+
+  // ── Reset ──
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      form.querySelectorAll('.field-input').forEach(inp => clearError(inp));
+      form.style.display = '';
+      successEl.hidden = true;
     });
   }
+
 });
