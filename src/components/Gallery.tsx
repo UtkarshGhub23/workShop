@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Maximize2, X } from "lucide-react";
 
 const GALLERY_ITEMS = [
-  { id: 1, title: "3D Customizer Lab", category: "Student Work", gradient: "from-orange-400 to-amber-500", aspect: "aspect-video" },
-  { id: 2, title: "Day 3 Particle Portal", category: "Demo Project", gradient: "from-pink-400 to-rose-500", aspect: "aspect-square" },
-  { id: 3, title: "Discord Live Stream Critique", category: "Mentorship", gradient: "from-purple-400 to-indigo-500", aspect: "aspect-square" },
-  { id: 4, title: "GLSL Shader Matrix Setup", category: "Curriculum", gradient: "from-emerald-400 to-teal-500", aspect: "aspect-video" },
-  { id: 5, title: "Student Portfolio Showcase", category: "Student Work", gradient: "from-blue-400 to-cyan-500", aspect: "aspect-square" },
-  { id: 6, title: "Day 5 Draco Compression", category: "Performance", gradient: "from-rose-400 to-purple-500", aspect: "aspect-video" },
+  { id: 1, title: "Mini Leather Bags", category: "Handmade Creations", gradient: "from-orange-400 to-amber-500", aspect: "aspect-video" },
+  { id: 2, title: "Personalized Tote Bags", category: "Fabric Painting", gradient: "from-pink-400 to-rose-500", aspect: "aspect-square" },
+  { id: 3, title: "Aesthetic Phone Charms", category: "DIY Accessories", gradient: "from-purple-400 to-indigo-500", aspect: "aspect-square" },
+  { id: 4, title: "Woven Friendship Bracelets", category: "Group Crafts", gradient: "from-emerald-400 to-teal-500", aspect: "aspect-video" },
+  { id: 5, title: "Mini Canvas Easel Art", category: "Painting Session", gradient: "from-blue-400 to-cyan-500", aspect: "aspect-square" },
+  { id: 6, title: "Custom Acrylic Keychains", category: "Resin & Acrylic", gradient: "from-rose-400 to-purple-500", aspect: "aspect-video" },
 ];
 
 export default function Gallery() {
@@ -29,8 +29,7 @@ export default function Gallery() {
             Glimpse of Past Work
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            See the type of projects created by our past attendees, our live co-coding sessions, 
-            and our dynamic Discord community highlights.
+            See the beautiful handcrafted accessories, bags, canvases, and bracelets created by our workshop participants.
           </p>
         </div>
 
@@ -98,17 +97,10 @@ export default function Gallery() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className={`w-full h-full bg-gradient-to-tr ${activeItem.gradient} flex items-center justify-center relative p-8`}>
-                <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:24px_24px] opacity-40"></div>
-                <div className="absolute bottom-6 left-6 text-left">
-                  <span className="text-[10px] font-bold text-slate-800 uppercase tracking-widest bg-white/90 border border-slate-200 px-3 py-1 rounded-full shadow-sm">
-                    {activeItem.category}
-                  </span>
-                  <h3 className="font-display font-extrabold text-2xl sm:text-4xl text-white mt-3 filter drop-shadow-sm">
-                    {activeItem.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-100 mt-2 filter drop-shadow-sm">
-                    Visual layout demonstration representing live workshop exercises.
-                  </p>
+                <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:16px_16px] opacity-35"></div>
+                <div className="text-center z-10">
+                  <span className="block text-xs font-bold text-white/80 uppercase tracking-widest mb-2">{activeItem.category}</span>
+                  <h3 className="font-display font-extrabold text-3xl sm:text-5xl text-white filter drop-shadow-lg">{activeItem.title}</h3>
                 </div>
               </div>
             </motion.div>

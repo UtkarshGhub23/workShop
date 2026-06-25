@@ -4,20 +4,32 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const FAQS = [
   {
-    q: "What are the prerequisites for this workshop?",
-    a: "Basic familiarity with React, HTML, and CSS is recommended. Prior mathematical training or WebGL experience is NOT required; we teach coordinate systems, vectors, and rendering pipelines from scratch.",
+    q: "Is the workshop beginner-friendly?",
+    a: "Yes, absolutely! No prior crafting or design experience is required. Our experienced instructors will guide you step-by-step through the entire process.",
   },
   {
-    q: "Will the live classes be recorded?",
-    a: "Yes, all live sessions are recorded and uploaded within 2 hours. Developer Pass and VIP Pass holders get lifetime access to all lecture videos, source code, and assets.",
+    q: "What materials are provided?",
+    a: "Every registration includes a complete DIY kit containing premium base items (bags, canvases, charms), high-quality paints, safe adhesives, stencils, glitter, and other decorative accessories.",
   },
   {
-    q: "Is there a certificate provided?",
-    a: "Yes! Everyone who registers and submits the course projects will receive an official WebGL and Creative Developer Badge Certificate signed by Aarav & Tara.",
+    q: "Can children participate?",
+    a: "Yes, children aged 8 and above are welcome to join. We design our activities to be safe and engaging for all age groups.",
   },
   {
-    q: "What is your refund policy?",
-    a: "We offer a full 100% refund up to 48 hours before the workshop launches on August 24, 2026. Send an email and we will process it, no questions asked.",
+    q: "Can I come with friends?",
+    a: "Of course! Crafting is a fantastic social activity. You can register as a group, come with friends, family, or partners to share a fun creative session.",
+  },
+  {
+    q: "Will I take my creations home?",
+    a: "Yes, every single handmade item you design and customize during the workshop is yours to take home in our aesthetic paper bags.",
+  },
+  {
+    q: "Is prior experience required?",
+    a: "No prior crafting, sewing, or painting experience is required. Just bring your enthusiasm and imagination!",
+  },
+  {
+    q: "Will certificates be provided?",
+    a: "Yes, all participants will receive a beautiful DIY Creative Workshop Certificate of Completion upon finishing their handcrafted items.",
   },
 ];
 
@@ -41,7 +53,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h2>
           <p className="text-slate-600 text-sm sm:text-base mt-4 leading-relaxed">
-            Can't find what you are looking for? Reach out on our Discord or drop us an 
+            Can't find what you are looking for? Reach out on our WhatsApp or drop us an 
             email in our contact section.
           </p>
         </div>

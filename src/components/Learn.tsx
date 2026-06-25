@@ -1,36 +1,54 @@
 import { motion } from "framer-motion";
-import { BookOpen, Layers, Terminal, Compass, Zap } from "lucide-react";
+import { Brush, Palette, Sparkles, Scissors, Smile, CheckCircle2, Users, Lightbulb } from "lucide-react";
 
 const MODULES = [
   {
-    day: "Day 01",
-    title: "Three.js Foundations & Math",
-    icon: <Compass className="w-5 h-5 text-gold" />,
-    desc: "Understand vectors, trigonometry, camera setups, lights, and standard geometries. Set up a responsive WebGL rendering loop.",
+    step: "Skills 01",
+    title: "Creative Designing",
+    icon: <Brush className="w-5 h-5 text-gold" />,
+    desc: "Learn to visualize and plan your handcrafted pieces, sketching initial layouts and structures before picking your materials.",
   },
   {
-    day: "Day 02",
-    title: "Advanced Interactions & Scroll Controls",
-    icon: <Layers className="w-5 h-5 text-orange" />,
-    desc: "Build smooth scroll-driven 3D animations, bind interactions to mouse coordinates, and create tactile hover tilts.",
+    step: "Skills 02",
+    title: "Color Matching",
+    icon: <Palette className="w-5 h-5 text-orange" />,
+    desc: "Understand complementary color palettes, textures, and shading patterns to make your personalized creations visually stunning.",
   },
   {
-    day: "Day 03",
-    title: "Shaders, Materials, & Particle Portals",
-    icon: <Terminal className="w-5 h-5 text-pink" />,
-    desc: "Dive into GLSL (Vertex and Fragment shaders). Write custom animations for thousands of floating particles on the GPU.",
+    step: "Skills 03",
+    title: "Decorative Techniques",
+    icon: <Sparkles className="w-5 h-5 text-pink" />,
+    desc: "Master the application of accessories, glitter, embroidery, ribbons, and decals to add detail and personality.",
   },
   {
-    day: "Day 04",
-    title: "Responsive Interface Engineering",
-    icon: <BookOpen className="w-5 h-5 text-lavender" />,
-    desc: "Connect React state, build responsive layouts with Tailwind v4, handle input validation with React Hook Form & Zod.",
+    step: "Skills 04",
+    title: "DIY Craft Skills",
+    icon: <Scissors className="w-5 h-5 text-lavender" />,
+    desc: "Get hands-on training with crafting tools, safe adhesives, molding materials, and assembly procedures.",
   },
   {
-    day: "Day 05",
-    title: "LCP, SEO, & Production Deployment",
-    icon: <Zap className="w-5 h-5 text-rose" />,
-    desc: "Compress GLTF meshes via Draco. Optimize Cumulative Layout Shift (CLS) and LCP. Deploy seamlessly to Vercel.",
+    step: "Skills 05",
+    title: "Personalization Techniques",
+    icon: <Smile className="w-5 h-5 text-rose" />,
+    desc: "Learn how to embed names, initials, custom quotes, and bespoke design assets into your handmade bags or charms.",
+  },
+  {
+    step: "Skills 06",
+    title: "Finishing & Presentation",
+    icon: <CheckCircle2 className="w-5 h-5 text-emerald-600" />,
+    desc: "Discover sealing, coating, and polishing methods that protect your accessories and give them a professional, store-bought look.",
+  },
+  {
+    step: "Skills 07",
+    title: "Team Collaboration",
+    icon: <Users className="w-5 h-5 text-blue-500" />,
+    desc: "Engage in group crafting projects, sharing ideas and resources with fellow participants in a cooperative workshop environment.",
+  },
+  {
+    step: "Skills 08",
+    title: "Creative Thinking",
+    icon: <Lightbulb className="w-5 h-5 text-amber-500" />,
+    desc: "Unleash your imagination by solving design challenges and exploring unconventional crafting materials.",
   },
 ];
 
@@ -48,8 +66,8 @@ export default function Learn() {
             What You'll Learn
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            A comprehensive, step-by-step track taking you from standard React development 
-            to high-performance interactive web design.
+            Gain concrete, reusable crafting skills. Our comprehensive schedule guides you from initial planning 
+            and design concepts to professional finishing techniques.
           </p>
         </div>
 
@@ -57,18 +75,16 @@ export default function Learn() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {MODULES.map((mod, idx) => (
             <motion.div
-              key={mod.day}
+              key={mod.step}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className={`p-6 rounded-3xl border border-slate-200/60 bg-white/60 hover:bg-white shadow-sm hover:shadow-md hover:border-gold/20 transition-all duration-300 flex flex-col gap-4 text-left ${
-                idx === 4 ? "md:col-span-2 lg:col-span-1" : ""
-              }`}
+              className="p-6 rounded-3xl border border-slate-200/60 bg-white/60 hover:bg-white shadow-sm hover:shadow-md hover:border-gold/20 transition-all duration-300 flex flex-col gap-4 text-left"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-gold uppercase tracking-wider bg-gold/5 border border-gold/10 px-2.5 py-1 rounded-full">
-                  {mod.day}
+                  {mod.step}
                 </span>
                 <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
                   {mod.icon}

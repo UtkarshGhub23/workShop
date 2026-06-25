@@ -48,7 +48,7 @@ export default function Hero() {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 text-gold text-xs sm:text-sm font-bold uppercase tracking-wider mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-          Masterclass · Aug 24-28, 2026 · Online + Interactive
+          Creative DIY Workshop · Live & Hands-On
         </motion.div>
 
         {/* Hero Title */}
@@ -58,9 +58,9 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.08] mb-6"
         >
-          Master the Art of<br />
+          Create. Design.<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-pink to-rose">
-            Creative 3D Development
+            Take It Home.
           </span>
         </motion.h1>
 
@@ -71,8 +71,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10"
         >
-          Build jaw-dropping interactive web experiences. Learn to blend WebGL, Three.js, 
-          Tailwind, and Framer Motion into immersive interfaces that captivate users.
+          Join our hands-on DIY Creative Workshop where you’ll design and customize beautiful handmade items while learning new creative skills in a fun and interactive environment.
         </motion.p>
 
         {/* Action Button & Badges */}
@@ -107,7 +106,7 @@ export default function Hero() {
             }}
             className="w-full sm:w-auto px-8 py-4 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold cursor-pointer transition-colors"
           >
-            Explore Workshop
+            View Workshop Details
           </button>
         </motion.div>
 
@@ -119,9 +118,9 @@ export default function Hero() {
           className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto mt-20 border-t border-slate-200 pt-10"
         >
           {[
-            { icon: <Calendar className="w-5 h-5 text-gold" />, label: "Duration", val: "5 Intensive Days" },
-            { icon: <MapPin className="w-5 h-5 text-pink" />, label: "Access", val: "Live + Recordings" },
-            { icon: <Users className="w-5 h-5 text-lavender" />, label: "Seats Left", val: "18 / 60 Available" },
+            { icon: <Calendar className="w-5 h-5 text-gold" />, label: "Supplies", val: "All Materials Provided" },
+            { icon: <MapPin className="w-5 h-5 text-pink" />, label: "Mentorship", val: "Expert Guidance" },
+            { icon: <Users className="w-5 h-5 text-lavender" />, label: "Keepsake", val: "Take Everything Home" },
           ].map((spec, i) => (
             <div
               key={spec.label}

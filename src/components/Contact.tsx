@@ -1,5 +1,22 @@
-import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { useState } from "react";
+
+const Instagram = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={props.className}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 export default function Contact() {
   const [msgSent, setMsgSent] = useState(false);
@@ -23,8 +40,8 @@ export default function Contact() {
             Have Questions? Reach Out
           </h2>
           <p className="text-slate-600 text-sm sm:text-base mt-4 leading-relaxed">
-            Need help choosing a plan or verifying your prerequisites? Our support team is online 
-            to help you get registered.
+            Need help selecting a pass tier or checking the schedule? Contact our team or drop 
+            a message on WhatsApp to learn more.
           </p>
         </div>
 
@@ -38,9 +55,10 @@ export default function Contact() {
               
               <div className="flex flex-col gap-4">
                 {[
-                  { icon: <Mail className="w-5 h-5 text-gold" />, label: "Support Email", val: "hello@creativedev.io" },
-                  { icon: <MessageCircle className="w-5 h-5 text-pink" />, label: "Discord Server", val: "discord.gg/creativedev" },
-                  { icon: <MapPin className="w-5 h-5 text-lavender" />, label: "Main Office", val: "100 Pine St, San Francisco, CA" },
+                  { icon: <Phone className="w-5 h-5 text-emerald-500" />, label: "Phone Number", val: "+1 (555) 234-5678" },
+                  { icon: <Mail className="w-5 h-5 text-gold" />, label: "Email", val: "hello@trayya.ai" },
+                  { icon: <Instagram className="w-5 h-5 text-pink" />, label: "Instagram", val: "@trayya.ai" },
+                  { icon: <MapPin className="w-5 h-5 text-lavender" />, label: "Workshop Location", val: "100 Pine St, San Francisco, CA" },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200/50 shrink-0">
@@ -53,6 +71,17 @@ export default function Contact() {
                   </div>
                 ))}
               </div>
+
+              {/* WhatsApp Button */}
+              <a
+                href="https://wa.me/15552345678"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-3 px-6 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm w-full mt-2"
+              >
+                <MessageCircle className="w-4 h-4 fill-white" />
+                Chat on WhatsApp
+              </a>
             </div>
 
             {/* Quick message form */}
@@ -96,11 +125,10 @@ export default function Contact() {
             </form>
           </div>
 
-          {/* Right Column: Embedded Google Map with Dark Mode Filters */}
+          {/* Right Column: Embedded Google Map with Filters */}
           <div className="lg:col-span-6 min-h-[300px] relative">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-gold to-rose opacity-10 blur-xl"></div>
             <div className="relative w-full h-full rounded-3xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xl">
-              {/* Google Maps embed code, filtered slightly for a premium layout */}
               <iframe
                 title="Google Office Map"
                 src="https://maps.google.com/maps?q=100%20Pine%20St,%20San%20Francisco,%20CA&t=&z=14&ie=UTF8&iwloc=&output=embed"

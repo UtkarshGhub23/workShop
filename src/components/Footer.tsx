@@ -2,7 +2,7 @@ import { Code2, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Footer() {
-  const [modalType, setModalType] = useState<"privacy" | "terms" | null>(null);
+  const [modalType, setModalType] = useState<"privacy" | "terms" | "refund" | null>(null);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export default function Footer() {
             </span>
           </div>
           <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-sm">
-            Educating the next generation of creative web developers. Mastering WebGL, 
-            Three.js, custom fragment shaders, and performant React systems.
+            Empowering hands-on craft exploration. Learn creative designing, personalization, 
+            and decorative styling in an interactive workshop environment.
           </p>
           
           {/* Social Icons */}
@@ -96,13 +96,10 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             {[
               { id: "about", lbl: "About" },
-              { id: "highlights", lbl: "Highlights" },
-              { id: "learn", lbl: "Curriculum" },
-              { id: "make", lbl: "Projects" },
-              { id: "pricing", lbl: "Plans" },
-              { id: "schedule", lbl: "Timeline" },
+              { id: "make", lbl: "Workshop" },
               { id: "gallery", lbl: "Gallery" },
-              { id: "faq", lbl: "FAQs" },
+              { id: "register", lbl: "Register" },
+              { id: "contact", lbl: "Contact" },
             ].map((item) => (
               <button
                 key={item.id}
@@ -131,6 +128,12 @@ export default function Footer() {
             className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
           >
             Terms & Conditions
+          </button>
+          <button
+            onClick={() => setModalType("refund")}
+            className="text-xs sm:text-sm text-slate-500 hover:text-slate-900 transition-colors cursor-pointer text-left focus:outline-none"
+          >
+            Refund Policy
           </button>
           
           {showInstallBtn && (
@@ -161,23 +164,42 @@ export default function Footer() {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="font-display font-bold text-2xl text-slate-900 mb-4">
-              {modalType === "privacy" ? "Privacy Policy" : "Terms & Conditions"}
+              {modalType === "privacy" && "Privacy Policy"}
+              {modalType === "terms" && "Terms & Conditions"}
+              {modalType === "refund" && "Refund Policy"}
             </h3>
             
             <div className="max-h-[300px] overflow-y-auto text-slate-600 text-xs leading-relaxed pr-2 flex flex-col gap-3">
-              <p>
-                Welcome to TrayyaAI. We prioritize your privacy and intellectual growth. 
-                Your name, email address, and phone details are encrypted during registration.
-              </p>
-              <p>
-                <strong>Information Sharing:</strong> We do not sell or lease registration inputs 
-                to third-party tracking services. All materials and source codes provided during 
-                the class are copyrighted for individual educational use.
-              </p>
-              <p>
-                <strong>Workspace Access:</strong> Lifetime recording credentials and Discord 
-                invitations are tied to a single user account and cannot be redistributed.
-              </p>
+              {modalType === "privacy" && (
+                <>
+                  <p>
+                    Welcome to TrayyaAI. We prioritize your privacy. Your name, email address, and phone details are encrypted during registration.
+                  </p>
+                  <p>
+                    <strong>Information Sharing:</strong> We do not sell or lease registration inputs to third-party tracking services.
+                  </p>
+                </>
+              )}
+              {modalType === "terms" && (
+                <>
+                  <p>
+                    Welcome to the DIY Creative Workshop. By registering, you agree to comply with our workshop safety guidelines and code of conduct.
+                  </p>
+                  <p>
+                    All materials provided are for workshop activities, and final creations can be taken home upon successful check-out.
+                  </p>
+                </>
+              )}
+              {modalType === "refund" && (
+                <>
+                  <p>
+                    <strong>Cancellation & Refunds:</strong> We offer a 100% full refund for cancellations requested up to 48 hours before the scheduled workshop date.
+                  </p>
+                  <p>
+                    Cancellations made within 48 hours of the workshop are subject to a 50% kit recovery fee, or you can reschedule to a future date at no extra cost.
+                  </p>
+                </>
+              )}
             </div>
 
             <button

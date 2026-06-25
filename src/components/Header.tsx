@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const LINKS = [
   { id: "about", label: "About" },
-  { id: "highlights", label: "Highlights" },
-  { id: "learn", label: "Curriculum" },
-  { id: "make", label: "Projects" },
-  { id: "pricing", label: "Pricing" },
+  { id: "highlights", label: "What's Included" },
+  { id: "learn", label: "What You'll Learn" },
+  { id: "make", label: "What You'll Create" },
+  { id: "pricing", label: "Packages" },
   { id: "schedule", label: "Schedule" },
   { id: "gallery", label: "Gallery" },
   { id: "faq", label: "FAQ" },
@@ -136,11 +136,11 @@ export default function Header() {
           
           {/* Logo */}
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.location.reload()}
             className="flex items-center gap-2 group cursor-pointer focus:outline-none"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold to-rose flex items-center justify-center shadow-md shadow-orange/10 group-hover:scale-105 transition-transform">
-              <Code2 className="w-5 h-5 text-white" />
+              <Smartphone className="w-5 h-5 text-white" />
             </div>
             <span className="font-display font-extrabold text-xl tracking-wider text-slate-900">
               TRAYYA<span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-pink">AI</span>

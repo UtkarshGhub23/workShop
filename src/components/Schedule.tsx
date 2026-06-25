@@ -1,36 +1,60 @@
 import { motion } from "framer-motion";
-import { Clock, Play, Coffee, FileCode, CheckCircle } from "lucide-react";
+import { Clock, Play, FileCode, CheckCircle, Package, Palette, Sparkles, Smile, Scissors, Heart, Award } from "lucide-react";
 
 const SESSIONS = [
   {
     time: "09:00 AM - 09:30 AM",
-    title: "Setup Check & Morning Huddle",
+    title: "Registration & Welcome",
     icon: <Play className="w-4 h-4 text-gold" />,
-    desc: "Verify Node versions, Three.js installations, packages, and check-in to Discord server tracks.",
+    desc: "Check-in at the creative lounge, receive your name tag, and meet your fellow crafters.",
   },
   {
-    time: "09:30 AM - 12:30 PM",
-    title: "Core Lecture & Concept Breakdown",
-    icon: <FileCode className="w-4 h-4 text-orange" />,
-    desc: "Live code demonstration detailing the day's math equations, WebGL buffers, and React state binding models.",
+    time: "09:30 AM - 10:00 AM",
+    title: "Introduction",
+    icon: <Smile className="w-4 h-4 text-orange" />,
+    desc: "Meet the instructors and review the crafting plan, layouts, and design inspirations for the day.",
   },
   {
-    time: "12:30 PM - 01:30 PM",
-    title: "Lunch & Networking Lounge",
-    icon: <Coffee className="w-4 h-4 text-pink" />,
-    desc: "Relax, chat with peer developers, and discuss ideas in the Virtual Potluck Discord voice lobbies.",
+    time: "10:00 AM - 10:30 AM",
+    title: "Material Distribution",
+    icon: <Package className="w-4 h-4 text-pink" />,
+    desc: "Collect your custom DIY kit containing premium fabrics, charms, beads, and special decorative pieces.",
   },
   {
-    time: "01:30 PM - 04:30 PM",
-    title: "Hands-on Lab & Pair Programming",
-    icon: <FileCode className="w-4 h-4 text-lavender" />,
-    desc: "Time to code. You will build and debug the day's assignment templates alongside direct mentor guidance.",
+    time: "10:30 AM - 12:30 PM",
+    title: "DIY Session",
+    icon: <Scissors className="w-4 h-4 text-lavender" />,
+    desc: "Get hands-on! Start crafting, stitching, or assembling your chosen base products under expert guidance.",
   },
   {
-    time: "04:30 PM - 05:00 PM",
-    title: "Project Review & Closing Sync",
-    icon: <CheckCircle className="w-4 h-4 text-rose" />,
-    desc: "Review stand-out code submissions, grade homework requirements, and introduce tomorrow's topics.",
+    time: "12:30 PM - 01:00 PM",
+    title: "Creative Guidance",
+    icon: <Sparkles className="w-4 h-4 text-rose" />,
+    desc: "Work one-on-one with instructors to refine your designs and learn specialized craft secrets.",
+  },
+  {
+    time: "01:00 PM - 02:30 PM",
+    title: "Decoration & Finishing",
+    icon: <Palette className="w-4 h-4 text-gold" />,
+    desc: "Apply personalized accessories, letters, coatings, and finishing polish for a clean, store-bought look.",
+  },
+  {
+    time: "02:30 PM - 03:00 PM",
+    title: "Showcase Your Creation",
+    icon: <Heart className="w-4 h-4 text-orange" />,
+    desc: "Display your handmade items on the showcase table and share your creative journey with the group.",
+  },
+  {
+    time: "03:00 PM - 03:30 PM",
+    title: "Photography",
+    icon: <FileCode className="w-4 h-4 text-pink" />, // using FileCode as placeholder or replace with Camera if we want. Let's use FileCode/Camera? Wait, we can use Clock/CheckCircle, or let's import Camera. Wait, Camera is imported! Let's render <Camera />
+    desc: "Capture professional photos of your creations at our dedicated aesthetic photography corner.",
+  },
+  {
+    time: "03:30 PM - 04:00 PM",
+    title: "Certificate Distribution",
+    icon: <Award className="w-4 h-4 text-lavender" />,
+    desc: "Receive your custom DIY Workshop Completion Certificate and pack your beautiful creations to take home!",
   },
 ];
 
@@ -42,14 +66,14 @@ export default function Schedule() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-xs text-slate-600 uppercase tracking-widest font-semibold mb-4">
-            Daily Timeline
+            Workshop Schedule
           </div>
           <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
             Hourly Workshop Routine
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Here's what a typical day looks like during the workshop. We balance structure, 
-            hands-on lab time, and community networking.
+            Here's what our fun-filled DIY session looks like. We balance structure, 
+            creative exploration, and personalized guidance.
           </p>
         </div>
 

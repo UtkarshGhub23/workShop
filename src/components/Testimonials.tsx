@@ -3,27 +3,27 @@ import { Star, MessageSquare } from "lucide-react";
 
 const TESTIMONIALS = [
   {
-    name: "Lukas Vance",
-    role: "Senior Frontend Engineer, Vercel",
-    initials: "LV",
+    name: "Clara Vance",
+    role: "Attendee, Family Craft Day",
+    initials: "CV",
     bg: "from-blue-100 to-indigo-100 text-indigo-700 border-indigo-200/40",
-    quote: "This masterclass completely reshaped my approach to interactive programming. Aarav explained 3D vector transformations so clearly that it clicked instantly.",
+    quote: "This DIY workshop was the highlight of our weekend! My kids made beautiful keychains and phone charms, and the instructors were so patient and helpful.",
     rating: 5,
   },
   {
     name: "Jessica Zhang",
-    role: "Creative Director, Studio Aura",
+    role: "College Student",
     initials: "JZ",
     bg: "from-pink-100 to-rose-100 text-rose-700 border-rose-200/40",
-    quote: "Our landing page conversion went up by 45% after implementing the WebGL optimizations and custom particle portals taught in Day 3.",
+    quote: "I customized a canvas tote bag and a mini bag. The supply selection was incredible—glitters, patches, leather dyes, and beads. Highly recommended for couples or friends!",
     rating: 5,
   },
   {
     name: "Devon Patel",
-    role: "Freelance Creative Developer",
+    role: "Freelance Designer",
     initials: "DP",
     bg: "from-amber-100 to-orange-100 text-orange-700 border-orange-200/40",
-    quote: "The Pro Pass was worth every penny. The portfolio review and Draco compression walkthrough helped me land an agency client within a month.",
+    quote: "The VIP Craft Pass was worth every penny. I spent the entire afternoon painting a mini canvas and designing personalized accessories. Extremely relaxing and creative.",
     rating: 5,
   },
 ];
@@ -39,11 +39,11 @@ export default function Testimonials() {
             Testimonials
           </div>
           <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-            Loved by Developers & Designers
+            Loved by Crafters & Families
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Read how developers, designers, and creative directors from around the world 
-            have leveled up their visual engineering skills.
+            Read how our participants enjoyed their hands-on creative crafting experience and 
+            designed their personalized creations.
           </p>
         </div>
 

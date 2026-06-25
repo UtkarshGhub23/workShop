@@ -5,46 +5,47 @@ const PLANS = [
   {
     id: "basic",
     name: "Starter Pass",
-    price: "$99",
+    price: "$29",
     billing: "One-time payment",
     popular: false,
     color: "border-slate-200/60 shadow-sm",
     features: [
-      "Access to all 5 days of live classes",
-      "Standard project repository template files",
-      "Public Discord server text channels access",
-      "Digital Certificate of attendance",
+      "Access to standard DIY crafting session",
+      "Basic crafting kit & decorative items",
+      "Guidance from experienced instructors",
+      "Take home 2 handmade creations",
     ],
   },
   {
     id: "pro",
-    name: "Developer Pass",
-    price: "$199",
+    name: "Creator Pass",
+    price: "$49",
     billing: "One-time payment",
     popular: true,
     color: "border-gold/60 shadow-xl shadow-gold/10",
     features: [
-      "Access to all live classes + lifetime recordings",
-      "Advanced Draco-compressed GLTF assets",
-      "Two 1-on-1 code critiques with mentors",
-      "Priority Discord channel & direct DM access",
-      "Official WebGL Developer Badge Certificate",
-      "Resume & Portfolio review support",
+      "Access to extended DIY session",
+      "Premium DIY crafting kit & tools",
+      "Access to all premium decorative accessories",
+      "Take home 5 handmade creations",
+      "Digital workshop completion certificate",
+      "Complimentary refreshments",
     ],
   },
   {
     id: "vip",
-    name: "VIP Elite Pass",
-    price: "$399",
+    name: "VIP Craft Pass",
+    price: "$79",
     billing: "One-time payment",
     popular: false,
     color: "border-slate-200/60 shadow-sm",
     features: [
-      "Everything in Developer Pass",
-      "Two private 45-minute mentoring calls",
-      "Tailored UI/UX portfolio mockup design",
-      "Vercel serverless deployment setup consult",
-      "1-on-1 career mapping & mock interview",
+      "Access to full-day creative session",
+      "Unlimited DIY crafting materials & kits",
+      "1-on-1 guidance & custom personalization support",
+      "Take home unlimited handmade creations",
+      "Access to VIP photography corner & instant prints",
+      "Premium certificate + custom gift pack",
     ],
   },
 ];
@@ -83,8 +84,7 @@ export default function Pricing() {
             Flexible Ticket Options
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mt-4 leading-relaxed">
-            Select the ticket tier that fits your learning style. Get lifetime benefits, code reviews, 
-            and verified certificates.
+            Select the ticket tier that fits your creative style. All passes include a take-home package of your beautiful creations.
           </p>
         </div>
 
@@ -100,42 +100,47 @@ export default function Pricing() {
               className={`relative rounded-3xl border bg-white/60 hover:bg-white p-8 flex flex-col justify-between transition-all duration-300 ${plan.color}`}
             >
               {plan.popular && (
-                <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-orange px-4 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider shadow-lg">
+                <div className="absolute -top-4.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-gold via-orange to-rose text-white text-[10px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md border border-white/20 select-none">
                   Most Popular
                 </div>
               )}
 
               <div>
-                <span className="block text-slate-500 text-xs font-bold uppercase tracking-wider">{plan.name}</span>
-                <div className="flex items-baseline gap-2 mt-4">
-                  <span className="text-4xl sm:text-5xl font-display font-extrabold text-slate-900">{plan.price}</span>
-                  <span className="text-xs text-slate-500 font-medium">{plan.billing}</span>
+                {/* Plan Header */}
+                <div className="text-left mb-6">
+                  <h3 className="font-display font-bold text-xl text-slate-900">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1 mt-4">
+                    <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">{plan.price}</span>
+                    <span className="text-xs text-slate-400 font-medium">/ person</span>
+                  </div>
+                  <span className="block text-[11px] text-slate-400 mt-1.5 font-semibold uppercase tracking-wider">
+                    {plan.billing}
+                  </span>
                 </div>
-                
-                {/* Divider */}
-                <div className="w-full h-px bg-slate-100 my-6"></div>
 
-                <ul className="flex flex-col gap-3.5 text-left mb-8">
+                {/* Plan Features */}
+                <div className="border-t border-slate-100 pt-6 flex flex-col gap-4 text-left">
                   {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5 border border-gold/10">
+                    <div key={feat} className="flex items-start gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-gold/5 flex items-center justify-center shrink-0 border border-gold/15 mt-0.5">
                         <Check className="w-3 h-3 text-gold" />
                       </div>
-                      <span className="text-slate-600 text-xs sm:text-sm">{feat}</span>
-                    </li>
+                      <span className="text-xs sm:text-sm text-slate-600 leading-normal font-medium">{feat}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
 
+              {/* Select Action */}
               <button
                 onClick={() => handleSelectPlan(plan.id)}
-                className={`w-full py-3 rounded-2xl font-bold text-sm tracking-wide transition-all cursor-pointer ${
+                className={`w-full mt-8 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-sm ${
                   plan.popular
-                    ? "bg-gradient-to-r from-gold via-orange to-rose text-white shadow-lg shadow-orange/15 hover:shadow-orange/25 hover:-translate-y-0.5 active:translate-y-0"
-                    : "border border-slate-200 hover:border-slate-350 text-slate-800 bg-slate-50 hover:bg-slate-100"
+                    ? "bg-slate-900 hover:bg-slate-800 text-white"
+                    : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800"
                 }`}
               >
-                Choose Ticket
+                Select Pass Tier
               </button>
             </motion.div>
           ))}

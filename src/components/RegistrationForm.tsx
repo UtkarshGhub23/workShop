@@ -3,16 +3,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Code, Ticket, CheckSquare } from "lucide-react";
+import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Ticket, CheckSquare, Calendar, Users, MapPin, AlignLeft } from "lucide-react";
 
 // 1. Define Zod validation schema
 const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "Full Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(8, "Phone number must be at least 8 digits"),
-  experience: z.enum(["beginner", "intermediate", "advanced"]),
+  age: z.coerce.number({ invalid_type_error: "Age is required" }).min(8, "Participants must be at least 8 years old").max(120, "Please enter a valid age"),
+  gender: z.string().min(1, "Please select a gender"),
+  city: z.string().min(2, "City must be at least 2 characters"),
+  participants: z.coerce.number({ invalid_type_error: "Number of participants is required" }).min(1, "At least 1 participant is required").max(20, "Maximum 20 participants per group"),
+  date: z.string().min(1, "Preferred Workshop Date is required"),
+  emergencyContact: z.string().min(8, "Emergency Contact must be at least 8 digits"),
+  specialRequirements: z.string().optional(),
   plan: z.enum(["basic", "pro", "vip"]),
-  track: z.enum(["threejs", "shaders", "performance"]),
   terms: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms and conditions",
   }),
@@ -36,9 +41,14 @@ export default function RegistrationForm() {
       name: "",
       email: "",
       phone: "",
-      experience: "intermediate",
+      age: undefined,
+      gender: "",
+      city: "",
+      participants: 1,
+      date: "",
+      emergencyContact: "",
+      specialRequirements: "",
       plan: "pro",
-      track: "threejs",
       terms: undefined,
     },
   });
@@ -100,15 +110,15 @@ export default function RegistrationForm() {
                     Claim Your Pass <Sparkles className="w-6 h-6 text-gold" />
                   </h2>
                   <p className="text-slate-500 text-sm mt-2 leading-relaxed">
-                    Reserve your interactive developer seat today. Fill in your information, choose 
-                    your track focus, and secure your place.
+                    Reserve your interactive DIY crafting pass. Fill in your details below and secure 
+                    your materials package.
                   </p>
 
                   {/* Seat meter */}
                   <div className="mt-5 p-3 rounded-2xl bg-slate-50 border border-slate-200/60 flex flex-col gap-2 shadow-sm">
                     <div className="flex justify-between items-center text-xs font-bold text-slate-600">
-                      <span>Live Cohort Limit</span>
-                      <span className="text-gold">42 / 60 Seats Registered</span>
+                      <span>Workshop Capacity</span>
+                      <span className="text-gold">42 / 60 Slots Booked</span>
                     </div>
                     <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
                       <div className="h-full w-[70%] bg-gradient-to-r from-gold to-rose rounded-full"></div>
@@ -137,7 +147,7 @@ export default function RegistrationForm() {
                     )}
                   </div>
 
-                  {/* Email & Phone side-by-side on desktop */}
+                  {/* Email & Phone */}
                   <div className="grid md:grid-cols-2 gap-5">
                     {/* Email field */}
                     <div className="flex flex-col gap-1.5">
@@ -176,64 +186,162 @@ export default function RegistrationForm() {
                     </div>
                   </div>
 
-                  {/* Level & Track Dropdowns */}
+                  {/* Age & Gender */}
                   <div className="grid md:grid-cols-2 gap-5">
-                    {/* Experience level */}
+                    {/* Age field */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Experience Level</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Age</label>
                       <div className="relative">
-                        <Code className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
-                        <select
-                          {...register("experience")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-850 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
-                        >
-                          <option value="beginner" className="bg-white text-slate-800">Beginner (React Basics)</option>
-                          <option value="intermediate" className="bg-white text-slate-800">Intermediate (JS + Code APIs)</option>
-                          <option value="advanced" className="bg-white text-slate-800">Advanced (WebGL/Mesh expert)</option>
-                        </select>
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <input
+                          {...register("age")}
+                          placeholder="24"
+                          type="number"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          aria-invalid={errors.age ? "true" : "false"}
+                        />
                       </div>
-                      {errors.experience && (
-                        <span className="text-rose text-xs mt-1 block">{errors.experience.message}</span>
+                      {errors.age && (
+                        <span className="text-rose text-xs mt-1 block">{errors.age.message}</span>
                       )}
                     </div>
 
-                    {/* Track choice */}
+                    {/* Gender dropdown */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Primary Track Focus</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Gender</label>
                       <div className="relative">
-                        <Code className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
                         <select
-                          {...register("track")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-855 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                          {...register("gender")}
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
                         >
-                          <option value="threejs" className="bg-white text-slate-800">WebGL Core (Three.js)</option>
-                          <option value="shaders" className="bg-white text-slate-800">GPU Custom shaders (GLSL)</option>
-                          <option value="performance" className="bg-white text-slate-800">Responsive Interfaces (React/TS)</option>
+                          <option value="">Select Gender</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                          <option value="prefer-not-to-say">Prefer not to say</option>
                         </select>
                       </div>
-                      {errors.track && (
-                        <span className="text-rose text-xs mt-1 block">{errors.track.message}</span>
+                      {errors.gender && (
+                        <span className="text-rose text-xs mt-1 block">{errors.gender.message}</span>
                       )}
                     </div>
                   </div>
 
-                  {/* Plan Choice (linked to pricing selections) */}
+                  {/* City & Number of Participants */}
+                  <div className="grid md:grid-cols-2 gap-5">
+                    {/* City field */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">City</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <input
+                          {...register("city")}
+                          placeholder="San Francisco"
+                          type="text"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          aria-invalid={errors.city ? "true" : "false"}
+                        />
+                      </div>
+                      {errors.city && (
+                        <span className="text-rose text-xs mt-1 block">{errors.city.message}</span>
+                      )}
+                    </div>
+
+                    {/* Number of Participants */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Number of Participants</label>
+                      <div className="relative">
+                        <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <input
+                          {...register("participants")}
+                          placeholder="1"
+                          type="number"
+                          min="1"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          aria-invalid={errors.participants ? "true" : "false"}
+                        />
+                      </div>
+                      {errors.participants && (
+                        <span className="text-rose text-xs mt-1 block">{errors.participants.message}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Preferred Date & Emergency Contact */}
+                  <div className="grid md:grid-cols-2 gap-5">
+                    {/* Preferred Workshop Date */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Preferred Date</label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <select
+                          {...register("date")}
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                        >
+                          <option value="">Select Preferred Date</option>
+                          <option value="aug-24">August 24, 2026</option>
+                          <option value="aug-25">August 25, 2026</option>
+                          <option value="aug-26">August 26, 2026</option>
+                          <option value="aug-27">August 27, 2026</option>
+                          <option value="aug-28">August 28, 2026</option>
+                        </select>
+                      </div>
+                      {errors.date && (
+                        <span className="text-rose text-xs mt-1 block">{errors.date.message}</span>
+                      )}
+                    </div>
+
+                    {/* Emergency Contact */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Emergency Contact</label>
+                      <div className="relative">
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+                        <input
+                          {...register("emergencyContact")}
+                          placeholder="Name & Phone Number"
+                          type="text"
+                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] shadow-sm"
+                          aria-invalid={errors.emergencyContact ? "true" : "false"}
+                        />
+                      </div>
+                      {errors.emergencyContact && (
+                        <span className="text-rose text-xs mt-1 block">{errors.emergencyContact.message}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Choose Plan Tier */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Choose Plan Tier</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Choose Ticket Tier</label>
                     <div className="relative">
                       <Ticket className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
                       <select
                         {...register("plan")}
-                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-855 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
                       >
-                        <option value="basic" className="bg-white text-slate-800">Starter Pass — $99</option>
-                        <option value="pro" className="bg-white text-slate-800">Developer Pass — $199</option>
-                        <option value="vip" className="bg-white text-slate-800">VIP Elite Pass — $399</option>
+                        <option value="basic">Starter Pass — $29</option>
+                        <option value="pro">Creator Pass — $49</option>
+                        <option value="vip">VIP Craft Pass — $79</option>
                       </select>
                     </div>
                     {errors.plan && (
                       <span className="text-rose text-xs mt-1 block">{errors.plan.message}</span>
                     )}
+                  </div>
+
+                  {/* Special Requirements */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Special Requirements (Optional)</label>
+                    <div className="relative">
+                      <AlignLeft className="absolute left-3.5 top-3 w-4.5 h-4.5 text-slate-400" />
+                      <textarea
+                        {...register("specialRequirements")}
+                        placeholder="Allergies, access needs, or specific accessory requests..."
+                        rows={2}
+                        className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/15 transition-all resize-none shadow-sm"
+                      ></textarea>
+                    </div>
                   </div>
 
                   {/* Terms checkbox */}
@@ -249,8 +357,7 @@ export default function RegistrationForm() {
                       </div>
                     </div>
                     <span className="text-xs text-slate-500 leading-normal text-left">
-                      I agree to the Terms & Conditions and understand all class videos, assets, 
-                      and Discord credentials will be emailed to my address prior to class start.
+                      I agree to the Terms & Conditions and understand that workshop tickets are subject to the Refund Policy.
                     </span>
                   </label>
                   {errors.terms && (
@@ -266,7 +373,7 @@ export default function RegistrationForm() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Processing reservation...
+                        Securing Ticket...
                       </>
                     ) : (
                       "Confirm My Pass"
@@ -298,7 +405,7 @@ export default function RegistrationForm() {
                   Pass Secured!
                 </h3>
                 <p className="text-slate-600 text-sm max-w-md leading-relaxed">
-                  Thank you, <strong className="text-slate-900">{submittedData?.name}</strong>! Your Developer Pass registration is confirmed. We've sent a welcome email with invitation links to your inbox (<strong className="text-slate-900">{submittedData?.email}</strong>).
+                  Thank you, <strong className="text-slate-900">{submittedData?.name}</strong>! Your DIY Workshop Pass is confirmed. We've sent a welcome email with preferred date confirmation and workshop guidelines to <strong className="text-slate-900">{submittedData?.email}</strong>.
                 </p>
 
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 w-full text-left max-w-sm mt-4 flex flex-col gap-2 shadow-sm">
@@ -307,25 +414,28 @@ export default function RegistrationForm() {
                     <span className="font-bold text-slate-800 uppercase">{submittedData?.plan} Pass</span>
                   </div>
                   <div className="flex justify-between text-xs text-slate-500">
-                    <span>Primary Track:</span>
-                    <span className="font-bold text-gold uppercase">{submittedData?.track}</span>
+                    <span>Preferred Date:</span>
+                    <span className="font-bold text-gold uppercase">{submittedData?.date}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-slate-500">
+                    <span>Participants:</span>
+                    <span className="font-bold text-slate-800">{submittedData?.participants}</span>
                   </div>
                   <div className="flex justify-between text-xs text-slate-500">
                     <span>Status:</span>
-                    <span className="font-bold text-emerald-600">Active / Paid</span>
+                    <span className="font-bold text-emerald-600">Confirmed</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2.5 rounded-xl border border-slate-200 hover:border-slate-350 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 transition-colors mt-6 cursor-pointer"
+                  className="mt-6 px-6 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
                 >
-                  Register Another Seat
+                  Register Another Participant
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
     </section>
