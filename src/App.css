@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════
-   FRIENDSHIP DAY 2026 — Warm Minimal Glassmorphism UI
+   FRIENDSHIP DAY 2026 — React App Styles
    ══════════════════════════════════════════════════════════ */
 
 /* ── Reset ─────────────────────────────────────────────── */
@@ -16,18 +16,17 @@
   --border:       rgba(255,255,255,0.08);
   --border2:      rgba(255,255,255,0.14);
 
-  --accent1:      #f59e0b;   /* warm gold */
-  --accent2:      #fb923c;   /* warm orange */
-  --accent3:      #f472b6;   /* soft pink */
-  --rose:         #e11d48;   /* deep rose */
-  --peach:        #fdba74;   /* peach */
-  --lavender:     #c084fc;   /* soft lavender */
+  --accent1:      #f59e0b;
+  --accent2:      #fb923c;
+  --accent3:      #f472b6;
+  --rose:         #e11d48;
+  --peach:        #fdba74;
+  --lavender:     #c084fc;
 
   --text:         #fef3e2;
   --text-muted:   rgba(254,243,226,0.55);
   --text-dim:     rgba(254,243,226,0.30);
 
-  /* Gradients */
   --grad-main:    linear-gradient(135deg, #f59e0b, #f472b6, #e11d48);
   --grad-warm:    linear-gradient(135deg, #fb923c, #f59e0b);
   --grad-sunset:  linear-gradient(135deg, #f472b6, #c084fc);
@@ -202,7 +201,7 @@ body {
   50%       { box-shadow: 0 0 16px var(--accent1); opacity: 0.6; }
 }
 
-/* ── Page Layout — Two Panels ────────────────────────────── */
+/* ── Page Layout ────────────────────────────────────────── */
 .page-layout {
   position: relative;
   z-index: 1;
@@ -212,7 +211,6 @@ body {
   padding-top: 60px;
 }
 
-/* ── Shared Panel Styles ─────────────────────────────────── */
 .panel {
   padding: 3rem 2.5rem;
   position: relative;
@@ -223,16 +221,13 @@ body {
   margin: 0 auto;
 }
 
-/* ── Left Panel — Details ────────────────────────────────── */
+/* ── Left Panel ─────────────────────────────────────────── */
 .panel-details {
   border-right: 1px solid var(--border);
   overflow-y: auto;
 }
 
-/* ─ Hero Title ─ */
-.detail-hero {
-  margin-bottom: 2.5rem;
-}
+.detail-hero { margin-bottom: 2.5rem; }
 
 .detail-tag {
   display: inline-flex;
@@ -272,7 +267,7 @@ body {
   max-width: 540px;
 }
 
-/* ─ Stats Row ─ */
+/* ─ Stats ─ */
 .stats-row {
   display: flex;
   gap: 1rem;
@@ -349,10 +344,9 @@ body {
   background: linear-gradient(90deg, var(--border), transparent);
 }
 
-/* ─ Schedule Block ─ */
+/* ─ Schedule ─ */
 .schedule-block { margin-bottom: 2.5rem; }
 
-/* ─ Agenda Card ─ */
 .agenda-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -366,9 +360,7 @@ body {
   box-shadow: 0 4px 24px rgba(245,158,11,0.08);
 }
 
-.day-sessions {
-  list-style: none;
-}
+.day-sessions { list-style: none; }
 
 .day-sessions li {
   display: flex;
@@ -413,7 +405,7 @@ body {
   color: var(--text-muted);
 }
 
-/* ─ Perks Grid ─ */
+/* ─ Perks ─ */
 .perks-block { margin-bottom: 2rem; }
 
 .perks-grid {
@@ -460,7 +452,7 @@ body {
   background: rgba(244,114,182,0.14);
 }
 
-/* ─ Quote Block ─ */
+/* ─ Quote ─ */
 .quote-block {
   margin-top: 0.5rem;
   padding: 1.5rem;
@@ -471,7 +463,7 @@ body {
 }
 
 .quote-block::before {
-  content: '"';
+  content: '\201C';
   position: absolute;
   top: -0.3rem;
   left: 1rem;
@@ -502,7 +494,7 @@ body {
   font-weight: 600;
 }
 
-/* ── Right Panel — Registration ──────────────────────────── */
+/* ── Right Panel ────────────────────────────────────────── */
 .panel-register {
   position: sticky;
   top: 60px;
@@ -513,10 +505,7 @@ body {
   -webkit-backdrop-filter: blur(30px);
 }
 
-/* ─ Form Header ─ */
-.form-header {
-  margin-bottom: 2rem;
-}
+.form-header { margin-bottom: 2rem; }
 
 .form-title-wrap h2 {
   font-size: 1.75rem;
@@ -566,16 +555,14 @@ body {
   animation: shimmerMeter 2.5s ease-in-out infinite;
 }
 
-@keyframes shimmerMeter {
-  to { left: 200%; }
-}
+@keyframes shimmerMeter { to { left: 200%; } }
 
 .seats-meter span {
   font-size: 0.75rem;
   color: var(--text-dim);
 }
 
-/* ─ Form Fields ─ */
+/* ─ Form ─ */
 .reg-form {
   display: flex;
   flex-direction: column;
@@ -640,18 +627,12 @@ body {
   color: var(--accent1);
 }
 
-/* Valid state */
-.field-input:not(:placeholder-shown):valid {
-  border-color: rgba(245,158,11,0.4);
-}
-
-/* Error state */
-.field-input[aria-invalid="true"] {
+.field-input[aria-invalid="true"],
+.field-input.error {
   border-color: rgba(225,29,72,0.6);
   background: rgba(225,29,72,0.04);
 }
 
-/* Select */
 .select-wrap { position: relative; }
 
 .field-select {
@@ -693,7 +674,7 @@ body {
   transform: translateY(0);
 }
 
-/* ─ Terms Checkbox ─ */
+/* ─ Terms ─ */
 .terms-row {
   display: flex;
   align-items: flex-start;
@@ -729,6 +710,7 @@ body {
   width: 11px; height: 11px;
   stroke: white;
   stroke-width: 3;
+  fill: none;
   stroke-dasharray: 20;
   stroke-dashoffset: 20;
   transition: stroke-dashoffset 0.25s ease;
@@ -765,7 +747,7 @@ body {
   color: var(--accent2);
 }
 
-/* ─ Submit Button ─ */
+/* ─ Submit ─ */
 .submit-btn {
   position: relative;
   display: flex;
@@ -841,11 +823,9 @@ body {
   justify-content: center;
 }
 
-.form-note svg {
-  color: var(--accent3);
-}
+.form-note svg { color: var(--accent3); }
 
-/* ─ Success State ─ */
+/* ─ Success ─ */
 .success-state {
   display: flex;
   flex-direction: column;
@@ -856,8 +836,6 @@ body {
   padding: 2rem;
   min-height: 300px;
 }
-
-.success-state[hidden] { display: none; }
 
 .success-icon {
   width: 76px; height: 76px;
@@ -874,6 +852,7 @@ body {
   width: 34px; height: 34px;
   stroke: white;
   stroke-width: 2.5;
+  fill: none;
 }
 
 @keyframes popIn {
@@ -964,25 +943,12 @@ body {
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .page-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .panel-details {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .panel-register {
-    position: static;
-    height: auto;
-  }
-
+  .page-layout { grid-template-columns: 1fr; }
+  .panel-details { border-right: none; border-bottom: 1px solid var(--border); }
+  .panel-register { position: static; height: auto; }
   .topbar-inner { padding: 0 1.25rem; }
   .panel { padding: 2rem 1.25rem; }
-
   .perks-grid { grid-template-columns: 1fr; }
-
   .floating-hearts { display: none; }
 }
 
