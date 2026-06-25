@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { WifiOff, Wifi, RefreshCw, X } from "lucide-react";
+import Loader from "./components/Loader";
 import BackgroundThree from "./components/BackgroundThree";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -26,6 +28,7 @@ interface ToastState {
 export default function App() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [toasts, setToasts] = useState<ToastState[]>([]);
+  const [loading, setLoading] = useState(true);
   
   // Service Worker Update State
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
@@ -93,10 +96,16 @@ export default function App() {
       });
     }
 
+    // 4. Loading state timeout
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("show-toast", handleCustomToast);
+      clearTimeout(timer);
     };
   }, []);
 
@@ -122,6 +131,10 @@ export default function App() {
   return (
     <div className="relative min-h-screen font-sans selection:bg-gold/30 selection:text-white bg-[#fcfbfd] text-slate-800">
       
+      <AnimatePresence>
+        {loading && <Loader />}
+      </AnimatePresence>
+
       {/* 3D WebGL Background (adjusted for Light Mode) */}
       <BackgroundThree />
 
