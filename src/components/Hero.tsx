@@ -107,7 +107,7 @@ export default function Hero({ onNavigate }: HeroProps) {
               onClick={() => onNavigate("register")}
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#C87A53] hover:bg-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-lg shadow-terracotta/10 hover:shadow-terracotta/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group"
             >
-              I'm Interested
+              Register Now
               <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
             </button>
 
@@ -202,8 +202,8 @@ export default function Hero({ onNavigate }: HeroProps) {
           onClick={() => onNavigate("register")}
           className="w-full py-4 rounded-2xl bg-[#C87A53] hover:bg-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-2xl flex items-center justify-center gap-2"
         >
-          I'm Interested
-          <ArrowRight className="w-4 h-4" />
+          Register Now
+          <ArrowRight className="w-4.5 h-4.5" />
         </button>
       </div>
     </section>

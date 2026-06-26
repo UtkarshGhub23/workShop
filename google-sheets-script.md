@@ -382,6 +382,148 @@ function doPost(e) {
       } catch (errAdmin) {
         console.error("Failed to send admin notification: " + errAdmin.toString());
       }
+    } else if (formType === "contact") {
+      // 1. Compile Contact Confirmation HTML Email
+      var contactParticipantHtml = 
+        '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        '  <meta charset="utf-8">' +
+        '  <meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+        '  <title>Message Received</title>' +
+        '</head>' +
+        '<body style="margin: 0; padding: 0; background-color: #FAF6F0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; color: #2D1E1A;">' +
+        '  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FAF6F0; padding: 20px 0;">' +
+        '    <tr>' +
+        '      <td align="center">' +
+        '        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #FFFDFB; border: 1px solid rgba(140, 106, 92, 0.15); border-radius: 24px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">' +
+        '          <!-- Header Banner -->' +
+        '          <tr>' +
+        '            <td align="center" style="background-color: #C87A53; padding: 30px 20px;">' +
+        '              <h1 style="color: #FFFDFB; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">TRAYYAAI × AYRA</h1>' +
+        '              <p style="color: rgba(255, 253, 251, 0.85); margin: 5px 0 0 0; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Message Received</p>' +
+        '            </td>' +
+        '          </tr>' +
+        '          <!-- Content -->' +
+        '          <tr>' +
+        '            <td style="padding: 40px 30px;">' +
+        '              <h2 style="color: #2D1E1A; margin-top: 0; font-size: 20px; font-weight: 800;">Thank you for reaching out! ✉️</h2>' +
+        '              <p style="color: #8C6A5C; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">' +
+        '                Hi <strong>' + (parameter.name || '') + '</strong>,<br><br>' +
+        '                Thank you for contacting us. We have received your message and our team will get back to you as soon as possible.' +
+        '              </p>' +
+        '              ' +
+        '              <!-- Details Box -->' +
+        '              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FAF6F0; border-radius: 16px; padding: 20px; margin-bottom: 25px; border: 1px solid rgba(140, 106, 92, 0.1);">' +
+        '                <tr>' +
+        '                  <td style="padding-bottom: 12px; border-bottom: 1px solid rgba(140, 106, 92, 0.1);">' +
+        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Your Details</span><br>' +
+        '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.name || '') + ' (' + (parameter.email || '') + ')</strong>' +
+        '                  </td>' +
+        '                </tr>' +
+        '                <tr>' +
+        '                  <td style="padding: 12px 0 0 0;">' +
+        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Your Message</span><br>' +
+        '                    <blockquote style="margin: 8px 0 0 0; padding-left: 12px; border-left: 3px solid #C87A53; color: #5C4A44; font-size: 13px; font-style: italic; line-height: 1.5;">' +
+        '                      ' + (parameter.message || '') + '' +
+        '                    </blockquote>' +
+        '                  </td>' +
+        '                </tr>' +
+        '              </table>' +
+        '              ' +
+        '              <p style="color: #8C6A5C; font-size: 13px; line-height: 1.6; margin-bottom: 0;">' +
+        '                If you have any urgent requests, feel free to contact us via WhatsApp or reply directly to this email.' +
+        '              </p>' +
+        '            </td>' +
+        '          </tr>' +
+        '          <!-- Footer -->' +
+        '          <tr>' +
+        '            <td align="center" style="background-color: #FAF6F0; padding: 25px 20px; border-top: 1px solid rgba(140, 106, 92, 0.08);">' +
+        '              <p style="color: #8C6A5C; margin: 0; font-size: 11px; line-height: 1.5;">' +
+        '                © 2026 Trayyaai × Ayra. All rights reserved.<br>' +
+        '                You received this email because you submitted a contact request on our website.' +
+        '              </p>' +
+        '            </td>' +
+        '          </tr>' +
+        '        </table>' +
+        '      </td>' +
+        '    </tr>' +
+        '  </table>' +
+        '</body>' +
+        '</html>';
+
+      // 2. Compile Organizer Contact Notification HTML Email
+      var contactOrganizerHtml = 
+        '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        '  <meta charset="utf-8">' +
+        '  <meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+        '  <title>New Contact Message</title>' +
+        '</head>' +
+        '<body style="margin: 0; padding: 20px; background-color: #FAF6F0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; color: #2D1E1A;">' +
+        '  <div style="max-width: 600px; background-color: #FFFDFB; border: 1px solid rgba(140, 106, 92, 0.15); border-radius: 16px; padding: 30px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">' +
+        '    <h2 style="color: #C87A53; margin-top: 0; font-size: 20px; font-weight: 800; border-bottom: 2px solid #FAF6F0; padding-bottom: 15px;">New Contact Message Received</h2>' +
+        '    <p style="color: #2D1E1A; font-size: 14px; line-height: 1.5;">' +
+        '      A user has sent a message via the website contact form. Here are the details:' +
+        '    </p>' +
+        '    ' +
+        '    <table border="0" cellpadding="8" cellspacing="0" width="100%" style="font-size: 13px; line-height: 1.5; color: #2D1E1A; margin-top: 20px; background-color: #FAF6F0; border-radius: 8px; overflow: hidden;">' +
+        '      <tr>' +
+        '        <td width="30%" style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Sender Name</td>' +
+        '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.name || '') + '</td>' +
+        '      </tr>' +
+        '      <tr>' +
+        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Email Address</td>' +
+        '        <td style="border-bottom: 1px solid #FFFDFB;"><a href="mailto:' + (parameter.email || '') + '" style="color: #C87A53; text-decoration: none;">' + (parameter.email || '') + '</a></td>' +
+        '      </tr>' +
+        '      <tr>' +
+        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Message</td>' +
+        '        <td style="border-bottom: 1px solid #FFFDFB; white-space: pre-wrap;">' + (parameter.message || '') + '</td>' +
+        '      </tr>' +
+        '      <tr>' +
+        '        <td style="font-weight: bold;">Timestamp</td>' +
+        '        <td>' + Utilities.formatDate(timestamp, "GMT+5:30", "yyyy-MM-dd HH:mm:ss") + '</td>' +
+        '      </tr>' +
+        '    </table>' +
+        '    ' +
+        '    <p style="color: #8C6A5C; font-size: 11px; margin-top: 25px; border-top: 1px solid #FAF6F0; padding-top: 15px; text-align: center;">' +
+        '      This notification was automatically sent by the DIY Experience Form System.' +
+        '    </p>' +
+        '  </div>' +
+        '</body>' +
+        '</html>';
+
+      // 3. Dispatch emails
+      try {
+        if (parameter.email) {
+          MailApp.sendEmail({
+            to: parameter.email,
+            subject: "📨 Message Received: Trayyaai × Ayra",
+            htmlBody: contactParticipantHtml
+          });
+        }
+      } catch (errParticipant) {
+        console.error("Failed to send contact confirmation: " + errParticipant.toString());
+      }
+      
+      try {
+        var adminEmail = "hello@trayyaai.com";
+        var activeUserEmail = Session.getActiveUser().getEmail();
+        var adminRecipients = [adminEmail];
+        
+        if (activeUserEmail && activeUserEmail !== adminEmail) {
+          adminRecipients.push(activeUserEmail);
+        }
+        
+        MailApp.sendEmail({
+          to: adminRecipients.join(","),
+          subject: "✉️ New Contact Message from " + (parameter.name || "User"),
+          htmlBody: contactOrganizerHtml
+        });
+      } catch (errAdmin) {
+        console.error("Failed to send admin contact notification: " + errAdmin.toString());
+      }
     }
     
     return ContentService.createTextOutput(JSON.stringify({ status: "success", registrationId: registrationId, message: "Data recorded successfully" }))

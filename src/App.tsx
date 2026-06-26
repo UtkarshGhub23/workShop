@@ -9,7 +9,6 @@ import About from "./components/About";
 import Highlights from "./components/Highlights";
 import Learn from "./components/Learn";
 import Make from "./components/Make";
-import Pricing from "./components/Pricing";
 import Schedule from "./components/Schedule";
 import Team from "./components/Team";
 import FAQ from "./components/FAQ";
@@ -155,7 +154,6 @@ export default function App() {
             <Highlights />
             <Learn />
             <Schedule />
-            <Pricing onNavigate={setView} />
             <Contact />
           </>
         )}

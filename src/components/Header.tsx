@@ -8,7 +8,6 @@ const LINKS = [
   { id: "highlights", label: "Highlights" },
   { id: "learn", label: "Mini Games" },
   { id: "schedule", label: "Why Join" },
-  { id: "pricing", label: "Pricing" },
   { id: "team", label: "Team" },
   { id: "faq", label: "FAQ" },
   { id: "contact", label: "Location" },
@@ -206,7 +205,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
               onClick={() => scrollTo("register")}
               className="px-5 py-2.5 rounded-full bg-terracotta hover:bg-brown text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
             >
-              I'm Interested
+              Register Now
             </button>
           </nav>
 
@@ -269,7 +268,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
                 onClick={() => scrollTo("register")}
                 className="w-full mt-2 py-3 rounded-xl bg-terracotta hover:bg-brown text-white font-bold text-center shadow-lg shadow-terracotta/15 focus:outline-none"
               >
-                I'm Interested
+                Register Now
               </button>
             </motion.div>
           )}
