@@ -140,6 +140,13 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
     setSubmittedData(null);
   };
 
+  const getGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return "Good morning";
+    if (hours < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
     <section id="register" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15 relative">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-terracotta/5 blur-[120px] rounded-full pointer-events-none"></div>
@@ -174,6 +181,9 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
               >
                 {/* Form Header */}
                 <div className="mb-8">
+                  <p className="text-[10px] uppercase tracking-widest text-terracotta font-extrabold mb-1">
+                    ✨ {getGreeting()}, Creator!
+                  </p>
                   <h2 className="font-display font-extrabold text-3xl text-[#2D1E1A] tracking-tight flex items-center gap-2">
                     Register Your Interest <Sparkles className="w-6 h-6 text-terracotta" />
                   </h2>

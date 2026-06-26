@@ -38,6 +38,13 @@ export default function Hero({ onNavigate }: HeroProps) {
     }
   };
 
+  const getGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return "Good morning";
+    if (hours < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-28 pb-20 md:py-32 overflow-hidden bg-transparent">
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10">
@@ -54,6 +61,16 @@ export default function Hero({ onNavigate }: HeroProps) {
             <span className="w-2 h-2 rounded-full bg-terracotta animate-pulse"></span>
             Trayyaai × Ayra Friendship Day Special
           </motion.div>
+
+          {/* Dynamic Greeting */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="text-[10px] sm:text-xs uppercase tracking-widest text-[#8C6A5C] font-extrabold mb-3"
+          >
+            ✨ {getGreeting()}, Creator!
+          </motion.p>
 
           {/* Hero Title */}
           <motion.h1
