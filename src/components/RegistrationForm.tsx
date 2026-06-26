@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, Check, ChevronDown, Copy, CheckCheck } from "lucide-react";
+import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, Check, ChevronDown, Copy, CheckCheck, MapPin } from "lucide-react";
 
 // Define Zod validation schema for the Interest Form
 const interestSchema = z.object({
@@ -11,30 +11,12 @@ const interestSchema = z.object({
   phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   age: z.coerce.number().min(5, "Please enter a valid age").max(100, "Please enter a valid age"),
-  joiningAs: z.enum(["Solo", "Duo"]),
-  partnerName: z.string().optional(),
-  partnerAge: z.union([z.coerce.number(), z.literal("")]).optional(),
+  address: z.string().min(3, "Address must be at least 3 characters"),
+  joiningAs: z.enum(["Solo", "Duo", "Trio", "Group"]),
   hearAboutUs: z.string().min(1, "Please let us know how you heard about us"),
   terms: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms to receive notifications",
   }),
-}).refine((data) => {
-  if (data.joiningAs === "Duo") {
-    return !!data.partnerName && data.partnerName.trim().length >= 2;
-  }
-  return true;
-}, {
-  message: "Partner's Name must be at least 2 characters",
-  path: ["partnerName"],
-}).refine((data) => {
-  if (data.joiningAs === "Duo") {
-    const age = Number(data.partnerAge);
-    return !isNaN(age) && age >= 5 && age <= 100;
-  }
-  return true;
-}, {
-  message: "Partner's Age must be between 5 and 100",
-  path: ["partnerAge"],
 });
 
 // Replace this URL with your deployed Google Apps Script Web App URL
@@ -48,7 +30,15 @@ interface RegistrationFormProps {
 
 export default function RegistrationForm({ onBackToHome }: RegistrationFormProps) {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submittedData, setSubmittedData] = useState<(InterestFormData & { registrationId?: string }) | null>(null);
+
+  const [submittedData, setSubmittedData] = useState<(InterestFormData & { 
+    registrationId?: string; 
+    partnerName?: string; 
+    partnerAge?: string;
+    partnerEmail?: string;
+    partnerPhone?: string;
+    partnerAddress?: string;
+  }) | null>(null);
   const [copied, setCopied] = useState(false);
 
   const handleCopyId = () => {
@@ -64,6 +54,10 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
     }
   };
 
+  // Partners state for Duo/Trio/Group
+  const [partners, setPartners] = useState<{ name: string; age: string; email: string; phone: string; address: string }[]>([]);
+  const [partnerErrors, setPartnerErrors] = useState<{ [key: number]: { name?: string; age?: string; email?: string; phone?: string; address?: string } }>({});
+
   const {
     register,
     handleSubmit,
@@ -77,9 +71,8 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
       email: "",
       phone: "",
       age: undefined as any,
+      address: "",
       joiningAs: "Solo",
-      partnerName: "",
-      partnerAge: "" as any,
       hearAboutUs: "",
       terms: false,
     },
@@ -87,17 +80,130 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
   const joiningAs = watch("joiningAs");
 
+  // Sync partners array based on selection
+  useEffect(() => {
+    if (joiningAs === "Solo") {
+      setPartners([]);
+    } else if (joiningAs === "Duo") {
+      setPartners([{ name: "", age: "", email: "", phone: "", address: "" }]);
+    } else if (joiningAs === "Trio") {
+      setPartners([
+        { name: "", age: "", email: "", phone: "", address: "" },
+        { name: "", age: "", email: "", phone: "", address: "" },
+      ]);
+    } else if (joiningAs === "Group") {
+      setPartners([
+        { name: "", age: "", email: "", phone: "", address: "" },
+        { name: "", age: "", email: "", phone: "", address: "" },
+        { name: "", age: "", email: "", phone: "", address: "" },
+      ]);
+    }
+    setPartnerErrors({});
+  }, [joiningAs]);
+
+  const addPartner = () => {
+    setPartners([...partners, { name: "", age: "", email: "", phone: "", address: "" }]);
+  };
+
+  const removePartner = (index: number) => {
+    setPartners(partners.filter((_, i) => i !== index));
+    const newErrors = { ...partnerErrors };
+    delete newErrors[index];
+    const adjustedErrors: typeof partnerErrors = {};
+    Object.keys(newErrors).forEach((key) => {
+      const idx = Number(key);
+      if (idx > index) {
+        adjustedErrors[idx - 1] = newErrors[idx];
+      } else if (idx < index) {
+        adjustedErrors[idx] = newErrors[idx];
+      }
+    });
+    setPartnerErrors(adjustedErrors);
+  };
+
+  const validatePartners = (): boolean => {
+    if (joiningAs === "Solo") return true;
+
+    const newErrors: typeof partnerErrors = {};
+    let isValid = true;
+
+    partners.forEach((partner, index) => {
+      const errorsForPartner: { name?: string; age?: string; email?: string; phone?: string; address?: string } = {};
+
+      if (!partner.name.trim()) {
+        errorsForPartner.name = "Full Name is required";
+        isValid = false;
+      } else if (partner.name.trim().length < 2) {
+        errorsForPartner.name = "Full Name must be at least 2 characters";
+        isValid = false;
+      }
+
+      const ageNum = Number(partner.age);
+      if (!partner.age) {
+        errorsForPartner.age = "Age is required";
+        isValid = false;
+      } else if (isNaN(ageNum) || ageNum < 5 || ageNum > 100) {
+        errorsForPartner.age = "Age must be between 5 and 100";
+        isValid = false;
+      }
+
+      if (!partner.email.trim()) {
+        errorsForPartner.email = "Email is required";
+        isValid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partner.email.trim())) {
+        errorsForPartner.email = "Please enter a valid email address";
+        isValid = false;
+      }
+
+      if (!partner.phone.trim()) {
+        errorsForPartner.phone = "Phone is required";
+        isValid = false;
+      } else if (!/^[0-9]{10}$/.test(partner.phone.trim())) {
+        errorsForPartner.phone = "Phone must be exactly 10 digits";
+        isValid = false;
+      }
+
+      if (!partner.address.trim()) {
+        errorsForPartner.address = "Address is required";
+        isValid = false;
+      } else if (partner.address.trim().length < 3) {
+        errorsForPartner.address = "Address must be at least 3 characters";
+        isValid = false;
+      }
+
+      if (Object.keys(errorsForPartner).length > 0) {
+        newErrors[index] = errorsForPartner;
+      }
+    });
+
+    setPartnerErrors(newErrors);
+    return isValid;
+  };
+
   const onSubmit = async (data: InterestFormData) => {
+    if (!validatePartners()) {
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Please correct the errors in member details.", type: "error" },
+        })
+      );
+      return;
+    }
+
     try {
-      // Generate a unique 6-character ID prefixed with TAY- (e.g. TAY-K2H8P1)
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       let registrationId = "TAY-";
       for (let i = 0; i < 6; i++) {
         registrationId += chars.charAt(Math.floor(Math.random() * chars.length));
       }
 
+      const partnerNames = partners.map((p) => p.name.trim()).join(", ");
+      const partnerAges = partners.map((p) => p.age.trim()).join(", ");
+      const partnerEmails = partners.map((p) => p.email.trim()).join(", ");
+      const partnerPhones = partners.map((p) => p.phone.trim()).join(", ");
+      const partnerAddresses = partners.map((p) => p.address.trim()).join(", ");
+
       if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("https://script.google.com")) {
-        // Send data using URLSearchParams to avoid CORS preflight check errors with no-cors mode
         const params = new URLSearchParams();
         params.append("formType", "registration");
         params.append("registrationId", registrationId);
@@ -105,14 +211,13 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         params.append("email", data.email);
         params.append("phone", data.phone);
         params.append("age", String(data.age));
+        params.append("address", data.address);
         params.append("joiningAs", data.joiningAs);
-        if (data.joiningAs === "Duo") {
-          params.append("partnerName", data.partnerName || "");
-          params.append("partnerAge", String(data.partnerAge || ""));
-        } else {
-          params.append("partnerName", "");
-          params.append("partnerAge", "");
-        }
+        params.append("partnerName", partnerNames);
+        params.append("partnerAge", partnerAges);
+        params.append("partnerEmail", partnerEmails);
+        params.append("partnerPhone", partnerPhones);
+        params.append("partnerAddress", partnerAddresses);
         params.append("hearAboutUs", data.hearAboutUs);
 
         await fetch(GOOGLE_SCRIPT_URL, {
@@ -124,15 +229,21 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
           body: params.toString(),
         });
       } else {
-        // Simulate API delay for demo/testing when URL is not configured
         console.warn("Google Script URL is not configured. Simulating API request locally.");
         await new Promise((resolve) => setTimeout(resolve, 1500));
       }
 
-      setSubmittedData({ ...data, registrationId });
+      setSubmittedData({
+        ...data,
+        registrationId,
+        partnerName: partnerNames,
+        partnerAge: partnerAges,
+        partnerEmail: partnerEmails,
+        partnerPhone: partnerPhones,
+        partnerAddress: partnerAddresses,
+      });
       setIsSuccess(true);
 
-      // Dispatch toast notification
       window.dispatchEvent(
         new CustomEvent("show-toast", {
           detail: { message: "Interest registered successfully!", type: "success" },
@@ -150,6 +261,8 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
   const handleReset = () => {
     reset();
+    setPartners([]);
+    setPartnerErrors({});
     setIsSuccess(false);
     setSubmittedData(null);
   };
@@ -312,8 +425,10 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                           {...register("joiningAs")}
                           className="w-full pl-11 pr-10 py-3 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] appearance-none cursor-pointer shadow-sm"
                         >
-                          <option value="Solo">Solo</option>
-                          <option value="Duo">Duo (With a Friend/Partner)</option>
+                          <option value="Solo">Solo (1 Person)</option>
+                          <option value="Duo">Duo (2 People)</option>
+                          <option value="Trio">Trio (3 People)</option>
+                          <option value="Group">Group / Friends (4+ People)</option>
                         </select>
                         <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60 pointer-events-none" />
                       </div>
@@ -323,9 +438,9 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     </div>
                   </div>
 
-                  {/* Dynamic Partner Details Section (rendered for Duo) */}
+                  {/* Dynamic Partner Details Section */}
                   <AnimatePresence>
-                    {joiningAs === "Duo" && (
+                    {joiningAs !== "Solo" && partners.length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -333,45 +448,104 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                         transition={{ duration: 0.25 }}
                         className="overflow-hidden flex flex-col gap-4 border-t border-[#8C6A5C]/15 pt-5 mt-2"
                       >
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-terracotta flex items-center gap-1.5">
-                          <Users className="w-4 h-4" /> Partner Details (Second Person)
-                        </h4>
-                        <div className="grid md:grid-cols-2 gap-5">
-                          {/* Partner Name */}
-                          <div className="flex flex-col gap-1.5">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Partner's Full Name</label>
-                            <div className="relative">
-                              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
-                              <input
-                                {...register("partnerName")}
-                                placeholder="Partner's full name"
-                                type="text"
-                                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] shadow-sm"
-                                aria-invalid={errors.partnerName ? "true" : "false"}
-                              />
-                            </div>
-                            {errors.partnerName && (
-                              <span className="text-rose-600 text-xs mt-1 block">{errors.partnerName.message}</span>
-                            )}
-                          </div>
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-terracotta flex items-center gap-1.5">
+                            <Users className="w-4 h-4" /> 
+                            {joiningAs === "Duo" 
+                              ? "Partner Details (Second Person)" 
+                              : joiningAs === "Trio" 
+                              ? "Member Details" 
+                              : "Group Members Details"}
+                          </h4>
+                          {joiningAs === "Group" && (
+                            <button
+                              type="button"
+                              onClick={addPartner}
+                              className="px-3.5 py-1 rounded-full border border-terracotta/30 hover:border-terracotta bg-white text-terracotta text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer focus:outline-none"
+                            >
+                              + Add Member
+                            </button>
+                          )}
+                        </div>
 
-                          {/* Partner Age */}
-                          <div className="flex flex-col gap-1.5">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Partner's Age</label>
-                            <div className="relative">
-                              <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
-                              <input
-                                {...register("partnerAge")}
-                                placeholder="Partner's age"
-                                type="number"
-                                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] shadow-sm"
-                                aria-invalid={errors.partnerAge ? "true" : "false"}
-                              />
+                        <div className="flex flex-col gap-4 max-h-[360px] overflow-y-auto pr-1">
+                          {partners.map((partner, index) => (
+                            <div key={index} className="p-4 rounded-2xl bg-[#FAF6F0]/50 border border-[#8C6A5C]/10 flex flex-col gap-3 relative">
+                              {/* Header for each member */}
+                              <div className="flex justify-between items-center">
+                                <span className="text-[10px] font-extrabold uppercase tracking-wide text-[#8C6A5C]">
+                                  Person #{index + 2}
+                                </span>
+                                {joiningAs === "Group" && partners.length > 3 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => removePartner(index)}
+                                    className="text-[10px] font-bold uppercase text-rose-600 hover:text-rose-800 transition-colors focus:outline-none cursor-pointer"
+                                  >
+                                    Remove
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="grid md:grid-cols-2 gap-4">
+                                {/* Partner Name */}
+                                <div className="flex flex-col gap-1.5 text-left">
+                                  <label className="text-[9px] font-bold uppercase tracking-wider text-[#8C6A5C]">Full Name</label>
+                                  <div className="relative">
+                                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                                    <input
+                                      value={partner.name}
+                                      onChange={(e) => {
+                                        const newPartners = [...partners];
+                                        newPartners[index].name = e.target.value;
+                                        setPartners(newPartners);
+                                        // Clear error on change
+                                        if (partnerErrors[index]?.name) {
+                                          const newErrors = { ...partnerErrors };
+                                          delete newErrors[index].name;
+                                          setPartnerErrors(newErrors);
+                                        }
+                                      }}
+                                      placeholder="Full name"
+                                      type="text"
+                                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[42px] shadow-sm"
+                                    />
+                                  </div>
+                                  {partnerErrors[index]?.name && (
+                                    <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].name}</span>
+                                  )}
+                                </div>
+
+                                {/* Partner Age */}
+                                <div className="flex flex-col gap-1.5 text-left">
+                                  <label className="text-[9px] font-bold uppercase tracking-wider text-[#8C6A5C]">Age</label>
+                                  <div className="relative">
+                                    <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                                    <input
+                                      value={partner.age}
+                                      onChange={(e) => {
+                                        const newPartners = [...partners];
+                                        newPartners[index].age = e.target.value;
+                                        setPartners(newPartners);
+                                        // Clear error on change
+                                        if (partnerErrors[index]?.age) {
+                                          const newErrors = { ...partnerErrors };
+                                          delete newErrors[index].age;
+                                          setPartnerErrors(newErrors);
+                                        }
+                                      }}
+                                      placeholder="Age"
+                                      type="number"
+                                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[42px] shadow-sm"
+                                    />
+                                  </div>
+                                  {partnerErrors[index]?.age && (
+                                    <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].age}</span>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            {errors.partnerAge && (
-                              <span className="text-rose-600 text-xs mt-1 block">{errors.partnerAge.message}</span>
-                            )}
-                          </div>
+                          ))}
                         </div>
                       </motion.div>
                     )}
@@ -528,10 +702,23 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                         <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Format Option</span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.joiningAs}</strong>
                       </div>
-                      {submittedData?.joiningAs === "Duo" && (
+                      {submittedData?.joiningAs !== "Solo" && submittedData?.partnerName && (
                         <div className="col-span-2">
-                          <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Partner</span>
-                          <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.partnerName} ({submittedData?.partnerAge} Yrs)</strong>
+                          <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                            {submittedData.joiningAs === "Duo" ? "Partner" : "Group Members"}
+                          </span>
+                          <div className="text-[#2D1E1A] font-bold text-xs flex flex-col gap-1 mt-1 bg-[#FAF6F0]/40 p-2.5 rounded-xl border border-[#8C6A5C]/10 max-h-[100px] overflow-y-auto">
+                            {(() => {
+                              const names = submittedData.partnerName.split(", ");
+                              const ages = (submittedData.partnerAge || "").split(", ");
+                              return names.map((pName, i) => (
+                                <div key={i} className="flex justify-between items-center text-[11px]">
+                                  <span>👤 {pName}</span>
+                                  <span className="text-[#8C6A5C] text-[10px] font-normal">{ages[i] ? `${ages[i]} Yrs` : ""}</span>
+                                </div>
+                              ));
+                            })()}
+                          </div>
                         </div>
                       )}
                       <div>
