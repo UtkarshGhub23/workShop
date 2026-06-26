@@ -3,7 +3,24 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, Check, ChevronDown, Copy, CheckCheck, MapPin } from "lucide-react";
+import { 
+  ShieldCheck, 
+  Loader2, 
+  Sparkles, 
+  User, 
+  Mail, 
+  Phone, 
+  Calendar, 
+  Users, 
+  HelpCircle, 
+  Check, 
+  ChevronDown, 
+  Copy, 
+  CheckCheck, 
+  MapPin, 
+  UploadCloud, 
+  ArrowLeft 
+} from "lucide-react";
 
 // Define Zod validation schema for the Interest Form
 const interestSchema = z.object({
@@ -29,6 +46,13 @@ interface RegistrationFormProps {
 }
 
 export default function RegistrationForm({ onBackToHome }: RegistrationFormProps) {
+  const [step, setStep] = useState<1 | 2>(1);
+  const [tempFormData, setTempFormData] = useState<InterestFormData | null>(null);
+  const [paymentScreenshot, setPaymentScreenshot] = useState<string | null>(null);
+  const [paymentScreenshotName, setPaymentScreenshotName] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [isSubmittingFinal, setIsSubmittingFinal] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [submittedData, setSubmittedData] = useState<(InterestFormData & { 
@@ -180,7 +204,20 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
     return isValid;
   };
 
-  const onSubmit = async (data: InterestFormData) => {
+  const getTicketCount = () => {
+    if (joiningAs === "Solo") return 1;
+    return 1 + partners.length;
+  };
+
+  const calculateTotalPrice = () => {
+    const count = getTicketCount();
+    if (joiningAs === "Solo") {
+      return 699;
+    }
+    return count * 599;
+  };
+
+  const onSubmit = (data: InterestFormData) => {
     if (!validatePartners()) {
       window.dispatchEvent(
         new CustomEvent("show-toast", {
@@ -189,7 +226,52 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
       );
       return;
     }
+    setTempFormData(data);
+    setStep(2);
+    
+    // Scroll the register section into view
+    const formElement = document.getElementById("register");
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
+  const handleFileChange = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Only image files (PNG, JPG, JPEG) are allowed.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("Image size must be less than 5MB.");
+      return;
+    }
+    setUploadError(null);
+    setPaymentScreenshotName(file.name);
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setPaymentScreenshot(e.target.result as string);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFinalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tempFormData) return;
+
+    if (!paymentScreenshot) {
+      setUploadError("Payment screenshot is required to complete registration.");
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { message: "Please upload your payment screenshot.", type: "error" },
+        })
+      );
+      return;
+    }
+
+    setIsSubmittingFinal(true);
     try {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       let registrationId = "TAY-";
@@ -207,18 +289,19 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         const params = new URLSearchParams();
         params.append("formType", "registration");
         params.append("registrationId", registrationId);
-        params.append("name", data.name);
-        params.append("email", data.email);
-        params.append("phone", data.phone);
-        params.append("age", String(data.age));
-        params.append("address", data.address);
-        params.append("joiningAs", data.joiningAs);
+        params.append("name", tempFormData.name);
+        params.append("email", tempFormData.email);
+        params.append("phone", tempFormData.phone);
+        params.append("age", String(tempFormData.age));
+        params.append("address", tempFormData.address);
+        params.append("joiningAs", tempFormData.joiningAs);
         params.append("partnerName", partnerNames);
         params.append("partnerAge", partnerAges);
         params.append("partnerEmail", partnerEmails);
         params.append("partnerPhone", partnerPhones);
         params.append("partnerAddress", partnerAddresses);
-        params.append("hearAboutUs", data.hearAboutUs);
+        params.append("hearAboutUs", tempFormData.hearAboutUs);
+        params.append("paymentScreenshot", paymentScreenshot);
 
         await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
@@ -230,11 +313,11 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         });
       } else {
         console.warn("Google Script URL is not configured. Simulating API request locally.");
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
 
       setSubmittedData({
-        ...data,
+        ...tempFormData,
         registrationId,
         partnerName: partnerNames,
         partnerAge: partnerAges,
@@ -246,16 +329,18 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
       window.dispatchEvent(
         new CustomEvent("show-toast", {
-          detail: { message: "Interest registered successfully!", type: "success" },
+          detail: { message: "Registration completed successfully!", type: "success" },
         })
       );
     } catch (error) {
       console.error("Error submitting form:", error);
       window.dispatchEvent(
         new CustomEvent("show-toast", {
-          detail: { message: "Failed to submit interest. Please try again.", type: "error" },
+          detail: { message: "Failed to complete registration. Please try again.", type: "error" },
         })
       );
+    } finally {
+      setIsSubmittingFinal(false);
     }
   };
 
@@ -265,6 +350,11 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
     setPartnerErrors({});
     setIsSuccess(false);
     setSubmittedData(null);
+    setStep(1);
+    setTempFormData(null);
+    setPaymentScreenshot(null);
+    setPaymentScreenshotName(null);
+    setUploadError(null);
   };
 
   const getGreeting = () => {
@@ -302,13 +392,203 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
           {/* Accent Line */}
           <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-terracotta via-[#DCA037] to-terracotta rounded-t-[36px]" />
 
+          {/* Step Progress Indicator */}
+          {!isSuccess && (
+            <div className="flex items-center justify-center gap-4 mb-8 pb-6 border-b border-[#8C6A5C]/10">
+              <div className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                  step === 1 
+                    ? "bg-terracotta text-white ring-4 ring-terracotta/25" 
+                    : "bg-emerald-600 text-white"
+                }`}>
+                  {step > 1 ? <Check className="w-4 h-4" /> : "1"}
+                </div>
+                <span className={`text-[10px] font-extrabold uppercase tracking-wider transition-colors duration-300 ${
+                  step === 1 ? "text-[#2D1E1A]" : "text-[#8C6A5C]/60"
+                }`}>
+                  Details
+                </span>
+              </div>
+              
+              <div className="w-8 h-px bg-[#8C6A5C]/20" />
+              
+              <div className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                  step === 2 
+                    ? "bg-terracotta text-white ring-4 ring-terracotta/25" 
+                    : "bg-[#FAF6F0] text-[#8C6A5C]/40 border border-[#8C6A5C]/25"
+                }`}>
+                  2
+                </div>
+                <span className={`text-[10px] font-extrabold uppercase tracking-wider transition-colors duration-300 ${
+                  step === 2 ? "text-[#2D1E1A]" : "text-[#8C6A5C]/40"
+                }`}>
+                  Payment
+                </span>
+              </div>
+            </div>
+          )}
+
           <AnimatePresence mode="wait">
-            {!isSuccess ? (
+            {isSuccess ? (
               <motion.div
-                key="form"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
+                key="success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="text-center py-6 flex flex-col items-center gap-5"
+              >
+                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-lg shadow-terracotta/15 animate-bounce">
+                  <ShieldCheck className="w-10 h-10 text-white" />
+                </div>
+                
+                <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-2">
+                  Registration Submitted!
+                </h3>
+                <p className="text-[#8C6A5C] text-xs sm:text-sm max-w-md leading-relaxed mb-2">
+                  Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your registration and payment details have been successfully received. We will verify your transaction screenshot and send a confirmation email shortly.
+                </p>
+
+                {/* VIP Pass Ticket Card */}
+                <div className="w-full max-w-sm bg-[#FFFDFB] border border-[#8C6A5C]/15 rounded-3xl shadow-lg relative overflow-visible mt-2">
+                  
+                  {/* Top Ticket Stub */}
+                  <div className="p-5 text-left bg-gradient-to-br from-[#FAF6F0] to-[#FAF6F0]/50 rounded-t-3xl border-b border-[#8C6A5C]/10 relative">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[9px] uppercase tracking-widest text-[#8C6A5C] font-extrabold">Workshop Ticket Waitlist</span>
+                        <h4 className="font-display font-black text-base text-[#2D1E1A] tracking-wider uppercase mt-1">TRAYYAAI × AYRA</h4>
+                      </div>
+                      <span className="text-[9px] font-extrabold uppercase bg-emerald-600/10 text-emerald-700 px-2.5 py-1 rounded-full tracking-wider">
+                        Reserved
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Perforated Divider (Notches outside border) */}
+                  <div className="relative my-1 -mx-[1px] h-0 select-none pointer-events-none">
+                    {/* Left notch */}
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-[#fcfbfd] border-r border-[#8C6A5C]/15 rounded-full z-10"></div>
+                    {/* Right notch */}
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-[#fcfbfd] border-l border-[#8C6A5C]/15 rounded-full z-10"></div>
+                    {/* Dashed line */}
+                    <div className="w-full border-t-2 border-dashed border-[#8C6A5C]/20"></div>
+                  </div>
+
+                  {/* Main Ticket Body */}
+                  <div className="p-5 text-left flex flex-col gap-4">
+                    {/* ID Row with Copy button */}
+                    <div className="flex flex-col gap-1 p-3 rounded-2xl bg-[#FAF6F0] border border-[#8C6A5C]/10">
+                      <span className="text-[8px] uppercase tracking-widest text-[#8C6A5C] font-extrabold">Your Registration ID</span>
+                      <div className="flex justify-between items-center">
+                        <span className="font-mono font-extrabold text-base sm:text-lg text-terracotta tracking-wider">
+                          {submittedData?.registrationId}
+                        </span>
+                        <button
+                          onClick={handleCopyId}
+                          className="p-1.5 rounded-lg hover:bg-white border border-transparent hover:border-[#8C6A5C]/15 text-[#8C6A5C] hover:text-terracotta transition-all cursor-pointer focus:outline-none flex items-center gap-1 text-[10px] font-bold"
+                          title="Copy ID"
+                        >
+                          {copied ? (
+                            <>
+                              <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-[9px] text-emerald-600 uppercase">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span className="text-[9px] uppercase">Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Detail Grid */}
+                    <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-xs border-b border-[#8C6A5C]/10 pb-3">
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Attendee</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.name}</strong>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Format Option</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.joiningAs}</strong>
+                      </div>
+                      {submittedData?.joiningAs !== "Solo" && submittedData?.partnerName && (
+                        <div className="col-span-2">
+                          <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                            {submittedData.joiningAs === "Duo" ? "Partner Details" : "Group Member Details"}
+                          </span>
+                          <div className="text-[#2D1E1A] font-bold text-xs flex flex-col gap-2 mt-1 bg-[#FAF6F0]/40 p-2.5 rounded-xl border border-[#8C6A5C]/10 max-h-[150px] overflow-y-auto">
+                            {(() => {
+                              const names = submittedData.partnerName.split(", ");
+                              const ages = (submittedData.partnerAge || "").split(", ");
+                              const emails = (submittedData.partnerEmail || "").split(", ");
+                              const phones = (submittedData.partnerPhone || "").split(", ");
+                              const addresses = (submittedData.partnerAddress || "").split(", ");
+                              return names.map((pName, i) => (
+                                <div key={i} className="flex flex-col gap-0.5 border-b border-[#8C6A5C]/5 pb-1.5 last:border-0 last:pb-0 text-[10px]">
+                                  <div className="flex justify-between items-center text-[11px] font-bold">
+                                    <span>👤 {pName}</span>
+                                    <span className="text-[#8C6A5C] font-normal">{ages[i] ? `${ages[i]} Yrs` : ""}</span>
+                                  </div>
+                                  {emails[i] && <span className="text-[#8C6A5C]/80 font-normal">✉️ {emails[i]}</span>}
+                                  {phones[i] && <span className="text-[#8C6A5C]/80 font-normal">📞 {phones[i]}</span>}
+                                  {addresses[i] && <span className="text-[#8C6A5C]/80 font-normal">📍 {addresses[i]}</span>}
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Amount Paid</span>
+                        <strong className="text-emerald-700 font-bold text-xs block">₹{calculateTotalPrice()}</strong>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Payment Verification</span>
+                        <strong className="text-amber-600 font-bold text-xs block uppercase tracking-wider text-left">Pending</strong>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Age</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block">{submittedData?.age} Years</strong>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Date</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block">August 2, 2026</strong>
+                      </div>
+                      <div className="col-span-2 border-t border-[#8C6A5C]/10 pt-2">
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Your Address</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate" title={submittedData?.address}>
+                          {submittedData?.address}
+                        </strong>
+                      </div>
+                    </div>
+
+                    {/* Ticket Footer / Venue info */}
+                    <div className="text-[9px] text-[#8C6A5C]/80 leading-relaxed flex flex-col gap-1">
+                      <p>📍 <strong>Venue:</strong> Mathura, Uttar Pradesh (Exact location shared upon booking)</p>
+                      <p>✉️ <strong>Confirmation Sent To:</strong> {submittedData?.email}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleReset}
+                  className="mt-6 px-6 py-3 rounded-xl border border-[#8C6A5C]/20 bg-white text-[#8C6A5C] hover:text-[#2D1E1A] hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+                >
+                  Register Another Interest Form
+                </motion.button>
+              </motion.div>
+            ) : step === 1 ? (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 15 }}
+                transition={{ duration: 0.25 }}
                 className="flex flex-col text-left"
               >
                 {/* Form Header */}
@@ -708,10 +988,10 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Saving Preferences...
+                        Validating details...
                       </>
                     ) : (
-                      "Notify Me When Registrations Open"
+                      `Proceed to Payment (₹${calculateTotalPrice()})`
                     )}
                   </motion.button>
 
@@ -725,147 +1005,205 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
               </motion.div>
             ) : (
               <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="text-center py-6 flex flex-col items-center gap-5"
+                key="step2"
+                initial={{ opacity: 0, x: 15 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -15 }}
+                transition={{ duration: 0.25 }}
+                className="flex flex-col text-left"
               >
-                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-lg shadow-terracotta/15 animate-bounce">
-                  <ShieldCheck className="w-10 h-10 text-white" />
+                {/* Payment Header */}
+                <div className="mb-8 text-left">
+                  <h2 className="font-display font-black text-3xl sm:text-4xl text-[#2D1E1A] tracking-tight leading-tight">
+                    Secure Your Tickets
+                  </h2>
+                  <p className="text-[#8C6A5C] text-xs sm:text-sm mt-3 leading-relaxed">
+                    Scan the QR code below using any UPI-enabled app (Google Pay, PhonePe, Paytm, BHIM) to make the payment and upload your receipt screenshot.
+                  </p>
                 </div>
-                
-                <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-2">
-                  Interest Registered!
-                </h3>
-                <p className="text-[#8C6A5C] text-xs sm:text-sm max-w-md leading-relaxed mb-2">
-                  Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your preference details have been saved securely. We will contact you the moment ticket bookings launch!
-                </p>
 
-                {/* VIP Pass Ticket Card */}
-                <div className="w-full max-w-sm bg-[#FFFDFB] border border-[#8C6A5C]/15 rounded-3xl shadow-lg relative overflow-visible mt-2">
+                {/* Summary Box */}
+                <div className="mb-6 p-5 rounded-2xl bg-[#FAF6F0]/80 border border-[#8C6A5C]/15 flex flex-col gap-3">
+                  <div className="flex justify-between items-center text-xs text-[#8C6A5C] border-b border-[#8C6A5C]/10 pb-2.5">
+                    <span className="font-bold uppercase tracking-wider">Registration Summary</span>
+                    <span className="font-bold text-terracotta bg-terracotta/5 px-2.5 py-0.5 rounded-full uppercase text-[9px] tracking-widest">
+                      {tempFormData?.joiningAs} Option
+                    </span>
+                  </div>
                   
-                  {/* Top Ticket Stub */}
-                  <div className="p-5 text-left bg-gradient-to-br from-[#FAF6F0] to-[#FAF6F0]/50 rounded-t-3xl border-b border-[#8C6A5C]/10 relative">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-[9px] uppercase tracking-widest text-[#8C6A5C] font-extrabold">Workshop Ticket Waitlist</span>
-                        <h4 className="font-display font-black text-base text-[#2D1E1A] tracking-wider uppercase mt-1">TRAYYAAI × AYRA</h4>
-                      </div>
-                      <span className="text-[9px] font-extrabold uppercase bg-olive/15 text-olive px-2.5 py-1 rounded-full tracking-wider">
-                        Priority Pass
-                      </span>
-                    </div>
-                  </div>
+                  <div className="grid grid-cols-2 gap-y-2 text-xs">
+                    <div className="text-[#8C6A5C]">Attendee:</div>
+                    <div className="text-[#2D1E1A] font-bold text-right truncate">{tempFormData?.name}</div>
+                    
+                    <div className="text-[#8C6A5C]">Number of Persons:</div>
+                    <div className="text-[#2D1E1A] font-bold text-right">{getTicketCount()}</div>
 
-                  {/* Perforated Divider (Notches outside border) */}
-                  <div className="relative my-1 -mx-[1px] h-0 select-none pointer-events-none">
-                    {/* Left notch */}
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-[#fcfbfd] border-r border-[#8C6A5C]/15 rounded-full z-10"></div>
-                    {/* Right notch */}
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-[#fcfbfd] border-l border-[#8C6A5C]/15 rounded-full z-10"></div>
-                    {/* Dashed line */}
-                    <div className="w-full border-t-2 border-dashed border-[#8C6A5C]/20"></div>
-                  </div>
-
-                  {/* Main Ticket Body */}
-                  <div className="p-5 text-left flex flex-col gap-4">
-                    {/* ID Row with Copy button */}
-                    <div className="flex flex-col gap-1 p-3 rounded-2xl bg-[#FAF6F0] border border-[#8C6A5C]/10">
-                      <span className="text-[8px] uppercase tracking-widest text-[#8C6A5C] font-extrabold">Your Registration ID</span>
-                      <div className="flex justify-between items-center">
-                        <span className="font-mono font-extrabold text-base sm:text-lg text-terracotta tracking-wider">
-                          {submittedData?.registrationId}
-                        </span>
-                        <button
-                          onClick={handleCopyId}
-                          className="p-1.5 rounded-lg hover:bg-white border border-transparent hover:border-[#8C6A5C]/15 text-[#8C6A5C] hover:text-terracotta transition-all cursor-pointer focus:outline-none flex items-center gap-1 text-[10px] font-bold"
-                          title="Copy ID"
-                        >
-                          {copied ? (
-                            <>
-                              <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
-                              <span className="text-[9px] text-emerald-600 uppercase">Copied!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span className="text-[9px] uppercase">Copy</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Detail Grid */}
-                    <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-xs border-b border-[#8C6A5C]/10 pb-3">
-                      <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Attendee</span>
-                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.name}</strong>
-                      </div>
-                      <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Format Option</span>
-                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.joiningAs}</strong>
-                      </div>
-                      {submittedData?.joiningAs !== "Solo" && submittedData?.partnerName && (
-                        <div className="col-span-2">
-                          <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
-                            {submittedData.joiningAs === "Duo" ? "Partner Details" : "Group Member Details"}
-                          </span>
-                          <div className="text-[#2D1E1A] font-bold text-xs flex flex-col gap-2 mt-1 bg-[#FAF6F0]/40 p-2.5 rounded-xl border border-[#8C6A5C]/10 max-h-[150px] overflow-y-auto">
-                            {(() => {
-                              const names = submittedData.partnerName.split(", ");
-                              const ages = (submittedData.partnerAge || "").split(", ");
-                              const emails = (submittedData.partnerEmail || "").split(", ");
-                              const phones = (submittedData.partnerPhone || "").split(", ");
-                              const addresses = (submittedData.partnerAddress || "").split(", ");
-                              return names.map((pName, i) => (
-                                <div key={i} className="flex flex-col gap-0.5 border-b border-[#8C6A5C]/5 pb-1.5 last:border-0 last:pb-0 text-[10px]">
-                                  <div className="flex justify-between items-center text-[11px] font-bold">
-                                    <span>👤 {pName}</span>
-                                    <span className="text-[#8C6A5C] font-normal">{ages[i] ? `${ages[i]} Yrs` : ""}</span>
-                                  </div>
-                                  {emails[i] && <span className="text-[#8C6A5C]/80 font-normal">✉️ {emails[i]}</span>}
-                                  {phones[i] && <span className="text-[#8C6A5C]/80 font-normal">📞 {phones[i]}</span>}
-                                  {addresses[i] && <span className="text-[#8C6A5C]/80 font-normal">📍 {addresses[i]}</span>}
-                                </div>
-                              ));
-                            })()}
-                          </div>
+                    {joiningAs !== "Solo" && (
+                      <>
+                        <div className="text-[#8C6A5C]">Group Members:</div>
+                        <div className="text-[#2D1E1A] font-bold text-right truncate">
+                          {partners.map(p => p.name).join(", ")}
                         </div>
-                      )}
-                      <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Age</span>
-                        <strong className="text-[#2D1E1A] font-bold text-xs block">{submittedData?.age} Years</strong>
-                      </div>
-                      <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Date</span>
-                        <strong className="text-[#2D1E1A] font-bold text-xs block">August 2, 2026</strong>
-                      </div>
-                      <div className="col-span-2 border-t border-[#8C6A5C]/10 pt-2">
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Your Address</span>
-                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate" title={submittedData?.address}>
-                          {submittedData?.address}
-                        </strong>
-                      </div>
-                    </div>
+                      </>
+                    )}
+                  </div>
 
-                    {/* Ticket Footer / Venue info */}
-                    <div className="text-[9px] text-[#8C6A5C]/80 leading-relaxed flex flex-col gap-1">
-                      <p>📍 <strong>Venue:</strong> Mathura, Uttar Pradesh (Exact location shared upon booking)</p>
-                      <p>✉️ <strong>Confirmation Sent To:</strong> {submittedData?.email}</p>
+                  <div className="border-t border-dashed border-[#8C6A5C]/20 pt-2.5 flex justify-between items-center">
+                    <span className="text-xs font-extrabold uppercase text-[#2D1E1A]">Total Payable</span>
+                    <span className="text-xl font-black text-terracotta">₹{calculateTotalPrice()}</span>
+                  </div>
+                </div>
+
+                {/* QR Code Container */}
+                <div className="flex flex-col items-center justify-center p-6 rounded-3xl border border-[#8C6A5C]/15 bg-white shadow-sm mb-6 gap-4">
+                  <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none pointer-events-none">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                        `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
+                      )}`}
+                      alt="UPI QR Code"
+                      className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] object-contain"
+                    />
+                  </div>
+
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8C6A5C]">UPI ID for Manual Transfer</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
+                      <span>trayyaai@okaxis</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText("trayyaai@okaxis");
+                          setCopiedUpi(true);
+                          setTimeout(() => setCopiedUpi(false), 2000);
+                          window.dispatchEvent(
+                            new CustomEvent("show-toast", {
+                              detail: { message: "UPI ID copied!", type: "success" },
+                            })
+                          );
+                        }}
+                        className="p-1 hover:bg-white rounded transition-colors text-terracotta hover:text-[#2D1E1A] focus:outline-none cursor-pointer border-0 bg-transparent"
+                        title="Copy UPI ID"
+                      >
+                        {copiedUpi ? <CheckCheck className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="mt-6 px-6 py-3 rounded-xl border border-[#8C6A5C]/20 bg-white text-[#8C6A5C] hover:text-[#2D1E1A] hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
-                >
-                  Register Another Interest Form
-                </motion.button>
+                {/* File Uploader Container */}
+                <div className="flex flex-col gap-2 mb-6">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C] text-left">
+                    Upload Payment Screenshot <span className="text-rose-600">*</span>
+                  </label>
+                  
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                        handleFileChange(e.dataTransfer.files[0]);
+                      }
+                    }}
+                    className={`relative border-2 border-dashed rounded-2xl p-6 transition-all flex flex-col items-center justify-center gap-3 bg-[#FAF6F0]/20 hover:bg-[#FAF6F0]/40 cursor-pointer ${
+                      uploadError 
+                        ? "border-rose-500 bg-rose-50/10" 
+                        : paymentScreenshot 
+                        ? "border-emerald-500 bg-emerald-50/5" 
+                        : "border-[#8C6A5C]/25 hover:border-terracotta/50"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="screenshot-input"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handleFileChange(e.target.files[0]);
+                        }
+                      }}
+                    />
+
+                    {paymentScreenshot ? (
+                      <div className="flex flex-col items-center gap-2.5">
+                        <div className="relative w-16 h-16 rounded-xl border border-emerald-500/30 overflow-hidden shadow-sm bg-white">
+                          <img
+                            src={paymentScreenshot}
+                            alt="Screenshot Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="text-center z-10">
+                          <span className="block text-xs font-bold text-[#2D1E1A] max-w-[200px] truncate">
+                            {paymentScreenshotName}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setPaymentScreenshot(null);
+                              setPaymentScreenshotName(null);
+                            }}
+                            className="text-[10px] text-rose-600 hover:text-rose-800 font-bold uppercase tracking-wide mt-1.5 focus:outline-none cursor-pointer inline-flex items-center gap-1 border-0 bg-transparent"
+                          >
+                            Remove Image
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <UploadCloud className="w-8 h-8 text-[#8C6A5C]/50" />
+                        <div className="text-center">
+                          <span className="block text-xs font-bold text-[#2D1E1A]">
+                            Drag & drop screenshot here, or <span className="text-terracotta">browse</span>
+                          </span>
+                          <span className="block text-[10px] text-[#8C6A5C]/60 mt-1">
+                            Supports JPG, JPEG, PNG (Max 5MB)
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {uploadError && (
+                    <span className="text-rose-600 text-xs text-left font-semibold mt-1 block">
+                      ⚠️ {uploadError}
+                    </span>
+                  )}
+                </div>
+
+                {/* Back and Confirm Buttons */}
+                <div className="flex gap-4 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStep(1);
+                      setUploadError(null);
+                    }}
+                    className="flex-1 py-4 rounded-xl border border-[#8C6A5C]/20 hover:border-terracotta/40 bg-white hover:bg-slate-50 text-[#8C6A5C] hover:text-terracotta text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 focus:outline-none"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={handleFinalSubmit}
+                    disabled={isSubmittingFinal || !paymentScreenshot}
+                    className="flex-[2] py-4 rounded-xl bg-gradient-to-r from-terracotta via-[#DCA037] to-terracotta bg-[length:200%_auto] hover:bg-[right_center] text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-terracotta/15 hover:shadow-terracotta/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-500 cursor-pointer flex items-center justify-center gap-2 border-0 focus:outline-none"
+                  >
+                    {isSubmittingFinal ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Registering...
+                      </>
+                    ) : (
+                      "Register & Submit"
+                    )}
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
