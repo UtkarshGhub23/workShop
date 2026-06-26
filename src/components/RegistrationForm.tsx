@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, CheckSquare } from "lucide-react";
+import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, HelpCircle, Check } from "lucide-react";
 
 // Define Zod validation schema for the Interest Form
 const interestSchema = z.object({
@@ -355,15 +355,14 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
                   {/* Terms checkbox */}
                   <label className="flex items-start gap-3 mt-2 cursor-pointer select-none">
-                    <div className="relative mt-0.5 shrink-0">
+                    <div className="relative mt-0.5 shrink-0 w-5 h-5">
                       <input
                         type="checkbox"
                         {...register("terms")}
                         className="peer sr-only"
                       />
-                      <div className="w-5 h-5 rounded-md border border-[#8C6A5C]/25 bg-white flex items-center justify-center peer-checked:bg-terracotta peer-checked:border-terracotta transition-colors shadow-sm">
-                        <CheckSquare className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
-                      </div>
+                      <div className="w-5 h-5 rounded-md border border-[#8C6A5C]/25 bg-white transition-colors shadow-sm peer-checked:bg-terracotta peer-checked:border-terracotta"></div>
+                      <Check className="w-3.5 h-3.5 text-white absolute inset-0 m-auto opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                     </div>
                     <span className="text-xs text-[#8C6A5C] leading-normal text-left">
                       I agree to receive booking opening alerts and updates regarding the Trayyaai × Ayra workshop.
