@@ -8,15 +8,33 @@ import { ShieldCheck, Loader2, Sparkles, User, Mail, Phone, Calendar, Users, Hel
 // Define Zod validation schema for the Interest Form
 const interestSchema = z.object({
   name: z.string().min(2, "Full Name must be at least 2 characters"),
-  phone: z.string().min(8, "Phone number must be at least 8 digits"),
+  phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   age: z.coerce.number().min(5, "Please enter a valid age").max(100, "Please enter a valid age"),
   joiningAs: z.enum(["Solo", "Duo"]),
-  timeSlot: z.string().min(1, "Preferred Time Slot is required"),
+  partnerName: z.string().optional(),
+  partnerAge: z.union([z.coerce.number(), z.literal("")]).optional(),
   hearAboutUs: z.string().min(1, "Please let us know how you heard about us"),
   terms: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms to receive notifications",
   }),
+}).refine((data) => {
+  if (data.joiningAs === "Duo") {
+    return !!data.partnerName && data.partnerName.trim().length >= 2;
+  }
+  return true;
+}, {
+  message: "Partner's Name must be at least 2 characters",
+  path: ["partnerName"],
+}).refine((data) => {
+  if (data.joiningAs === "Duo") {
+    const age = Number(data.partnerAge);
+    return !isNaN(age) && age >= 5 && age <= 100;
+  }
+  return true;
+}, {
+  message: "Partner's Age must be between 5 and 100",
+  path: ["partnerAge"],
 });
 
 // Replace this URL with your deployed Google Apps Script Web App URL
@@ -36,6 +54,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<InterestFormData>({
     resolver: zodResolver(interestSchema) as any,
@@ -45,11 +64,14 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
       phone: "",
       age: undefined as any,
       joiningAs: "Solo",
-      timeSlot: "",
+      partnerName: "",
+      partnerAge: "" as any,
       hearAboutUs: "",
       terms: false,
     },
   });
+
+  const joiningAs = watch("joiningAs");
 
   const onSubmit = async (data: InterestFormData) => {
     try {
@@ -62,7 +84,13 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         params.append("phone", data.phone);
         params.append("age", String(data.age));
         params.append("joiningAs", data.joiningAs);
-        params.append("timeSlot", data.timeSlot);
+        if (data.joiningAs === "Duo") {
+          params.append("partnerName", data.partnerName || "");
+          params.append("partnerAge", String(data.partnerAge || ""));
+        } else {
+          params.append("partnerName", "");
+          params.append("partnerAge", "");
+        }
         params.append("hearAboutUs", data.hearAboutUs);
 
         await fetch(GOOGLE_SCRIPT_URL, {
@@ -193,9 +221,14 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                       <div className="relative">
                         <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
                         <input
-                          {...register("phone")}
-                          placeholder="Phone number"
+                          {...register("phone", {
+                            onChange: (e) => {
+                              e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                            }
+                          })}
+                          placeholder="10-digit mobile number"
                           type="tel"
+                          maxLength={10}
                           className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
                           aria-invalid={errors.phone ? "true" : "false"}
                         />
@@ -245,47 +278,79 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     </div>
                   </div>
 
-                  {/* Preferred Time Slot & Hear About Us */}
-                  <div className="grid md:grid-cols-2 gap-5">
-                    {/* Preferred Time Slot */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Preferred Time Slot</label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
-                        <select
-                          {...register("timeSlot")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
-                        >
-                          <option value="">Select Time Slot</option>
-                          <option value="morning">Morning Session (11:00 AM - 02:00 PM)</option>
-                          <option value="afternoon">Afternoon Session (03:00 PM - 06:00 PM)</option>
-                        </select>
-                      </div>
-                      {errors.timeSlot && (
-                        <span className="text-rose-600 text-xs mt-1 block">{errors.timeSlot.message}</span>
-                      )}
-                    </div>
+                  {/* Dynamic Partner Details Section (rendered for Duo) */}
+                  <AnimatePresence>
+                    {joiningAs === "Duo" && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden flex flex-col gap-4 border-t border-[#8C6A5C]/10 pt-4 mt-2"
+                      >
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-terracotta flex items-center gap-1.5">
+                          <Users className="w-4 h-4" /> Partner Details (Second Person)
+                        </h4>
+                        <div className="grid md:grid-cols-2 gap-5">
+                          {/* Partner Name */}
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Partner's Full Name</label>
+                            <div className="relative">
+                              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                              <input
+                                {...register("partnerName")}
+                                placeholder="Partner's full name"
+                                type="text"
+                                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
+                                aria-invalid={errors.partnerName ? "true" : "false"}
+                              />
+                            </div>
+                            {errors.partnerName && (
+                              <span className="text-rose-600 text-xs mt-1 block">{errors.partnerName.message}</span>
+                            )}
+                          </div>
 
-                    {/* How did you hear about us */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">How did you hear about us?</label>
-                      <div className="relative">
-                        <HelpCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
-                        <select
-                          {...register("hearAboutUs")}
-                          className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
-                        >
-                          <option value="">Choose Options</option>
-                          <option value="Instagram">Instagram</option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Friend/Family">Friends / Family</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                      {errors.hearAboutUs && (
-                        <span className="text-rose-600 text-xs mt-1 block">{errors.hearAboutUs.message}</span>
-                      )}
+                          {/* Partner Age */}
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Partner's Age</label>
+                            <div className="relative">
+                              <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                              <input
+                                {...register("partnerAge")}
+                                placeholder="Partner's age"
+                                type="number"
+                                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] shadow-sm"
+                                aria-invalid={errors.partnerAge ? "true" : "false"}
+                              />
+                            </div>
+                            {errors.partnerAge && (
+                              <span className="text-rose-600 text-xs mt-1 block">{errors.partnerAge.message}</span>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* How did you hear about us */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">How did you hear about us?</label>
+                    <div className="relative">
+                      <HelpCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                      <select
+                        {...register("hearAboutUs")}
+                        className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all h-[46px] appearance-none cursor-pointer shadow-sm"
+                      >
+                        <option value="">Choose Options</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Friend/Family">Friends / Family</option>
+                        <option value="Other">Other</option>
+                      </select>
                     </div>
+                    {errors.hearAboutUs && (
+                      <span className="text-rose-600 text-xs mt-1 block">{errors.hearAboutUs.message}</span>
+                    )}
                   </div>
 
                   {/* Terms checkbox */}
@@ -356,10 +421,18 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     <span>Format Option:</span>
                     <span className="font-bold text-[#2D1E1A]">{submittedData?.joiningAs}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-[#8C6A5C]">
-                    <span>Preferred Slot:</span>
-                    <span className="font-bold text-terracotta uppercase">{submittedData?.timeSlot}</span>
-                  </div>
+                  {submittedData?.joiningAs === "Duo" && (
+                    <>
+                      <div className="flex justify-between text-xs text-[#8C6A5C]">
+                        <span>Partner's Name:</span>
+                        <span className="font-bold text-[#2D1E1A]">{submittedData?.partnerName}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-[#8C6A5C]">
+                        <span>Partner's Age:</span>
+                        <span className="font-bold text-[#2D1E1A]">{submittedData?.partnerAge} Years</span>
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between text-xs text-[#8C6A5C]">
                     <span>Age:</span>
                     <span className="font-bold text-[#2D1E1A]">{submittedData?.age} Years</span>

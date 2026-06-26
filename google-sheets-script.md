@@ -45,7 +45,7 @@ function doPost(e) {
       if (formType === "contact") {
         sheet.appendRow(["Timestamp", "Name", "Email", "Message"]);
       } else {
-        sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Age", "Joining As", "Preferred Time Slot", "How they heard"]);
+        sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Age", "Joining As", "Partner Name", "Partner Age", "How they heard"]);
       }
       
       // Style headers
@@ -68,7 +68,8 @@ function doPost(e) {
       rowData.push(parameter.phone || "");
       rowData.push(parameter.age || "");
       rowData.push(parameter.joiningAs || "");
-      rowData.push(parameter.timeSlot || "");
+      rowData.push(parameter.partnerName || "");
+      rowData.push(parameter.partnerAge || "");
       rowData.push(parameter.hearAboutUs || "");
     }
     
