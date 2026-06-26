@@ -48,7 +48,7 @@ function doPost(e) {
       if (formType === "contact") {
         sheet.appendRow(["Timestamp", "Name", "Email", "Message"]);
       } else {
-        sheet.appendRow(["Timestamp", "Registration ID", "Name", "Email", "Phone", "Age", "Joining As", "Partner Name", "Partner Age", "How they heard"]);
+        sheet.appendRow(["Timestamp", "Registration ID", "Name", "Email", "Phone", "Age", "Address", "Joining As", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address", "How they heard"]);
       }
       
       // Style headers
@@ -61,9 +61,9 @@ function doPost(e) {
     // Get existing headers from Row 1
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     
-    // Ensure Registration ID and Partner columns exist for registrations
+    // Ensure Registration ID, Address and Partner columns exist for registrations
     if (formType === "registration") {
-      var requiredHeaders = ["Registration ID", "Partner Name", "Partner Age"];
+      var requiredHeaders = ["Registration ID", "Address", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address"];
       for (var k = 0; k < requiredHeaders.length; k++) {
         var req = requiredHeaders[k];
         if (headers.indexOf(req) === -1) {
@@ -84,9 +84,13 @@ function doPost(e) {
       "email": "Email",
       "phone": "Phone",
       "age": "Age",
+      "address": "Address",
       "joiningAs": "Joining As",
       "partnerName": "Partner Name",
       "partnerAge": "Partner Age",
+      "partnerEmail": "Partner Email",
+      "partnerPhone": "Partner Phone",
+      "partnerAddress": "Partner Address",
       "hearAboutUs": "How they heard",
       "message": "Message"
     };
@@ -125,6 +129,32 @@ function doPost(e) {
     
     // If it's a registration, trigger email notifications
     if (formType === "registration") {
+      
+      // Helper for Partner details formatting in HTML
+      var partnerDetailsHtml = '';
+      if (parameter.joiningAs && parameter.joiningAs !== "Solo" && parameter.partnerName) {
+        var pNames = (parameter.partnerName || '').split(', ');
+        var pAges = (parameter.partnerAge || '').split(', ');
+        var pEmails = (parameter.partnerEmail || '').split(', ');
+        var pPhones = (parameter.partnerPhone || '').split(', ');
+        var pAddresses = (parameter.partnerAddress || '').split(', ');
+        
+        partnerDetailsHtml += '<tr><td style="padding: 12px 0 6px 0; border-top: 1px solid rgba(140, 106, 92, 0.1);">';
+        partnerDetailsHtml += '<span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Partner / Group Member Details</span>';
+        partnerDetailsHtml += '</td></tr>';
+        
+        for (var idx = 0; idx < pNames.length; idx++) {
+          if (!pNames[idx]) continue;
+          partnerDetailsHtml += '<tr><td style="padding: 10px 14px; background-color: rgba(200, 122, 83, 0.04); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(140, 106, 92, 0.08);">';
+          partnerDetailsHtml += '<strong style="font-size: 13px; color: #2D1E1A;">Member #' + (idx + 2) + ': ' + pNames[idx] + '</strong>';
+          if (pAges[idx]) partnerDetailsHtml += '<span style="font-size: 12px; color: #8C6A5C;"> (' + pAges[idx] + ' Yrs)</span>';
+          partnerDetailsHtml += '<br style="margin-bottom: 4px;">';
+          if (pEmails[idx]) partnerDetailsHtml += '<span style="font-size: 11px; color: #8C6A5C; display: block; margin: 2px 0;">✉️ ' + pEmails[idx] + '</span>';
+          if (pPhones[idx]) partnerDetailsHtml += '<span style="font-size: 11px; color: #8C6A5C; display: block; margin: 2px 0;">📞 ' + pPhones[idx] + '</span>';
+          if (pAddresses[idx]) partnerDetailsHtml += '<span style="font-size: 11px; color: #8C6A5C; display: block; margin: 2px 0;">📍 ' + pAddresses[idx] + '</span>';
+          partnerDetailsHtml += '</td></tr>';
+        }
+      }
       
       // 1. Compile Participant Confirmation HTML Email
       var participantHtml = 
@@ -176,19 +206,19 @@ function doPost(e) {
         '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.joiningAs || 'Solo') + '</strong>' +
         '                  </td>' +
         '                </tr>' +
-        (parameter.joiningAs === "Duo" ? 
         '                <tr>' +
         '                  <td style="padding: 6px 0;">' +
-        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Partner Details</span><br>' +
-        '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.partnerName || '') + ' (' + (parameter.partnerAge || '') + ' Years)</strong>' +
-        '                  </td>' +
-        '                </tr>' : '') +
-        '                <tr>' +
-        '                  <td style="padding: 6px 0;">' +
-        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Participant Age</span><br>' +
-        '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.age || '') + ' Years</strong>' +
+        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Participant Details</span><br>' +
+        '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.name || '') + ' (' + (parameter.age || '') + ' Years)</strong>' +
         '                  </td>' +
         '                </tr>' +
+        '                <tr>' +
+        '                  <td style="padding: 6px 0;">' +
+        '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Address</span><br>' +
+        '                    <strong style="font-size: 13px; color: #2D1E1A;">' + (parameter.address || '') + '</strong>' +
+        '                  </td>' +
+        '                </tr>' +
+        partnerDetailsHtml + 
         '                <tr>' +
         '                  <td style="padding: 6px 0;">' +
         '                    <span style="font-size: 11px; text-transform: uppercase; color: #8C6A5C; font-weight: bold; letter-spacing: 0.5px;">Date</span><br>' +
@@ -223,7 +253,42 @@ function doPost(e) {
         '  </table>' +
         '</body>' +
         '</html>';
-
+      
+      // Helper for Partner details formatting in Admin Email
+      var organizerPartnerRows = '';
+      if (parameter.joiningAs && parameter.joiningAs !== "Solo" && parameter.partnerName) {
+        var pNames = (parameter.partnerName || '').split(', ');
+        var pAges = (parameter.partnerAge || '').split(', ');
+        var pEmails = (parameter.partnerEmail || '').split(', ');
+        var pPhones = (parameter.partnerPhone || '').split(', ');
+        var pAddresses = (parameter.partnerAddress || '').split(', ');
+        
+        for (var idx = 0; idx < pNames.length; idx++) {
+          if (!pNames[idx]) continue;
+          organizerPartnerRows += 
+            '      <tr>' +
+            '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB; background-color: rgba(200, 122, 83, 0.05);">Member #' + (idx + 2) + ' Name</td>' +
+            '        <td style="border-bottom: 1px solid #FFFDFB; background-color: rgba(200, 122, 83, 0.05); font-weight: bold;">' + pNames[idx] + '</td>' +
+            '      </tr>' +
+            '      <tr>' +
+            '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Member #' + (idx + 2) + ' Age</td>' +
+            '        <td style="border-bottom: 1px solid #FFFDFB;">' + (pAges[idx] || '') + ' Years</td>' +
+            '      </tr>' +
+            '      <tr>' +
+            '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Member #' + (idx + 2) + ' Email</td>' +
+            '        <td style="border-bottom: 1px solid #FFFDFB;"><a href="mailto:' + (pEmails[idx] || '') + '" style="color: #C87A53; text-decoration: none;">' + (pEmails[idx] || '') + '</a></td>' +
+            '      </tr>' +
+            '      <tr>' +
+            '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Member #' + (idx + 2) + ' Phone</td>' +
+            '        <td style="border-bottom: 1px solid #FFFDFB;">' + (pPhones[idx] || '') + '</td>' +
+            '      </tr>' +
+            '      <tr>' +
+            '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Member #' + (idx + 2) + ' Address</td>' +
+            '        <td style="border-bottom: 1px solid #FFFDFB;">' + (pAddresses[idx] || '') + '</td>' +
+            '      </tr>';
+        }
+      }
+ 
       // 2. Compile Organizer Notification HTML Email
       var organizerHtml = 
         '<!DOCTYPE html>' +
@@ -231,11 +296,11 @@ function doPost(e) {
         '<head>' +
         '  <meta charset="utf-8">' +
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">' +
-        '  <title>New Registration Notification</title>' +
+        '  <title>New Waitlist Registration</title>' +
         '</head>' +
         '<body style="margin: 0; padding: 20px; background-color: #FAF6F0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; color: #2D1E1A;">' +
         '  <div style="max-width: 600px; background-color: #FFFDFB; border: 1px solid rgba(140, 106, 92, 0.15); border-radius: 16px; padding: 30px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">' +
-        '    <h2 style="color: #C87A53; margin-top: 0; font-size: 20px; font-weight: 800; border-bottom: 2px solid #FAF6F0; padding-bottom: 15px;">New Workshop Registration Received!</h2>' +
+        '    <h2 style="color: #C87A53; margin-top: 0; font-size: 20px; font-weight: 800; border-bottom: 2px solid #FAF6F0; padding-bottom: 15px;">New Workshop Waitlist Registration!</h2>' +
         '    <p style="color: #2D1E1A; font-size: 14px; line-height: 1.5;">' +
         '      A new user has successfully registered their interest in the DIY Experience workshop. Here are the details:' +
         '    </p>' +
@@ -262,18 +327,14 @@ function doPost(e) {
         '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.age || '') + ' Years</td>' +
         '      </tr>' +
         '      <tr>' +
+        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Address</td>' +
+        '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.address || '') + '</td>' +
+        '      </tr>' +
+        '      <tr>' +
         '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Joining As</td>' +
         '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.joiningAs || 'Solo') + '</td>' +
         '      </tr>' +
-        (parameter.joiningAs === "Duo" ? 
-        '      <tr>' +
-        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Partner Name</td>' +
-        '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.partnerName || '') + '</td>' +
-        '      </tr>' +
-        '      <tr>' +
-        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Partner Age</td>' +
-        '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.partnerAge || '') + ' Years</td>' +
-        '      </tr>' : '') +
+        organizerPartnerRows +
         '      <tr>' +
         '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">How They Heard</td>' +
         '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.hearAboutUs || '') + '</td>' +

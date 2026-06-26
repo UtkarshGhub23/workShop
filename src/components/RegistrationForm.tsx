@@ -438,6 +438,24 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     </div>
                   </div>
 
+                  {/* Address field */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A5C]">Address</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                      <input
+                        {...register("address")}
+                        placeholder="Your residential address"
+                        type="text"
+                        className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] shadow-sm"
+                        aria-invalid={errors.address ? "true" : "false"}
+                      />
+                    </div>
+                    {errors.address && (
+                      <span className="text-rose-600 text-xs mt-1 block">{errors.address.message}</span>
+                    )}
+                  </div>
+
                   {/* Dynamic Partner Details Section */}
                   <AnimatePresence>
                     {joiningAs !== "Solo" && partners.length > 0 && (
@@ -543,6 +561,90 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                                     <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].age}</span>
                                   )}
                                 </div>
+                              </div>
+
+                              <div className="grid md:grid-cols-2 gap-4">
+                                {/* Partner Email */}
+                                <div className="flex flex-col gap-1.5 text-left">
+                                  <label className="text-[9px] font-bold uppercase tracking-wider text-[#8C6A5C]">Email Address</label>
+                                  <div className="relative">
+                                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                                    <input
+                                      value={partner.email}
+                                      onChange={(e) => {
+                                        const newPartners = [...partners];
+                                        newPartners[index].email = e.target.value;
+                                        setPartners(newPartners);
+                                        if (partnerErrors[index]?.email) {
+                                          const newErrors = { ...partnerErrors };
+                                          delete newErrors[index].email;
+                                          setPartnerErrors(newErrors);
+                                        }
+                                      }}
+                                      placeholder="name@domain.com"
+                                      type="email"
+                                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[42px] shadow-sm"
+                                    />
+                                  </div>
+                                  {partnerErrors[index]?.email && (
+                                    <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].email}</span>
+                                  )}
+                                </div>
+
+                                {/* Partner Phone */}
+                                <div className="flex flex-col gap-1.5 text-left">
+                                  <label className="text-[9px] font-bold uppercase tracking-wider text-[#8C6A5C]">Phone Number</label>
+                                  <div className="relative">
+                                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                                    <input
+                                      value={partner.phone}
+                                      onChange={(e) => {
+                                        const newPartners = [...partners];
+                                        newPartners[index].phone = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                        setPartners(newPartners);
+                                        if (partnerErrors[index]?.phone) {
+                                          const newErrors = { ...partnerErrors };
+                                          delete newErrors[index].phone;
+                                          setPartnerErrors(newErrors);
+                                        }
+                                      }}
+                                      placeholder="10-digit mobile number"
+                                      type="tel"
+                                      maxLength={10}
+                                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[42px] shadow-sm"
+                                    />
+                                  </div>
+                                  {partnerErrors[index]?.phone && (
+                                    <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].phone}</span>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Partner Address */}
+                              <div className="flex flex-col gap-1.5 text-left">
+                                <label className="text-[9px] font-bold uppercase tracking-wider text-[#8C6A5C]">Address</label>
+                                <div className="relative">
+                                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60" />
+                                  <input
+                                    value={partner.address}
+                                    onChange={(e) => {
+                                      const newPartners = [...partners];
+                                      newPartners[index].address = e.target.value;
+                                      setPartners(newPartners);
+                                      if (partnerErrors[index]?.address) {
+                                        const newErrors = { ...partnerErrors };
+                                        delete newErrors[index].address;
+                                        setPartnerErrors(newErrors);
+                                      }
+                                    }}
+                                    placeholder="Residential address"
+                                    type="text"
+                                    className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#8C6A5C]/20 text-[#2D1E1A] placeholder-[#8C6A5C]/40 text-xs focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[42px] shadow-sm"
+                                  />
+                                </div>
+                                {partnerErrors[index]?.address && (
+                                  <span className="text-rose-600 text-[10px] mt-1 block">{partnerErrors[index].address}</span>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -705,16 +807,24 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                       {submittedData?.joiningAs !== "Solo" && submittedData?.partnerName && (
                         <div className="col-span-2">
                           <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
-                            {submittedData.joiningAs === "Duo" ? "Partner" : "Group Members"}
+                            {submittedData.joiningAs === "Duo" ? "Partner Details" : "Group Member Details"}
                           </span>
-                          <div className="text-[#2D1E1A] font-bold text-xs flex flex-col gap-1 mt-1 bg-[#FAF6F0]/40 p-2.5 rounded-xl border border-[#8C6A5C]/10 max-h-[100px] overflow-y-auto">
+                          <div className="text-[#2D1E1A] font-bold text-xs flex flex-col gap-2 mt-1 bg-[#FAF6F0]/40 p-2.5 rounded-xl border border-[#8C6A5C]/10 max-h-[150px] overflow-y-auto">
                             {(() => {
                               const names = submittedData.partnerName.split(", ");
                               const ages = (submittedData.partnerAge || "").split(", ");
+                              const emails = (submittedData.partnerEmail || "").split(", ");
+                              const phones = (submittedData.partnerPhone || "").split(", ");
+                              const addresses = (submittedData.partnerAddress || "").split(", ");
                               return names.map((pName, i) => (
-                                <div key={i} className="flex justify-between items-center text-[11px]">
-                                  <span>👤 {pName}</span>
-                                  <span className="text-[#8C6A5C] text-[10px] font-normal">{ages[i] ? `${ages[i]} Yrs` : ""}</span>
+                                <div key={i} className="flex flex-col gap-0.5 border-b border-[#8C6A5C]/5 pb-1.5 last:border-0 last:pb-0 text-[10px]">
+                                  <div className="flex justify-between items-center text-[11px] font-bold">
+                                    <span>👤 {pName}</span>
+                                    <span className="text-[#8C6A5C] font-normal">{ages[i] ? `${ages[i]} Yrs` : ""}</span>
+                                  </div>
+                                  {emails[i] && <span className="text-[#8C6A5C]/80 font-normal">✉️ {emails[i]}</span>}
+                                  {phones[i] && <span className="text-[#8C6A5C]/80 font-normal">📞 {phones[i]}</span>}
+                                  {addresses[i] && <span className="text-[#8C6A5C]/80 font-normal">📍 {addresses[i]}</span>}
                                 </div>
                               ));
                             })()}
@@ -728,6 +838,12 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                       <div>
                         <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Date</span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block">August 2, 2026</strong>
+                      </div>
+                      <div className="col-span-2 border-t border-[#8C6A5C]/10 pt-2">
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Your Address</span>
+                        <strong className="text-[#2D1E1A] font-bold text-xs block truncate" title={submittedData?.address}>
+                          {submittedData?.address}
+                        </strong>
                       </div>
                     </div>
 
