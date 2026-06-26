@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, MapPin, Users, Download } from "lucide-react";
 import { useState, useEffect } from "react";
+import LivingHeroImage from "./LivingHeroImage";
 
 interface HeroProps {
   onNavigate: (view: "home" | "team" | "faq" | "register") => void;
@@ -165,11 +166,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           <div className="absolute -inset-4 bg-gradient-to-tr from-terracotta/20 to-olive/15 rounded-[40px] blur-2xl -z-10 opacity-70"></div>
           
           <div className="relative rounded-[32px] overflow-hidden border border-white bg-white/80 p-3 shadow-xl max-w-md w-full">
-            <img
-              src="/hero-crafts.png"
-              alt="Friendship Day DIY Workshop Crafts"
-              className="w-full h-auto rounded-[24px] object-cover aspect-[4/5] hover:scale-[1.02] transition-transform duration-500"
-            />
+            <LivingHeroImage />
             {/* Small Floating Details Badge */}
             <div className="absolute bottom-6 right-6 bg-[#FFFDFB]/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-terracotta/15 shadow-lg flex flex-col items-start">
               <span className="text-[9px] font-bold text-terracotta uppercase tracking-widest">Organized By</span>
