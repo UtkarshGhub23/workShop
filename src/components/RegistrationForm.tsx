@@ -276,16 +276,16 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
   return (
     <section id="register" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15 relative overflow-hidden">
-      {/* Dynamic Background Blurry Blobs */}
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-terracotta/5 blur-[100px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-[250px] h-[250px] bg-gold/5 blur-[90px] rounded-full pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-terracotta/3 blur-[120px] rounded-full pointer-events-none"></div>
+      {/* Subtle Background Blurry Blobs */}
+      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-terracotta/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[250px] h-[250px] bg-gold/5 blur-[90px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-terracotta/3 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-2xl mx-auto relative">
         {/* Back Button */}
-        <div className="mb-10 text-left">
+        <div className="mb-8 text-left">
           <motion.button
-            whileHover={{ scale: 1.03, x: -3 }}
+            whileHover={{ scale: 1.02, x: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={onBackToHome}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#8C6A5C]/20 hover:border-terracotta/40 bg-[#FFFDFB]/80 hover:bg-white text-terracotta text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-sm focus:outline-none"
@@ -300,7 +300,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         <div className="rounded-[36px] border border-[#8C6A5C]/15 bg-[#FFFDFB]/90 backdrop-blur-md p-8 sm:p-12 shadow-[0_24px_60px_-15px_rgba(140,106,92,0.08)] relative overflow-visible">
           
           {/* Accent Line */}
-          <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-terracotta via-[#DCA037] to-brown rounded-t-[36px]"></div>
+          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-terracotta via-[#DCA037] to-terracotta rounded-t-[36px]" />
 
           <AnimatePresence mode="wait">
             {!isSuccess ? (
@@ -315,20 +315,23 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                 <div className="mb-10 text-left">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-terracotta/20 bg-terracotta/5 text-terracotta text-[10px] font-extrabold uppercase tracking-widest mb-4 select-none">
                     <span className="w-1.5 h-1.5 rounded-full bg-terracotta animate-pulse"></span>
-                    ✨ {getGreeting()}, Creator!
+                    {getGreeting()}, Welcome
                   </div>
-                  <h2 className="font-display font-black text-3xl sm:text-4xl text-[#2D1E1A] tracking-tight leading-tight flex items-center gap-2">
-                    Register Your Interest 
-                    <motion.span 
-                      animate={{ rotate: [0, 15, -15, 0] }} 
-                      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                    >
-                      <Sparkles className="w-6 h-6 text-terracotta" />
-                    </motion.span>
+                  <h2 className="font-display font-black text-3xl sm:text-4xl text-[#2D1E1A] tracking-tight leading-tight">
+                    Register Your Interest
                   </h2>
                   <p className="text-[#8C6A5C] text-xs sm:text-sm mt-3 leading-relaxed">
                     Be the first to know when official registrations open. Fill in your details below to lock in priority ticket bookings and early-bird notifications.
                   </p>
+
+                  {/* Event details strip */}
+                  <div className="mt-5 p-3.5 rounded-2xl bg-[#FAF6F0]/60 border border-[#8C6A5C]/8 flex items-center gap-4 text-[10px] text-[#8C6A5C]">
+                    <span className="font-bold text-terracotta uppercase tracking-wider">Friendship Day DIY Workshop</span>
+                    <span className="w-px h-3.5 bg-[#8C6A5C]/15" />
+                    <span>Aug 2, 2026</span>
+                    <span className="w-px h-3.5 bg-[#8C6A5C]/15" />
+                    <span>Mathura, UP</span>
+                  </div>
                 </div>
 
                 {/* Main Form element */}
@@ -713,9 +716,9 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                   </motion.button>
 
                   {/* Secure connection note */}
-                  <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#8C6A5C]/60 mt-1">
+                  <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#8C6A5C]/60 mt-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-olive" />
-                    <span>Your contact information is strictly private and secure.</span>
+                    <span>Your information is private and secure.</span>
                   </div>
 
                 </form>
