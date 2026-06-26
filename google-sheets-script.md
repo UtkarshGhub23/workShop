@@ -58,23 +58,59 @@ function doPost(e) {
            .setBorder(true, true, true, true, true, true);
     }
     
-    var rowData = [];
-    rowData.push(timestamp); // Timestamp
+    // Get existing headers from Row 1
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     
-    if (formType === "contact") {
-      rowData.push(parameter.name || "");
-      rowData.push(parameter.email || "");
-      rowData.push(parameter.message || "");
-    } else {
-      rowData.push(registrationId); // Registration ID
-      rowData.push(parameter.name || "");
-      rowData.push(parameter.email || "");
-      rowData.push(parameter.phone || "");
-      rowData.push(parameter.age || "");
-      rowData.push(parameter.joiningAs || "");
-      rowData.push(parameter.partnerName || "");
-      rowData.push(parameter.partnerAge || "");
-      rowData.push(parameter.hearAboutUs || "");
+    // Ensure Registration ID and Partner columns exist for registrations
+    if (formType === "registration") {
+      var requiredHeaders = ["Registration ID", "Partner Name", "Partner Age"];
+      for (var k = 0; k < requiredHeaders.length; k++) {
+        var req = requiredHeaders[k];
+        if (headers.indexOf(req) === -1) {
+          // Append missing header column at the end
+          var newColIndex = headers.length + 1;
+          sheet.getRange(1, newColIndex).setValue(req)
+               .setFontWeight("bold")
+               .setBackground("#F3F4F6")
+               .setBorder(true, true, true, true, true, true);
+          headers.push(req);
+        }
+      }
+    }
+    
+    // Map of request parameters to column header names
+    var parameterMapping = {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "age": "Age",
+      "joiningAs": "Joining As",
+      "partnerName": "Partner Name",
+      "partnerAge": "Partner Age",
+      "hearAboutUs": "How they heard",
+      "message": "Message"
+    };
+    
+    // Build row data dynamically based on the actual sheet column headers
+    var rowData = [];
+    for (var j = 0; j < headers.length; j++) {
+      var headerName = headers[j];
+      var cellVal = "";
+      
+      if (headerName === "Timestamp") {
+        cellVal = timestamp;
+      } else if (headerName === "Registration ID") {
+        cellVal = registrationId;
+      } else {
+        // Find matching parameter key
+        for (var pKey in parameterMapping) {
+          if (parameterMapping[pKey] === headerName) {
+            cellVal = parameter[pKey] || "";
+            break;
+          }
+        }
+      }
+      rowData.push(cellVal);
     }
     
     sheet.appendRow(rowData);
