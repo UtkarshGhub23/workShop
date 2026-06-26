@@ -48,7 +48,7 @@ interface RegistrationFormProps {
 
 export default function RegistrationForm({ onBackToHome }: RegistrationFormProps) {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submittedData, setSubmittedData] = useState<InterestFormData | null>(null);
+  const [submittedData, setSubmittedData] = useState<(InterestFormData & { registrationId?: string }) | null>(null);
 
   const {
     register,
@@ -75,10 +75,18 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
   const onSubmit = async (data: InterestFormData) => {
     try {
+      // Generate a unique 6-character ID prefixed with TAY- (e.g. TAY-K2H8P1)
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let registrationId = "TAY-";
+      for (let i = 0; i < 6; i++) {
+        registrationId += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
       if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith("https://script.google.com")) {
         // Send data using URLSearchParams to avoid CORS preflight check errors with no-cors mode
         const params = new URLSearchParams();
         params.append("formType", "registration");
+        params.append("registrationId", registrationId);
         params.append("name", data.name);
         params.append("email", data.email);
         params.append("phone", data.phone);
@@ -107,7 +115,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
         await new Promise((resolve) => setTimeout(resolve, 1500));
       }
 
-      setSubmittedData(data);
+      setSubmittedData({ ...data, registrationId });
       setIsSuccess(true);
 
       // Dispatch toast notification
@@ -408,14 +416,20 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                   <ShieldCheck className="w-10 h-10 text-white" />
                 </div>
                 
-                <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-4">
+                 <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-4">
                   Interest Registered!
                 </h3>
                 <p className="text-[#8C6A5C] text-xs sm:text-sm max-w-md leading-relaxed">
-                  Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your preference details have been saved. We will contact you at <strong className="text-[#2D1E1A]">{submittedData?.email}</strong> or <strong className="text-[#2D1E1A]">{submittedData?.phone}</strong> the moment ticket bookings launch!
+                  Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your preference details have been saved under Registration ID <strong className="text-terracotta">{submittedData?.registrationId}</strong>. We will contact you at <strong className="text-[#2D1E1A]">{submittedData?.email}</strong> or <strong className="text-[#2D1E1A]">{submittedData?.phone}</strong> the moment ticket bookings launch!
                 </p>
 
                 <div className="p-4 rounded-2xl bg-[#FAF6F0] border border-[#8C6A5C]/10 w-full text-left max-w-sm mt-4 flex flex-col gap-2 shadow-sm">
+                  <div className="flex justify-between text-xs text-[#8C6A5C] items-center border-b border-[#8C6A5C]/10 pb-2 mb-1">
+                    <span>Registration ID:</span>
+                    <span className="font-display font-extrabold text-sm text-terracotta tracking-wider uppercase bg-terracotta/5 border border-terracotta/10 px-2.5 py-0.5 rounded-md">
+                      {submittedData?.registrationId}
+                    </span>
+                  </div>
                   <div className="flex justify-between text-xs text-[#8C6A5C]">
                     <span>Format Option:</span>
                     <span className="font-bold text-[#2D1E1A]">{submittedData?.joiningAs}</span>
