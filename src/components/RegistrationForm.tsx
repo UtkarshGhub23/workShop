@@ -237,12 +237,14 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
   };
 
   const handleFileChange = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      setUploadError("Only image files (PNG, JPG, JPEG) are allowed.");
+    const isImage = file.type.startsWith("image/");
+    const isPdf = file.type === "application/pdf";
+    if (!isImage && !isPdf) {
+      setUploadError("Only image files (PNG, JPG, JPEG) or PDF files are allowed.");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Image size must be less than 5MB.");
+      setUploadError("File size must be less than 5MB.");
       return;
     }
     setUploadError(null);
@@ -1115,7 +1117,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                   >
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/*,application/pdf"
                       id="screenshot-input"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       onChange={(e) => {
@@ -1127,12 +1129,19 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
 
                     {paymentScreenshot ? (
                       <div className="flex flex-col items-center gap-2.5">
-                        <div className="relative w-16 h-16 rounded-xl border border-emerald-500/30 overflow-hidden shadow-sm bg-white">
-                          <img
-                            src={paymentScreenshot}
-                            alt="Screenshot Preview"
-                            className="w-full h-full object-cover"
-                          />
+                        <div className="relative w-16 h-16 rounded-xl border border-emerald-500/30 overflow-hidden shadow-sm bg-white flex items-center justify-center">
+                          {paymentScreenshotName?.toLowerCase().endsWith(".pdf") ? (
+                            <div className="text-rose-600 font-extrabold text-xs flex flex-col items-center gap-1 select-none">
+                              <span className="text-xl">📄</span>
+                              <span>PDF</span>
+                            </div>
+                          ) : (
+                            <img
+                              src={paymentScreenshot}
+                              alt="Screenshot Preview"
+                              className="w-full h-full object-cover"
+                            />
+                          )}
                         </div>
                         <div className="text-center z-10">
                           <span className="block text-xs font-bold text-[#2D1E1A] max-w-[200px] truncate">
@@ -1148,7 +1157,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                             }}
                             className="text-[10px] text-rose-600 hover:text-rose-800 font-bold uppercase tracking-wide mt-1.5 focus:outline-none cursor-pointer inline-flex items-center gap-1 border-0 bg-transparent"
                           >
-                            Remove Image
+                            Remove File
                           </button>
                         </div>
                       </div>
@@ -1160,7 +1169,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                             Drag & drop screenshot here, or <span className="text-terracotta">browse</span>
                           </span>
                           <span className="block text-[10px] text-[#8C6A5C]/60 mt-1">
-                            Supports JPG, JPEG, PNG (Max 5MB)
+                            Supports JPG, JPEG, PNG, PDF (Max 5MB)
                           </span>
                         </div>
                       </>

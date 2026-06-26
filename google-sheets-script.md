@@ -56,7 +56,8 @@ function doPost(e) {
         var rawData = parameter.paymentScreenshot.split(",")[1];
         var contentType = parameter.paymentScreenshot.split(";")[0].split(":")[1];
         var decodedData = Utilities.base64Decode(rawData);
-        var blob = Utilities.newBlob(decodedData, contentType, "Payment_" + registrationId + "_" + (parameter.name || "User").replace(/\s+/g, "_") + ".png");
+        var extension = contentType === "application/pdf" ? ".pdf" : ".png";
+        var blob = Utilities.newBlob(decodedData, contentType, "Payment_" + registrationId + "_" + (parameter.name || "User").replace(/\s+/g, "_") + extension);
         var file = folder.createFile(blob);
         file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
         paymentFileUrl = file.getUrl();
