@@ -29,13 +29,13 @@ export default function Footer() {
   return (
     <footer className="bg-[#F5EFEB] border-t border-[#8C6A5C]/15 py-16 px-4 relative z-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10">
-        
+
         {/* Left Column: Brand details */}
         <div className="md:col-span-5 flex flex-col items-start gap-4 text-left">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center">
               <svg className="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
               </svg>
             </div>
             <span className="font-display font-bold text-lg tracking-widest text-[#2D1E1A] uppercase">
@@ -45,18 +45,18 @@ export default function Footer() {
           <p className="text-[#8C6A5C] text-xs sm:text-sm leading-relaxed max-w-sm">
             Celebrate friendship with creativity. Spend a screen-free afternoon in Mathura customizing accessories, playing fun teamwork games, and taking home memories you'll keep forever.
           </p>
-          
+
           {/* Social Icons */}
           <div className="flex items-center gap-3 mt-2">
             {[
-              { 
+              {
                 icon: (
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2" />
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke="currentColor" strokeWidth="2" fill="none" />
                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" stroke="currentColor" strokeWidth="2" />
                   </svg>
-                ), 
+                ),
                 href: "https://instagram.com",
                 label: "Instagram"
               },
@@ -121,7 +121,7 @@ export default function Footer() {
           >
             Refund Policy
           </button>
-          
+
           {showInstallBtn && (
             <button
               onClick={() => window.dispatchEvent(new CustomEvent("trigger-install"))}
@@ -154,7 +154,7 @@ export default function Footer() {
               {modalType === "terms" && "Terms & Conditions"}
               {modalType === "refund" && "Refund Policy"}
             </h3>
-            
+
             <div className="max-h-[300px] overflow-y-auto text-[#8C6A5C] text-xs leading-relaxed pr-2 flex flex-col gap-3">
               {modalType === "privacy" && (
                 <>

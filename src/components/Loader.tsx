@@ -1,352 +1,313 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const MESSAGES = [
-  "Unpacking premium craft kits...",
-  "Selecting vibrant thread colors...",
-  "Setting up the custom photo corner...",
-  "Sorting beads, bags & charms...",
-  "Preparing the DIY workshop space...",
-];
-
 export default function Loader() {
-  const [msgIdx, setMsgIdx] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMsgIdx((prev) => (prev + 1) % MESSAGES.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const brandName1 = "Trayyaai";
-  const brandName2 = "Ayra";
-
-  const letterContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      }
-    }
-  };
-
-  const letterChild = {
-    hidden: { opacity: 0, y: 10 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        type: "spring", 
-        stiffness: 150,
-        damping: 15
-      } 
-    }
-  };
+  // Thread colors matching the brand palette
+  const threads = [
+    { color: "#C87A53", label: "T" },  // Terracotta
+    { color: "#606C38", label: "×" },  // Olive
+    { color: "#DCA037", label: "A" },  // Gold
+    { color: "#8C6A5C", label: "♥" },  // Brown
+  ];
 
   return (
     <motion.div
       initial={{ y: 0 }}
       exit={{ y: "-100%" }}
-      transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center select-none"
+      transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 flex flex-col items-center justify-center select-none overflow-hidden"
       style={{
         zIndex: 1000,
-        backgroundColor: "#FAF6F0",
-        backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255, 253, 251, 0.6), rgba(250, 246, 240, 1)), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E")`,
+        background: "linear-gradient(145deg, #FAF6F0 0%, #F5EFEB 50%, #FAF6F0 100%)",
       }}
     >
-      <div className="flex flex-col items-center gap-8 max-w-sm px-6">
-        
-        {/* DIY Aesthetic Embroidery Hoop & Beads Loader */}
-        <div className="relative w-44 h-44 flex items-center justify-center">
-          
-          <svg
-            viewBox="0 0 160 160"
-            className="w-full h-full drop-shadow-xl"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+      {/* Subtle paper texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Floating craft particles */}
+      <style>{`
+        @keyframes float-particle {
+          0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+          50% { transform: translateY(-20px) rotate(180deg); opacity: 0.35; }
+        }
+        @keyframes weave-left {
+          0% { transform: translateX(-120%) scaleX(0); opacity: 0; }
+          15% { opacity: 1; }
+          100% { transform: translateX(0) scaleX(1); opacity: 1; }
+        }
+        @keyframes weave-right {
+          0% { transform: translateX(120%) scaleX(0); opacity: 0; }
+          15% { opacity: 1; }
+          100% { transform: translateX(0) scaleX(1); opacity: 1; }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes bead-pop {
+          0% { transform: scale(0) rotate(-20deg); }
+          60% { transform: scale(1.15) rotate(5deg); }
+          100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes gentle-sway {
+          0%, 100% { transform: rotate(-1deg); }
+          50% { transform: rotate(1deg); }
+        }
+        @keyframes stitch-draw {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        @keyframes letter-rise {
+          0% { transform: translateY(8px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes dot-bounce {
+          0%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-4px); }
+        }
+      `}</style>
+
+      {/* Scattered decorative particles */}
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: `${4 + i * 2}px`,
+            height: `${4 + i * 2}px`,
+            background: threads[i % 4].color,
+            top: `${15 + i * 13}%`,
+            left: `${10 + i * 15}%`,
+            animation: `float-particle ${2 + i * 0.3}s ease-in-out infinite`,
+            animationDelay: `${i * 0.2}s`,
+          }}
+        />
+      ))}
+
+      <div className="relative z-10 flex flex-col items-center gap-7">
+
+        {/* Main craft animation container */}
+        <div
+          className="relative w-52 h-52 flex items-center justify-center"
+          style={{ animation: "gentle-sway 3s ease-in-out infinite" }}
+        >
+          <svg viewBox="0 0 200 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <filter id="bead-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#8C6A5C" floodOpacity="0.25" />
+              {/* Glow filter for the center */}
+              <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
-              <linearGradient id="clay-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+              <filter id="bead-drop" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="#5C4033" floodOpacity="0.2" />
+              </filter>
+              {/* Thread gradients */}
+              <linearGradient id="thread-terra" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#C87A53" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#C87A53" />
+                <stop offset="100%" stopColor="#C87A53" stopOpacity="0.3" />
+              </linearGradient>
+              <linearGradient id="thread-olive" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#606C38" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#606C38" />
+                <stop offset="100%" stopColor="#606C38" stopOpacity="0.3" />
+              </linearGradient>
+              <linearGradient id="thread-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#DCA037" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#DCA037" />
+                <stop offset="100%" stopColor="#DCA037" stopOpacity="0.3" />
+              </linearGradient>
+              <linearGradient id="thread-brown" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#8C6A5C" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#8C6A5C" />
+                <stop offset="100%" stopColor="#8C6A5C" stopOpacity="0.3" />
+              </linearGradient>
+              {/* Bead gradients */}
+              <radialGradient id="bead-terra" cx="35%" cy="35%">
                 <stop offset="0%" stopColor="#E5A691" />
                 <stop offset="100%" stopColor="#C87A53" />
-              </linearGradient>
-              <linearGradient id="clay-olive" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#A4B579" />
+              </radialGradient>
+              <radialGradient id="bead-olive" cx="35%" cy="35%">
+                <stop offset="0%" stopColor="#B8C98D" />
                 <stop offset="100%" stopColor="#606C38" />
-              </linearGradient>
-              <linearGradient id="clay-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FCDA8B" />
+              </radialGradient>
+              <radialGradient id="bead-gold" cx="35%" cy="35%">
+                <stop offset="0%" stopColor="#FCE4A8" />
                 <stop offset="100%" stopColor="#DCA037" />
-              </linearGradient>
-              <linearGradient id="clay-brown" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#A88B7D" />
-                <stop offset="100%" stopColor="#735245" />
-              </linearGradient>
-              <linearGradient id="hoop-wood" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#E5D8CF" />
-                <stop offset="50%" stopColor="#CDAFA0" />
-                <stop offset="100%" stopColor="#9C7F72" />
-              </linearGradient>
-              <linearGradient id="metal-screw" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#E6D3A0" />
-                <stop offset="50%" stopColor="#C0A258" />
-                <stop offset="100%" stopColor="#8A7030" />
-              </linearGradient>
+              </radialGradient>
+              <radialGradient id="bead-brown" cx="35%" cy="35%">
+                <stop offset="0%" stopColor="#C4A99D" />
+                <stop offset="100%" stopColor="#8C6A5C" />
+              </radialGradient>
             </defs>
 
-            {/* Embroidery Hoop Group with Swaying Animation */}
-            <motion.g
-              animate={{ transform: ["translate(0px, 0px) rotate(0deg)", "translate(0px, -3px) rotate(1.5deg)", "translate(0px, 3px) rotate(-1.5deg)", "translate(0px, 0px) rotate(0deg)"] }}
-              transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-            >
-              {/* Outer Wood Hoop */}
-              <circle cx="80" cy="80" r="70" stroke="url(#hoop-wood)" strokeWidth="6" fill="none" />
-              
-              {/* Inner Wood Hoop */}
-              <circle cx="80" cy="80" r="65" stroke="#FAF6F0" strokeWidth="1" fill="none" opacity="0.6" />
-              
-              {/* Hoop Tension Adjuster Hardware */}
-              {/* Wooden clamp blocks */}
-              <rect x="73" y="2" width="6" height="8" fill="#9C7F72" rx="1" />
-              <rect x="81" y="2" width="6" height="8" fill="#9C7F72" rx="1" />
-              {/* Screw Bolt */}
-              <rect x="66" y="4" width="28" height="3" fill="url(#metal-screw)" rx="0.5" />
-              {/* Knurled Thumb Nut */}
-              <circle cx="66" cy="5.5" r="4" fill="url(#metal-screw)" />
-              <circle cx="94" cy="5.5" r="2.5" fill="url(#metal-screw)" />
+            {/* Outer decorative ring - stitched circle */}
+            <circle
+              cx="100" cy="100" r="90"
+              fill="none"
+              stroke="#C87A53"
+              strokeWidth="1.5"
+              strokeDasharray="3 6"
+              opacity="0.2"
+            />
 
-              {/* Fabric/Canvas Background inside hoop */}
-              <circle cx="80" cy="80" r="64.5" fill="#FFFDFB" opacity="0.85" />
+            {/* Inner glow circle */}
+            <circle
+              cx="100" cy="100" r="70"
+              fill="none"
+              stroke="#DCA037"
+              strokeWidth="0.5"
+              opacity="0.15"
+              style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
+            />
 
-              {/* Background Guideline Circle (Lightly penciled) */}
-              <circle cx="80" cy="80" r="54" stroke="#8C6A5C" strokeWidth="0.5" strokeDasharray="2 4" fill="none" opacity="0.2" />
-
-              {/* Stitched Heart - drawing outline */}
-              <motion.path
-                d="M 80,116 C 52,93 38,75 38,57 C 38,45 47,36 59,36 C 67.5,36 75,40.5 80,47 C 85,40.5 92.5,36 101,36 C 113,36 122,45 122,57 C 122,75 108,93 80,116 Z"
-                fill="none"
-                stroke="#C87A53"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeDasharray="4 4"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ 
-                  duration: 4.5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut"
-                }}
-              />
-
-              {/* Secondary Olive Thread Line (Horizontal Bracelet String) */}
-              <line x1="22" y1="80" x2="138" y2="80" stroke="#606C38" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
-
-              {/* Weaving Threads SVG Motion Paths */}
-              {/* Thread 1 (Terracotta) */}
-              <motion.path
-                d="M 22,80 C 45,68 55,92 80,80 C 105,68 115,92 138,80"
-                fill="none"
-                stroke="#C87A53"
-                strokeWidth="1"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                opacity="0.8"
-              />
-              
-              {/* Thread 2 (Olive) */}
-              <motion.path
-                d="M 22,80 C 45,92 55,68 80,80 C 105,92 115,68 138,80"
-                fill="none"
-                stroke="#606C38"
-                strokeWidth="1"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                opacity="0.8"
-              />
-
-              {/* Bracelet Beads sliding in and floating */}
-              
-              {/* Bead 1: Pink/Terracotta Round Bead */}
-              <motion.g
-                initial={{ transform: "translate(-100px, 0px) scale(0)" }}
-                animate={{ transform: "translate(0px, 0px) scale(1)" }}
-                transition={{
-                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.2 }
-                }}
-              >
-                <motion.g
-                  animate={{ transform: ["translate(0px, -1.5px)", "translate(0px, 1.5px)", "translate(0px, -1.5px)"] }}
-                  transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-                >
-                  <circle cx="52" cy="80" r="7.5" fill="url(#clay-pink)" filter="url(#bead-shadow)" />
-                  <circle cx="52" cy="80" r="1.8" fill="#FFFDFB" />
-                </motion.g>
-              </motion.g>
-
-              {/* Bead 2: Gold Star Bead */}
-              <motion.g
-                initial={{ transform: "translate(-120px, 0px) scale(0)" }}
-                animate={{ transform: "translate(0px, 0px) scale(1)" }}
-                transition={{
-                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.5 }
-                }}
-              >
-                <motion.g
-                  animate={{ transform: ["translate(0px, 1.5px) rotate(0deg)", "translate(0px, -1.5px) rotate(5deg)", "translate(0px, 1.5px) rotate(0deg)"] }}
-                  transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
-                >
-                  {/* Star centered at 70,80 */}
-                  <path 
-                    d="M 70,72 L 72.3,77 L 77.8,77.8 L 73.8,81.7 L 74.8,87.2 L 70,84.6 L 65.2,87.2 L 66.2,81.7 L 62.2,77.8 L 67.7,77 Z" 
-                    fill="url(#clay-gold)" 
-                    filter="url(#bead-shadow)" 
-                  />
-                  <circle cx="70" cy="80" r="1.5" fill="#FFFDFB" />
-                </motion.g>
-              </motion.g>
-
-              {/* Bead 3: Olive Flower Bead */}
-              <motion.g
-                initial={{ transform: "translate(-140px, 0px) scale(0)" }}
-                animate={{ transform: "translate(0px, 0px) scale(1)" }}
-                transition={{
-                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.8 }
-                }}
-              >
-                <motion.g
-                  animate={{ transform: ["translate(0px, -1.2px) rotate(0deg)", "translate(0px, 1.2px) rotate(-15deg)", "translate(0px, -1.2px) rotate(0deg)"] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                >
-                  {/* 5-Petal Flower centered at 90,80 */}
-                  <circle cx="90" cy="74.5" r="3.5" fill="url(#clay-olive)" />
-                  <circle cx="95.2" cy="78.3" r="3.5" fill="url(#clay-olive)" />
-                  <circle cx="93.2" cy="84.5" r="3.5" fill="url(#clay-olive)" />
-                  <circle cx="86.8" cy="84.5" r="3.5" fill="url(#clay-olive)" />
-                  <circle cx="84.8" cy="78.3" r="3.5" fill="url(#clay-olive)" />
-                  <circle cx="90" cy="80" r="4.5" fill="url(#clay-olive)" filter="url(#bead-shadow)" />
-                  <circle cx="90" cy="80" r="1.8" fill="#FFFDFB" />
-                </motion.g>
-              </motion.g>
-
-              {/* Bead 4: Terracotta Small Heart Charm */}
-              <motion.g
-                initial={{ transform: "translate(-160px, 0px) scale(0)" }}
-                animate={{ transform: "translate(0px, 0px) scale(1)" }}
-                transition={{
-                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 1.1 }
-                }}
-              >
-                <motion.g
-                  animate={{ transform: ["translate(0px, 1.8px) rotate(0deg)", "translate(0px, -1.8px) rotate(8deg)", "translate(0px, 1.8px) rotate(0deg)"] }}
-                  transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-                >
-                  {/* Small Heart Charm hanging down slightly, centered around 108, 83 */}
-                  <path 
-                    d="M 108,89 C 105,86.5 102,84.3 102,81.3 C 102,78.8 103.7,77.1 106.3,77.1 C 107.5,77.1 108,78 108,78 C 108,78 108.5,77.1 109.7,77.1 C 112.3,77.1 114,78.8 114,81.3 C 114,84.3 111,86.5 108,89 Z" 
-                    fill="url(#clay-pink)" 
-                    filter="url(#bead-shadow)" 
-                  />
-                  {/* Hanging loop line */}
-                  <line x1="108" y1="80" x2="108" y2="77.5" stroke="#606C38" strokeWidth="1" />
-                  <circle cx="108" cy="80" r="1" fill="#FFFDFB" />
-                </motion.g>
-              </motion.g>
-
-            </motion.g>
-
-            {/* Sewing Needle Group doing stitching motion at the top edge of the heart */}
-            <motion.g
-              initial={{ transform: "translate(80px, 35px) rotate(-20deg)" }}
-              animate={{
-                transform: [
-                  "translate(80px, 35px) rotate(-20deg)",
-                  "translate(84px, 18px) rotate(-5deg)",
-                  "translate(76px, 38px) rotate(-35deg)",
-                  "translate(80px, 35px) rotate(-20deg)"
-                ]
-              }}
-              transition={{
-                duration: 4.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              {/* Needle shaft pointing downwards */}
+            {/* === WEAVING THREADS === */}
+            {/* Horizontal threads weaving from left */}
+            {[72, 84, 96, 108, 120].map((y, i) => (
               <path
-                d="M 0,-35 L 0,15 L -0.8,17 L 0,20 L 0.8,17 L 0,15"
-                fill="#B69E90"
-                stroke="#8C6A5C"
-                strokeWidth="1"
-              />
-              {/* Needle Eye */}
-              <ellipse cx="0" cy="-25" rx="0.6" ry="2.5" fill="#FFFDFB" />
-              {/* Sewing Thread coming out of eye */}
-              <path
-                d="M 0,-25 C 10,-25 18,-15 15,5"
+                key={`h-${i}`}
+                d={`M 20,${y} C 55,${y + (i % 2 === 0 ? -8 : 8)} 80,${y + (i % 2 === 0 ? 6 : -6)} 100,${y} C 120,${y + (i % 2 === 0 ? -6 : 6)} 145,${y + (i % 2 === 0 ? 8 : -8)} 180,${y}`}
                 fill="none"
-                stroke="#C87A53"
-                strokeWidth="1.2"
+                stroke={[
+                  "url(#thread-terra)",
+                  "url(#thread-olive)",
+                  "url(#thread-gold)",
+                  "url(#thread-brown)",
+                  "url(#thread-terra)",
+                ][i]}
+                strokeWidth="2"
                 strokeLinecap="round"
-                opacity="0.85"
+                style={{
+                  animation: `weave-left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${i * 0.08}s both`,
+                  transformOrigin: "center",
+                }}
               />
-            </motion.g>
+            ))}
 
+            {/* Vertical threads weaving from top */}
+            {[72, 88, 104, 120].map((x, i) => (
+              <path
+                key={`v-${i}`}
+                d={`M ${x},30 C ${x + (i % 2 === 0 ? 6 : -6)},60 ${x + (i % 2 === 0 ? -6 : 6)},90 ${x},100 C ${x + (i % 2 === 0 ? 6 : -6)},110 ${x + (i % 2 === 0 ? -6 : 6)},140 ${x},170`}
+                fill="none"
+                stroke={[
+                  "url(#thread-olive)",
+                  "url(#thread-gold)",
+                  "url(#thread-terra)",
+                  "url(#thread-brown)",
+                ][i]}
+                strokeWidth="2"
+                strokeLinecap="round"
+                style={{
+                  animation: `weave-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${0.3 + i * 0.08}s both`,
+                  transformOrigin: "center",
+                }}
+              />
+            ))}
+
+            {/* === CRAFT BEADS at intersections === */}
+            {/* Center bead cluster */}
+            {[
+              { cx: 80, cy: 85, r: 7, fill: "url(#bead-terra)", delay: 0.7 },
+              { cx: 100, cy: 100, r: 9, fill: "url(#bead-gold)", delay: 0.85 },
+              { cx: 120, cy: 85, r: 7, fill: "url(#bead-olive)", delay: 0.75 },
+              { cx: 90, cy: 108, r: 6, fill: "url(#bead-brown)", delay: 0.9 },
+              { cx: 110, cy: 108, r: 6, fill: "url(#bead-terra)", delay: 0.95 },
+            ].map((b, i) => (
+              <g key={`bead-${i}`} style={{ animation: `bead-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) ${b.delay}s both` }}>
+                <circle cx={b.cx} cy={b.cy} r={b.r} fill={b.fill} filter="url(#bead-drop)" />
+                <circle cx={b.cx - b.r * 0.25} cy={b.cy - b.r * 0.25} r={b.r * 0.2} fill="white" opacity="0.5" />
+              </g>
+            ))}
+
+            {/* Central heart stitched path */}
+            <path
+              d="M 100,118 C 89,110 82,103 82,96 C 82,91 85,88 89,88 C 92,88 95,90 100,94 C 105,90 108,88 111,88 C 115,88 118,91 118,96 C 118,103 111,110 100,118 Z"
+              fill="none"
+              stroke="#C87A53"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeDasharray="130"
+              strokeDashoffset="130"
+              style={{
+                animation: "stitch-draw 0.8s ease-out 1s forwards",
+              }}
+            />
           </svg>
         </div>
 
-        {/* Brand details with Staggered Fade-in */}
+        {/* Brand Name with letter-by-letter rise */}
         <div className="text-center">
-          <motion.div
-            variants={letterContainer}
-            initial="hidden"
-            animate="show"
-            className="font-display font-extrabold text-2xl tracking-widest text-[#2D1E1A] uppercase inline-flex items-center"
-          >
-            {brandName1.split("").map((char, index) => (
-              <motion.span key={`b1-${index}`} variants={letterChild}>
+          <div className="font-display font-extrabold text-2xl tracking-[0.2em] text-[#2D1E1A] uppercase flex items-center justify-center">
+            {"Trayyaai".split("").map((char, i) => (
+              <span
+                key={`a-${i}`}
+                style={{
+                  display: "inline-block",
+                  animation: `letter-rise 0.3s ease-out ${0.6 + i * 0.04}s both`,
+                }}
+              >
                 {char}
-              </motion.span>
+              </span>
             ))}
-            <motion.span variants={letterChild} className="text-terracotta font-light mx-2.5">
+            <span
+              className="text-[#C87A53] font-light mx-2"
+              style={{
+                display: "inline-block",
+                animation: `letter-rise 0.3s ease-out ${0.6 + 8 * 0.04}s both`,
+              }}
+            >
               ×
-            </motion.span>
-            {brandName2.split("").map((char, index) => (
-              <motion.span key={`b2-${index}`} variants={letterChild}>
+            </span>
+            {"Ayra".split("").map((char, i) => (
+              <span
+                key={`b-${i}`}
+                style={{
+                  display: "inline-block",
+                  animation: `letter-rise 0.3s ease-out ${0.6 + (9 + i) * 0.04}s both`,
+                }}
+              >
                 {char}
-              </motion.span>
+              </span>
             ))}
-          </motion.div>
-          <motion.span 
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            className="block text-[10px] text-[#8C6A5C] font-bold uppercase tracking-widest mt-2"
+          </div>
+
+          {/* Shimmer subtitle */}
+          <div
+            className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-transparent bg-clip-text"
+            style={{
+              backgroundImage: "linear-gradient(90deg, #8C6A5C 0%, #C87A53 25%, #DCA037 50%, #C87A53 75%, #8C6A5C 100%)",
+              backgroundSize: "200% auto",
+              animation: "shimmer 2s linear infinite, letter-rise 0.3s ease-out 1.1s both",
+            }}
           >
             Friendship Day DIY Studio
-          </motion.span>
+          </div>
         </div>
 
-        {/* Cycling Status message */}
-        <div className="h-7 overflow-hidden mt-1 flex items-center justify-center">
-          <motion.p
-            key={msgIdx}
-            initial={{ y: 22, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -22, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="text-xs text-[#8C6A5C]/90 font-bold tracking-wide italic"
-          >
-            {MESSAGES[msgIdx]}
-          </motion.p>
+        {/* Bouncing craft dots */}
+        <div className="flex gap-2 items-center mt-1">
+          {threads.map((t, i) => (
+            <div
+              key={i}
+              className="w-2 h-2 rounded-full"
+              style={{
+                backgroundColor: t.color,
+                animation: `dot-bounce 1s ease-in-out ${i * 0.15}s infinite`,
+              }}
+            />
+          ))}
         </div>
-
       </div>
     </motion.div>
   );

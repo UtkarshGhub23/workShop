@@ -156,14 +156,13 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
             ? "bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#8C6A5C]/15 py-3 shadow-sm"
             : "bg-transparent py-5"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          
+
           {/* Logo */}
           <button
             onClick={() => window.location.reload()}
@@ -171,8 +170,8 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-md shadow-terracotta/15 group-hover:scale-105 transition-transform">
               <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                <path d="M12 6v12M6 12h12"/>
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                <path d="M12 6v12M6 12h12" />
               </svg>
             </div>
             <span className="font-display font-bold text-lg tracking-widest text-[#2D1E1A] uppercase">
@@ -222,7 +221,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
                 <Download className="w-5 h-5" />
               </button>
             )}
-            
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="w-10 h-10 rounded-lg flex items-center justify-center border border-terracotta/25 bg-white hover:bg-slate-50 text-terracotta transition-colors focus:outline-none"
@@ -252,7 +251,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
                   {link.label}
                 </button>
               ))}
-              
+
               {showInstallBtn && (
                 <button
                   onClick={() => {
@@ -318,11 +317,10 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
                     <button
                       key={tab.id}
                       onClick={() => setModalTab(tab.id as any)}
-                      className={`flex-1 pb-3 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 cursor-pointer transition-colors ${
-                        active
+                      className={`flex-1 pb-3 text-xs font-bold flex items-center justify-center gap-1.5 border-b-2 cursor-pointer transition-colors ${active
                           ? "border-terracotta text-slate-900"
                           : "border-transparent text-slate-400 hover:text-slate-600"
-                      }`}
+                        }`}
                     >
                       <Icon className="w-4 h-4" />
                       {tab.label}
