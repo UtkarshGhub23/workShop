@@ -41,6 +41,31 @@ function doPost(e) {
     var registrationId = parameter.registrationId || "TAY-" + Math.floor(100000 + Math.random() * 900000).toString();
     var timestamp = new Date();
     
+    // Process Payment Screenshot Upload to Google Drive if present
+    var paymentFileUrl = "";
+    if (formType === "registration" && parameter.paymentScreenshot) {
+      try {
+        var folderName = "Form Filler Payment Screenshots";
+        var folder, folders = DriveApp.getFoldersByName(folderName);
+        if (folders.hasNext()) {
+          folder = folders.next();
+        } else {
+          folder = DriveApp.createFolder(folderName);
+        }
+        
+        var rawData = parameter.paymentScreenshot.split(",")[1];
+        var contentType = parameter.paymentScreenshot.split(";")[0].split(":")[1];
+        var decodedData = Utilities.base64Decode(rawData);
+        var blob = Utilities.newBlob(decodedData, contentType, "Payment_" + registrationId + "_" + (parameter.name || "User").replace(/\s+/g, "_") + ".png");
+        var file = folder.createFile(blob);
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        paymentFileUrl = file.getUrl();
+      } catch (errUpload) {
+        console.error("Failed to upload screenshot to Drive: " + errUpload.toString());
+        paymentFileUrl = "Upload failed: " + errUpload.toString();
+      }
+    }
+    
     // Create sheet and set headers if it does not exist
     if (!sheet) {
       sheet = spreadsheet.insertSheet(sheetName);
@@ -48,7 +73,7 @@ function doPost(e) {
       if (formType === "contact") {
         sheet.appendRow(["Timestamp", "Name", "Email", "Message"]);
       } else {
-        sheet.appendRow(["Timestamp", "Registration ID", "Name", "Email", "Phone", "Age", "Address", "Joining As", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address", "How they heard"]);
+        sheet.appendRow(["Timestamp", "Registration ID", "Name", "Email", "Phone", "Age", "Address", "Joining As", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address", "How they heard", "Payment Screenshot"]);
       }
       
       // Style headers
@@ -61,9 +86,9 @@ function doPost(e) {
     // Get existing headers from Row 1
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     
-    // Ensure Registration ID, Address and Partner columns exist for registrations
+    // Ensure Registration ID, Address, Partner, and Payment columns exist for registrations
     if (formType === "registration") {
-      var requiredHeaders = ["Registration ID", "Address", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address"];
+      var requiredHeaders = ["Registration ID", "Address", "Partner Name", "Partner Age", "Partner Email", "Partner Phone", "Partner Address", "Payment Screenshot"];
       for (var k = 0; k < requiredHeaders.length; k++) {
         var req = requiredHeaders[k];
         if (headers.indexOf(req) === -1) {
@@ -105,6 +130,8 @@ function doPost(e) {
         cellVal = timestamp;
       } else if (headerName === "Registration ID") {
         cellVal = registrationId;
+      } else if (headerName === "Payment Screenshot") {
+        cellVal = paymentFileUrl;
       } else {
         // Find matching parameter key
         for (var pKey in parameterMapping) {
@@ -338,6 +365,10 @@ function doPost(e) {
         '      <tr>' +
         '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">How They Heard</td>' +
         '        <td style="border-bottom: 1px solid #FFFDFB;">' + (parameter.hearAboutUs || '') + '</td>' +
+        '      </tr>' +
+        '      <tr>' +
+        '        <td style="font-weight: bold; border-bottom: 1px solid #FFFDFB;">Payment Screenshot</td>' +
+        '        <td style="border-bottom: 1px solid #FFFDFB;">' + (paymentFileUrl ? '<a href="' + paymentFileUrl + '" style="color: #C87A53; text-decoration: none; font-weight: bold;">View Screenshot</a>' : 'Not Uploaded') + '</td>' +
         '      </tr>' +
         '      <tr>' +
         '        <td style="font-weight: bold;">Timestamp</td>' +
