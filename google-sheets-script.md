@@ -132,7 +132,11 @@ function doPost(e) {
       } else if (headerName === "Registration ID") {
         cellVal = registrationId;
       } else if (headerName === "Payment Screenshot") {
-        cellVal = paymentFileUrl;
+        if (paymentFileUrl.indexOf("Upload failed:") !== -1) {
+          cellVal = paymentFileUrl;
+        } else {
+          cellVal = paymentFileUrl ? '=HYPERLINK("' + paymentFileUrl + '", "View Receipt")' : "";
+        }
       } else {
         // Find matching parameter key
         for (var pKey in parameterMapping) {
