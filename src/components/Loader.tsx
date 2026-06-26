@@ -101,7 +101,7 @@ export default function Loader() {
 
             {/* Embroidery Hoop Group with Swaying Animation */}
             <motion.g
-              animate={{ y: [0, -3, 0], rotate: [0, 1.5, -1.5, 0] }}
+              animate={{ transform: ["translate(0px, 0px) rotate(0deg)", "translate(0px, -3px) rotate(1.5deg)", "translate(0px, 3px) rotate(-1.5deg)", "translate(0px, 0px) rotate(0deg)"] }}
               transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
             >
               {/* Outer Wood Hoop */}
@@ -135,12 +135,11 @@ export default function Loader() {
                 strokeLinecap="round"
                 strokeDasharray="4 4"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: [0, 1, 1, 0], pathOffset: [0, 0, 0.1, 0.1] }}
+                animate={{ pathLength: 1 }}
                 transition={{ 
-                  duration: 6, 
+                  duration: 4.5, 
                   repeat: Infinity, 
-                  ease: "easeInOut",
-                  times: [0, 0.45, 0.55, 1]
+                  ease: "easeInOut"
                 }}
               />
 
@@ -155,7 +154,7 @@ export default function Loader() {
                 stroke="#C87A53"
                 strokeWidth="1"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: [0, 1, 1] }}
+                animate={{ pathLength: 1 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 opacity="0.8"
               />
@@ -167,7 +166,7 @@ export default function Loader() {
                 stroke="#606C38"
                 strokeWidth="1"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: [0, 1, 1] }}
+                animate={{ pathLength: 1 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 opacity="0.8"
               />
@@ -176,15 +175,14 @@ export default function Loader() {
               
               {/* Bead 1: Pink/Terracotta Round Bead */}
               <motion.g
-                initial={{ x: -100, scale: 0 }}
-                animate={{ x: 0, scale: 1 }}
+                initial={{ transform: "translate(-100px, 0px) scale(0)" }}
+                animate={{ transform: "translate(0px, 0px) scale(1)" }}
                 transition={{
-                  x: { type: "spring", stiffness: 60, damping: 15, delay: 0.2 },
-                  scale: { type: "spring", stiffness: 100, delay: 0.2 }
+                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.2 }
                 }}
               >
                 <motion.g
-                  animate={{ y: [-1.5, 1.5, -1.5] }}
+                  animate={{ transform: ["translate(0px, -1.5px)", "translate(0px, 1.5px)", "translate(0px, -1.5px)"] }}
                   transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
                 >
                   <circle cx="52" cy="80" r="7.5" fill="url(#clay-pink)" filter="url(#bead-shadow)" />
@@ -194,15 +192,14 @@ export default function Loader() {
 
               {/* Bead 2: Gold Star Bead */}
               <motion.g
-                initial={{ x: -120, scale: 0 }}
-                animate={{ x: 0, scale: 1 }}
+                initial={{ transform: "translate(-120px, 0px) scale(0)" }}
+                animate={{ transform: "translate(0px, 0px) scale(1)" }}
                 transition={{
-                  x: { type: "spring", stiffness: 60, damping: 15, delay: 0.5 },
-                  scale: { type: "spring", stiffness: 100, delay: 0.5 }
+                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.5 }
                 }}
               >
                 <motion.g
-                  animate={{ y: [1.5, -1.5, 1.5], rotate: [0, 5, -5, 0] }}
+                  animate={{ transform: ["translate(0px, 1.5px) rotate(0deg)", "translate(0px, -1.5px) rotate(5deg)", "translate(0px, 1.5px) rotate(0deg)"] }}
                   transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
                 >
                   {/* Star centered at 70,80 */}
@@ -217,15 +214,14 @@ export default function Loader() {
 
               {/* Bead 3: Olive Flower Bead */}
               <motion.g
-                initial={{ x: -140, scale: 0 }}
-                animate={{ x: 0, scale: 1 }}
+                initial={{ transform: "translate(-140px, 0px) scale(0)" }}
+                animate={{ transform: "translate(0px, 0px) scale(1)" }}
                 transition={{
-                  x: { type: "spring", stiffness: 60, damping: 15, delay: 0.8 },
-                  scale: { type: "spring", stiffness: 100, delay: 0.8 }
+                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 0.8 }
                 }}
               >
                 <motion.g
-                  animate={{ y: [-1.2, 1.2, -1.2], rotate: [0, -15, 15, 0] }}
+                  animate={{ transform: ["translate(0px, -1.2px) rotate(0deg)", "translate(0px, 1.2px) rotate(-15deg)", "translate(0px, -1.2px) rotate(0deg)"] }}
                   transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                 >
                   {/* 5-Petal Flower centered at 90,80 */}
@@ -241,15 +237,14 @@ export default function Loader() {
 
               {/* Bead 4: Terracotta Small Heart Charm */}
               <motion.g
-                initial={{ x: -160, scale: 0 }}
-                animate={{ x: 0, scale: 1 }}
+                initial={{ transform: "translate(-160px, 0px) scale(0)" }}
+                animate={{ transform: "translate(0px, 0px) scale(1)" }}
                 transition={{
-                  x: { type: "spring", stiffness: 60, damping: 15, delay: 1.1 },
-                  scale: { type: "spring", stiffness: 100, delay: 1.1 }
+                  transform: { type: "spring", stiffness: 60, damping: 15, delay: 1.1 }
                 }}
               >
                 <motion.g
-                  animate={{ y: [1.8, -1.8, 1.8], rotate: [0, 8, -8, 0] }}
+                  animate={{ transform: ["translate(0px, 1.8px) rotate(0deg)", "translate(0px, -1.8px) rotate(8deg)", "translate(0px, 1.8px) rotate(0deg)"] }}
                   transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
                 >
                   {/* Small Heart Charm hanging down slightly, centered around 108, 83 */}
@@ -268,11 +263,14 @@ export default function Loader() {
 
             {/* Sewing Needle Group doing stitching motion at the top edge of the heart */}
             <motion.g
-              initial={{ x: 80, y: 35, rotate: -20 }}
+              initial={{ transform: "translate(80px, 35px) rotate(-20deg)" }}
               animate={{
-                x: [80, 84, 76, 80],
-                y: [35, 18, 38, 35],
-                rotate: [-20, -5, -35, -20]
+                transform: [
+                  "translate(80px, 35px) rotate(-20deg)",
+                  "translate(84px, 18px) rotate(-5deg)",
+                  "translate(76px, 38px) rotate(-35deg)",
+                  "translate(80px, 35px) rotate(-20deg)"
+                ]
               }}
               transition={{
                 duration: 4.5,
