@@ -15,7 +15,7 @@ export default function WishingPopup() {
   const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
 
   return (
-    <div className="fixed top-4 left-0 right-0 mx-auto z-[100] flex items-center gap-3 rounded-xl bg-white border border-brown/10 shadow-lg px-5 py-3 w-fit animate-[slideDown_0.4s_ease-out]">
+    <div className="fixed top-20 md:top-4 left-4 right-4 md:left-0 md:right-0 mx-auto z-[200] flex items-center gap-3 rounded-xl bg-white border border-brown/10 shadow-lg px-4 py-3 w-auto md:w-fit animate-[slideDown_0.4s_ease-out]">
       <span className="text-xl">🎉</span>
       <p className="text-sm text-[#2D1E1A]">
         <span className="font-semibold text-terracotta">{greeting}!</span>{" "}
