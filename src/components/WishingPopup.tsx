@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 export default function WishingPopup() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 300);
+    const t = setTimeout(() => setVisible(false), 4000);
     return () => clearTimeout(t);
   }, []);
 
