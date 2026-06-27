@@ -15,6 +15,7 @@ import FAQ from "./components/FAQ";
 import RegistrationForm from "./components/RegistrationForm";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import WishingPopup from "./components/WishingPopup";
 
 // Toast Type
 interface ToastState {
@@ -137,6 +138,9 @@ export default function App() {
       <AnimatePresence>
         {loading && <Loader />}
       </AnimatePresence>
+
+      {/* Wishing Popup - shows after loader finishes */}
+      {!loading && <WishingPopup />}
 
       {/* 3D WebGL Background (adjusted for Light Mode) */}
       <BackgroundThree />
