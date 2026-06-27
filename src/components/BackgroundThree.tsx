@@ -1,10 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function BackgroundThree() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile] = useState(() => window.innerWidth < 768);
 
   useEffect(() => {
+    // Skip WebGL entirely on mobile — CSS gradient fallback is shown instead
+    if (isMobile) return;
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -18,14 +22,14 @@ export default function BackgroundThree() {
     );
     camera.position.z = 8;
 
-    // 2. Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // 2. Renderer — lower pixel ratio for performance
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
     // 3. Constellation Particles Setup
-    const particleCount = 200;
+    const particleCount = 120;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -68,7 +72,7 @@ export default function BackgroundThree() {
     scene.add(particles);
 
     // 4. Glowing Wireframe Torus Knot in Center
-    const knotGeom = new THREE.TorusKnotGeometry(2, 0.4, 120, 16);
+    const knotGeom = new THREE.TorusKnotGeometry(2, 0.4, 80, 12);
     const knotMat = new THREE.MeshBasicMaterial({
       color: 0xC87A53, // Terracotta
       wireframe: true,
@@ -102,12 +106,17 @@ export default function BackgroundThree() {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // 7. Animation Loop
+    // 7. Animation Loop — throttled to ~30fps for better perf
     let animId: number;
     const clock = new THREE.Clock();
+    let lastFrame = 0;
+    const frameInterval = 1000 / 30; // 30fps cap
 
-    const animate = () => {
+    const animate = (now: number) => {
       animId = requestAnimationFrame(animate);
+
+      if (now - lastFrame < frameInterval) return;
+      lastFrame = now;
 
       const elapsedTime = clock.getElapsedTime();
 
@@ -129,7 +138,7 @@ export default function BackgroundThree() {
 
       renderer.render(scene, camera);
     };
-    animate();
+    animate(0);
 
     // 8. Resize Handler
     const handleResize = () => {
@@ -154,7 +163,7 @@ export default function BackgroundThree() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div

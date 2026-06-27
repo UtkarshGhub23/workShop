@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 
+const SLIDES = ["/hero-crafts.png", "/hero-slide-2.png", "/hero-slide-3.png"];
+const SLIDE_ALTS = ["Friendship Day DIY Workshop Crafts", "Aesthetic Crafting Hands", "Cozy Material Shelf"];
+
 export default function LivingHeroImage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile] = useState(() => window.innerWidth < 768);
 
   // Auto-slide every 7 seconds
   useEffect(() => {
@@ -51,6 +55,42 @@ export default function LivingHeroImage() {
     setCurrentSlide(idx);
   };
 
+  // ─── Mobile: Simple image slider, no parallax/cinemagraph ───
+  if (isMobile) {
+    return (
+      <div className="relative w-full h-auto rounded-[24px] overflow-hidden aspect-[4/5] bg-stone-900 select-none shadow-inner">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentSlide}
+            src={SLIDES[currentSlide]}
+            alt={SLIDE_ALTS[currentSlide]}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+          />
+        </AnimatePresence>
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2.5 px-3 py-1.5 rounded-full bg-slate-950/20 border border-white/5">
+          {[0, 1, 2].map((idx) => (
+            <button
+              key={idx}
+              onClick={() => handleDotClick(idx)}
+              className={`w-2 h-2 rounded-full cursor-pointer transition-all duration-300 ${
+                currentSlide === idx
+                  ? "bg-white scale-125 shadow-sm"
+                  : "bg-white/45"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Desktop: Full parallax cinemagraph experience ───
   return (
     <div
       ref={containerRef}

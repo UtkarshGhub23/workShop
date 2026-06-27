@@ -49,8 +49,8 @@ export default function Hero({ onNavigate }: HeroProps) {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-28 pb-20 md:py-32 overflow-hidden bg-transparent">
       {/* Soft background glow circles to match the color theme */}
-      <div className="absolute top-[20%] left-[10%] w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-terracotta/10 to-transparent blur-3xl -z-10 animate-pulse" style={{ animationDuration: "12s" }}></div>
-      <div className="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-olive/8 to-transparent blur-3xl -z-10 animate-pulse" style={{ animationDuration: "10s" }}></div>
+      <div className="absolute top-[20%] left-[10%] w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-terracotta/10 to-transparent blur-3xl -z-10 hidden md:block" style={{ animationDuration: "12s" }}></div>
+      <div className="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-olive/8 to-transparent blur-3xl -z-10 hidden md:block" style={{ animationDuration: "10s" }}></div>
 
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10">
         
@@ -61,7 +61,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full border border-terracotta/20 bg-[#C87A53]/5 backdrop-blur-md text-terracotta text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm hover:bg-[#C87A53]/10 transition-colors duration-300"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full border border-terracotta/20 bg-[#C87A53]/5 text-terracotta text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm hover:bg-[#C87A53]/10 transition-colors duration-300"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C87A53] opacity-75"></span>
@@ -124,7 +124,7 @@ export default function Hero({ onNavigate }: HeroProps) {
 
             <button
               onClick={() => scrollToSection("about")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full border border-terracotta/25 bg-white/40 backdrop-blur-md hover:bg-white hover:border-terracotta hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-terracotta text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center"
+              className="w-full sm:w-auto px-8 py-4 rounded-full border border-terracotta/25 bg-white/60 hover:bg-white hover:border-terracotta hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-terracotta text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center"
             >
               Learn More
             </button>

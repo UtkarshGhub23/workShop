@@ -29,6 +29,7 @@
     scroll-behavior: smooth;
     background-color: var(--color-beige);
     color: #3C2E2A;
+    -webkit-text-size-adjust: 100%;
   }
   
   body {
@@ -36,11 +37,24 @@
     overflow-x: hidden;
     /* Disable pull-to-refresh in PWA standalone mode */
     overscroll-behavior-y: contain;
+    /* GPU-accelerated scrolling for mobile */
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     color: #2D1E1A;
+  }
+
+  /* Smooth touch-based interactions */
+  *, *::before, *::after {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Content visibility for off-screen sections — huge mobile perf win */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
   }
 
   /* Custom scrollbar for light theme premium feel */
@@ -57,6 +71,19 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(200, 122, 83, 0.6);
+  }
+}
+
+/* Reduce heavy effects on mobile */
+@media (max-width: 767px) {
+  .glassmorphic {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Reduce/disable non-essential animations on mobile */
+  .animate-pulse {
+    animation-duration: 20s !important;
   }
 }
 
