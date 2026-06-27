@@ -48,6 +48,10 @@ export default function Hero({ onNavigate }: HeroProps) {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-28 pb-20 md:py-32 overflow-hidden bg-transparent">
+      {/* Soft background glow circles to match the color theme */}
+      <div className="absolute top-[20%] left-[10%] w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-terracotta/10 to-transparent blur-3xl -z-10 animate-pulse" style={{ animationDuration: "12s" }}></div>
+      <div className="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-olive/8 to-transparent blur-3xl -z-10 animate-pulse" style={{ animationDuration: "10s" }}></div>
+
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10">
         
         {/* Left Content (Grid span 7) */}
@@ -57,21 +61,27 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-terracotta/25 bg-terracotta/5 text-terracotta text-xs sm:text-sm font-bold uppercase tracking-wider mb-6"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full border border-terracotta/20 bg-[#C87A53]/5 backdrop-blur-md text-terracotta text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm hover:bg-[#C87A53]/10 transition-colors duration-300"
           >
-            <span className="w-2 h-2 rounded-full bg-terracotta animate-pulse"></span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C87A53] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C87A53]"></span>
+            </span>
             Trayyaai × Ayra Friendship Day Special
           </motion.div>
 
-          {/* Dynamic Greeting */}
-          <motion.p
+          {/* Dynamic Greeting with line separator */}
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
-            className="text-[10px] sm:text-xs uppercase tracking-widest text-[#8C6A5C] font-extrabold mb-3"
+            className="flex items-center gap-3 mb-3"
           >
-            ✨ {getGreeting()}, Creator!
-          </motion.p>
+            <span className="w-6 h-[1.5px] bg-[#8C6A5C]/35"></span>
+            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#8C6A5C] font-extrabold">
+              ✨ {getGreeting()}, Creator!
+            </p>
+          </motion.div>
 
           {/* Hero Title */}
           <motion.h1
@@ -81,7 +91,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#2D1E1A] leading-[1.12] mb-6"
           >
             This Friendship Day,<br />
-            <span className="text-[#C87A53] italic">
+            <span className="bg-gradient-to-r from-[#C87A53] via-[#E28E63] to-[#8C6A5C] bg-clip-text text-transparent italic font-display">
               Make Memories,
             </span>{" "}
             Not Just Plans.
@@ -106,7 +116,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           >
             <button
               onClick={() => onNavigate("register")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#C87A53] hover:bg-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-lg shadow-terracotta/10 hover:shadow-terracotta/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#C87A53] to-[#B36842] hover:from-[#B36842] hover:to-[#8C6A5C] text-white text-sm font-bold uppercase tracking-wider shadow-xl shadow-terracotta/20 hover:shadow-terracotta/35 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 group relative overflow-hidden animate-btn-shine"
             >
               Register Now
               <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
@@ -114,7 +124,7 @@ export default function Hero({ onNavigate }: HeroProps) {
 
             <button
               onClick={() => scrollToSection("about")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full border border-terracotta/25 bg-white/70 hover:bg-white text-terracotta text-sm font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center"
+              className="w-full sm:w-auto px-8 py-4 rounded-full border border-terracotta/25 bg-white/40 backdrop-blur-md hover:bg-white hover:border-terracotta hover:shadow-lg hover:-translate-y-1 active:translate-y-0 text-terracotta text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center"
             >
               Learn More
             </button>
@@ -122,7 +132,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             {showInstallBtn && (
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent("trigger-install"))}
-                className="w-full sm:w-auto px-6 py-4 rounded-full border border-dashed border-[#8C6A5C]/40 text-[#8C6A5C] hover:text-[#C87A53] text-sm font-bold uppercase tracking-wider cursor-pointer transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-4 rounded-full border border-[#8C6A5C]/25 bg-[#FFFDFB]/30 hover:bg-[#FFFDFB]/85 hover:border-terracotta/40 hover:-translate-y-1 active:translate-y-0 text-[#8C6A5C] hover:text-[#C87A53] text-sm font-bold uppercase tracking-wider cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 shadow-sm"
               >
                 <Download className="w-4 h-4" />
                 Install App
@@ -142,8 +152,8 @@ export default function Hero({ onNavigate }: HeroProps) {
               { icon: <Users className="w-5 h-5 text-olive" />, label: "Interactive", val: "Mini Games & Surprises" },
               { icon: <MapPin className="w-5 h-5 text-brown" />, label: "Location", val: "Mathura, UP" },
             ].map((spec) => (
-              <div key={spec.label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#FFFDFB] border border-[#8C6A5C]/10 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-[#FAF6F0] flex items-center justify-center border border-[#8C6A5C]/5">
+              <div key={spec.label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#FFFDFB]/60 backdrop-blur-sm border border-[#8C6A5C]/10 shadow-sm hover:border-terracotta/35 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default group">
+                <div className="w-10 h-10 rounded-xl bg-[#FAF6F0] flex items-center justify-center border border-[#8C6A5C]/5 group-hover:scale-105 group-hover:bg-[#F5EFEB] transition-all duration-300">
                   {spec.icon}
                 </div>
                 <div>
@@ -165,12 +175,13 @@ export default function Hero({ onNavigate }: HeroProps) {
           {/* Decorative Backdrops */}
           <div className="absolute -inset-4 bg-gradient-to-tr from-terracotta/20 to-olive/15 rounded-[40px] blur-2xl -z-10 opacity-70"></div>
           
-          <div className="relative rounded-[32px] overflow-hidden border border-white bg-white/80 p-3 shadow-xl max-w-md w-full">
+          <div className="relative rounded-[32px] overflow-hidden border border-white/60 bg-[#FFFDFB]/50 p-3 shadow-2xl backdrop-blur-sm max-w-md w-full hover:shadow-[0_20px_50px_rgba(200,122,83,0.15)] transition-all duration-500">
             <LivingHeroImage />
-            {/* Small Floating Details Badge */}
-            <div className="absolute bottom-6 right-6 bg-[#FFFDFB]/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-terracotta/15 shadow-lg flex flex-col items-start">
-              <span className="text-[9px] font-bold text-terracotta uppercase tracking-widest">Organized By</span>
-              <span className="text-xs font-bold text-[#2D1E1A] font-display">Trayyaai × Ayra</span>
+            
+            {/* Dark glass floating details badge */}
+            <div className="absolute bottom-6 right-6 bg-slate-900/85 backdrop-blur-md px-4.5 py-2.5 rounded-2xl border border-white/10 shadow-2xl flex flex-col items-start z-20 group/badge hover:bg-slate-950 transition-colors duration-300">
+              <span className="text-[9px] font-extrabold text-white/50 uppercase tracking-widest">Organized By</span>
+              <span className="text-xs font-extrabold text-white font-sans group-hover/badge:text-terracotta transition-colors">Trayyaai × Ayra</span>
             </div>
           </div>
         </motion.div>
@@ -178,7 +189,10 @@ export default function Hero({ onNavigate }: HeroProps) {
       </div>
 
       {/* Scroll Down */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 opacity-40 select-none">
+      <div 
+        onClick={() => scrollToSection("about")}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity duration-300 select-none cursor-pointer"
+      >
         <span className="text-[9px] uppercase tracking-widest text-[#8C6A5C] font-semibold">Scroll to Discover</span>
         <div className="w-5 h-8 rounded-full border border-[#8C6A5C] flex justify-center p-1">
           <motion.div

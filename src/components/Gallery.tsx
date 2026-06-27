@@ -19,7 +19,7 @@ export default function Gallery() {
   return (
     <section id="gallery" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
@@ -48,12 +48,12 @@ export default function Gallery() {
               {/* Visual Card Gradient */}
               <div className={`w-full h-full bg-gradient-to-tr ${item.gradient} flex flex-col items-center justify-center p-6 relative`}>
                 <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:16px_16px] opacity-35"></div>
-                
+
                 {/* Visual Category tag */}
                 <div className="absolute top-4 left-4 bg-[#FFFDFB]/95 backdrop-blur-md px-3 py-1 rounded-full border border-[#8C6A5C]/10 text-[9px] font-bold text-[#8C6A5C] uppercase tracking-wider shadow-sm">
                   {item.category}
                 </div>
-                
+
                 {/* Zoom icon */}
                 <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#FFFDFB]/90 backdrop-blur-md flex items-center justify-center border border-[#8C6A5C]/10 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Maximize2 className="w-3.5 h-3.5 text-[#2D1E1A]" />

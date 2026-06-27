@@ -28,7 +28,7 @@ export default function App() {
   const [toasts, setToasts] = useState<ToastState[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"home" | "team" | "faq" | "register">("home");
-  
+
   // Service Worker Update State
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const [updateAvailable, setUpdateAvailable] = useState(false);
@@ -133,7 +133,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen font-sans selection:bg-gold/30 selection:text-white bg-[#fcfbfd] text-slate-800">
-      
+
       <AnimatePresence>
         {loading && <Loader />}
       </AnimatePresence>
@@ -184,8 +184,8 @@ export default function App() {
               <RefreshCw className="w-5 h-5 text-gold animate-spin" />
               <span className="text-sm font-extrabold">New Version Available!</span>
             </div>
-            <button 
-              onClick={() => setUpdateAvailable(false)} 
+            <button
+              onClick={() => setUpdateAvailable(false)}
               className="text-slate-400 hover:text-white"
             >
               <X className="w-4 h-4" />
@@ -208,13 +208,12 @@ export default function App() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`p-4 rounded-xl border flex items-center justify-between gap-3 shadow-xl transition-all duration-300 ${
-              toast.type === "success"
+            className={`p-4 rounded-xl border flex items-center justify-between gap-3 shadow-xl transition-all duration-300 ${toast.type === "success"
                 ? "bg-slate-950 border-emerald-500/35 text-white"
                 : toast.type === "error"
-                ? "bg-slate-950 border-rose/35 text-white"
-                : "bg-slate-950 border-gold/35 text-white"
-            }`}
+                  ? "bg-slate-950 border-rose/35 text-white"
+                  : "bg-slate-950 border-gold/35 text-white"
+              }`}
           >
             <div className="flex items-center gap-2 text-left">
               {toast.type === "success" ? (
