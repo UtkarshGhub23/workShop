@@ -19,7 +19,9 @@ import {
   CheckCheck, 
   MapPin, 
   UploadCloud, 
-  ArrowLeft 
+  ArrowLeft,
+  Printer,
+  Ticket
 } from "lucide-react";
 
 // Define Zod validation schema for the Interest Form
@@ -450,34 +452,38 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="text-center py-6 flex flex-col items-center gap-5"
               >
-                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-lg shadow-terracotta/15 animate-bounce">
-                  <ShieldCheck className="w-10 h-10 text-white" />
+                {/* Success Sparkle Glow */}
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-terracotta/20 blur-xl animate-pulse" />
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center shadow-lg shadow-terracotta/15 relative z-10 animate-bounce">
+                    <ShieldCheck className="w-10 h-10 text-white" />
+                  </div>
                 </div>
                 
                 <h3 className="font-display font-extrabold text-3xl text-[#2D1E1A] mt-2">
-                  Registration Submitted!
+                  Registration Received!
                 </h3>
                 <p className="text-[#8C6A5C] text-xs sm:text-sm max-w-md leading-relaxed mb-2">
                   Thank you, <strong className="text-[#2D1E1A]">{submittedData?.name}</strong>! Your registration and payment details have been successfully received. We will verify your transaction screenshot and send a confirmation email shortly.
                 </p>
 
                 {/* VIP Pass Ticket Card */}
-                <div className="w-full max-w-sm bg-[#FFFDFB] border border-[#8C6A5C]/15 rounded-3xl shadow-lg relative overflow-visible mt-2">
+                <div className="print-ticket w-full max-w-sm bg-[#FFFDFB] border border-[#8C6A5C]/15 rounded-3xl shadow-lg relative overflow-visible mt-2">
                   
                   {/* Top Ticket Stub */}
-                  <div className="p-5 text-left bg-gradient-to-br from-[#FAF6F0] to-[#FAF6F0]/50 rounded-t-3xl border-b border-[#8C6A5C]/10 relative">
+                  <div className="p-5 text-left bg-gradient-to-r from-terracotta to-brown rounded-t-3xl border-b border-[#8C6A5C]/10 relative text-white">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-[9px] uppercase tracking-widest text-[#8C6A5C] font-extrabold">Workshop Ticket Waitlist</span>
-                        <h4 className="font-display font-black text-base text-[#2D1E1A] tracking-wider uppercase mt-1">TRAYYAAI × AYRA</h4>
+                        <span className="text-[9px] uppercase tracking-widest text-white/80 font-bold">Workshop Ticket Waitlist</span>
+                        <h4 className="font-display font-black text-base tracking-wider uppercase mt-1">TRAYYAAI × AYRA</h4>
                       </div>
-                      <span className="text-[9px] font-extrabold uppercase bg-emerald-600/10 text-emerald-700 px-2.5 py-1 rounded-full tracking-wider">
+                      <span className="text-[9px] font-extrabold uppercase bg-white/20 text-white px-2.5 py-1 rounded-full tracking-wider">
                         Reserved
                       </span>
                     </div>
                   </div>
 
-                  {/* Perforated Divider (Notches outside border) */}
+                  {/* Perforated Divider */}
                   <div className="relative my-1 -mx-[1px] h-0 select-none pointer-events-none">
                     {/* Left notch */}
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-[#fcfbfd] border-r border-[#8C6A5C]/15 rounded-full z-10"></div>
@@ -504,12 +510,12 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                           {copied ? (
                             <>
                               <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
-                              <span className="text-[9px] text-emerald-600 uppercase">Copied!</span>
+                              <span className="text-[9px] text-emerald-600 uppercase font-bold">Copied!</span>
                             </>
                           ) : (
                             <>
                               <Copy className="w-3.5 h-3.5" />
-                              <span className="text-[9px] uppercase">Copy</span>
+                              <span className="text-[9px] uppercase font-bold">Copy</span>
                             </>
                           )}
                         </button>
@@ -519,11 +525,15 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     {/* Detail Grid */}
                     <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-xs border-b border-[#8C6A5C]/10 pb-3">
                       <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Attendee</span>
+                        <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                          <User className="w-3 h-3 text-terracotta" /> Attendee
+                        </span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.name}</strong>
                       </div>
                       <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Format Option</span>
+                        <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                          <Ticket className="w-3 h-3 text-terracotta" /> Ticket Option
+                        </span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block truncate">{submittedData?.joiningAs}</strong>
                       </div>
                       {submittedData?.joiningAs !== "Solo" && submittedData?.partnerName && (
@@ -558,41 +568,72 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                         <strong className="text-emerald-700 font-bold text-xs block">₹{calculateTotalPrice()}</strong>
                       </div>
                       <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Payment Verification</span>
-                        <strong className="text-amber-600 font-bold text-xs block uppercase tracking-wider text-left">Pending</strong>
+                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Payment Status</span>
+                        <strong className="text-amber-600 font-bold text-xs block uppercase tracking-wider text-left">Pending Verification</strong>
                       </div>
                       <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Age</span>
+                        <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                          <User className="w-3 h-3 text-terracotta" /> Age
+                        </span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block">{submittedData?.age} Years</strong>
                       </div>
                       <div>
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Date</span>
+                        <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                          <Calendar className="w-3 h-3 text-terracotta" /> Date
+                        </span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block">August 2, 2026</strong>
                       </div>
                       <div className="col-span-2 border-t border-[#8C6A5C]/10 pt-2">
-                        <span className="block text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">Your Address</span>
+                        <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider text-[#8C6A5C]/70 font-semibold mb-0.5">
+                          <MapPin className="w-3 h-3 text-terracotta" /> Delivery/Billing Address
+                        </span>
                         <strong className="text-[#2D1E1A] font-bold text-xs block truncate" title={submittedData?.address}>
                           {submittedData?.address}
                         </strong>
                       </div>
                     </div>
 
-                    {/* Ticket Footer / Venue info */}
-                    <div className="text-[9px] text-[#8C6A5C]/80 leading-relaxed flex flex-col gap-1">
-                      <p>📍 <strong>Venue:</strong> Mathura, Uttar Pradesh (Exact location shared upon booking)</p>
-                      <p>✉️ <strong>Confirmation Sent To:</strong> {submittedData?.email}</p>
+                    {/* Venue Info */}
+                    <div className="text-[9.5px] text-[#8C6A5C]/85 leading-relaxed flex flex-col gap-1">
+                      <p>📍 <strong>Venue:</strong> Mathura, Uttar Pradesh (Exact venue shared via email)</p>
+                      <p>✉️ <strong>Confirmation Sent To:</strong> <span className="font-semibold text-[#2D1E1A]">{submittedData?.email}</span></p>
                     </div>
+
+                    {/* Barcode representation */}
+                    <div className="flex flex-col items-center gap-1 mt-3 pt-4 border-t border-[#8C6A5C]/10 w-full">
+                      <div className="h-9 flex gap-[2px] items-end justify-center opacity-70">
+                        {[1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 1, 2, 3, 1, 4, 2, 1, 3, 1, 2, 1, 3, 2, 1, 4].map((width, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-[#2D1E1A] h-full"
+                            style={{ width: `${width}px` }}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-mono text-[9px] tracking-[0.25em] text-[#8C6A5C]">
+                        {submittedData?.registrationId || "TR-00000"}
+                      </span>
+                    </div>
+
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="mt-6 px-6 py-3 rounded-xl border border-[#8C6A5C]/20 bg-white text-[#8C6A5C] hover:text-[#2D1E1A] hover:bg-slate-50 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
-                >
-                  Register Another Interest Form
-                </motion.button>
+                {/* Print/Save and Reset buttons */}
+                <div className="no-print flex flex-col sm:flex-row gap-3 mt-6 w-full max-w-sm">
+                  <button
+                    onClick={() => window.print()}
+                    className="flex-1 py-3 rounded-xl bg-terracotta hover:bg-brown text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-terracotta/15 flex items-center justify-center gap-2 cursor-pointer transition-all duration-200"
+                  >
+                    <Printer className="w-4 h-4" />
+                    Print / Save Pass
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="flex-1 py-3 rounded-xl border border-[#8C6A5C]/20 bg-white text-[#8C6A5C] hover:text-[#2D1E1A] hover:bg-slate-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
+                  >
+                    Register Another
+                  </button>
+                </div>
               </motion.div>
             ) : step === 1 ? (
               <motion.div
