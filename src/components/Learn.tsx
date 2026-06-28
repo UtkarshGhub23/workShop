@@ -3,37 +3,37 @@ import { Users, Sparkles, Gift } from "lucide-react";
 
 const MODULES = [
   {
-    step: "Interaction 01",
-    title: "Teamwork Games",
+    step: "Challenge 01",
+    title: "Blind Pair Challenge",
     icon: <Users className="w-5 h-5 text-terracotta" />,
-    desc: "Cooperative, lighthearted challenges designed to encourage coordination, break the ice, and spark organic conversations with fellow participants.",
+    desc: "Work together to complete a fun creative challenge.",
   },
   {
-    step: "Interaction 02",
-    title: "Creative Challenges",
+    step: "Challenge 02",
+    title: "Speed Design Challenge",
     icon: <Sparkles className="w-5 h-5 text-olive" />,
-    desc: "Spontaneous craft rounds and design face-offs that allow you to express your artistic ideas and test your fast-thinking skills in a friendly format.",
+    desc: "A timed decoration challenge where creativity meets speed.",
   },
   {
-    step: "Interaction 03",
-    title: "Surprise Activities",
+    step: "Challenge 03",
+    title: "Lucky Surprise Prize",
     icon: <Gift className="w-5 h-5 text-brown" />,
-    desc: "Bespoke puzzle-solving steps, sensory design rounds, and secret interactive tasks scattered throughout the session to keep things fresh and fun.",
+    desc: "Every participant gets a chance to win exciting prizes through surprise activities during the workshop.",
   },
 ];
 
 export default function Learn() {
   return (
-    <section id="learn" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
+    <section id="learn" className="py-16 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex px-3 py-1 rounded-full border border-terracotta/25 bg-terracotta/5 text-xs text-terracotta uppercase tracking-wider font-bold mb-4">
             Interactive Play
           </div>
           <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#2D1E1A] leading-tight">
-            Mini Games & Interactions
+            Fun Challenges & Prizes
           </h2>
           <p className="text-[#8C6A5C] text-base sm:text-lg mt-4 leading-relaxed">
             Crafting is even better with laughter. Throughout the workshop, we interlace hands-on DIY work with delightful mini challenges to create real memories.

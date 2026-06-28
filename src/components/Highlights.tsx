@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Package, Gift, Users, Sparkles, Award, Palette, Camera, Heart } from "lucide-react";
+import { Package, Gift, Users, Award } from "lucide-react";
 
 const CARDS = [
   {
@@ -9,7 +9,7 @@ const CARDS = [
   },
   {
     icon: <Gift className="w-8 h-8 text-terracotta" />,
-    title: "Take Your Creations Home",
+    title: "Take Home Your Creations",
     desc: "Everything you stitch, paint, bead, or customize goes home with you in our custom premium bags.",
   },
   {
@@ -18,35 +18,15 @@ const CARDS = [
     desc: "We keep group sizes small to ensure everyone receives personal guidance and a cozy crafting space.",
   },
   {
-    icon: <Sparkles className="w-8 h-8 text-olive" />,
-    title: "Games & Challenges",
-    desc: "Participate in quick-fire creative icebreakers, collaborative teamwork games, and trivia.",
-  },
-  {
     icon: <Award className="w-8 h-8 text-brown" />,
-    title: "Prizes",
-    desc: "Exciting awards and special handcrafted surprises await the winners of our interaction rounds.",
-  },
-  {
-    icon: <Palette className="w-8 h-8 text-terracotta" />,
-    title: "Creative Atmosphere",
-    desc: "Craft inside a cozy, beautiful space surrounded by soft music, warm aesthetics, and visual inspiration.",
-  },
-  {
-    icon: <Camera className="w-8 h-8 text-brown" />,
-    title: "Photo Moments",
-    desc: "Take aesthetic polaroids and share-worthy social media snapshots at our curated photo spots.",
-  },
-  {
-    icon: <Heart className="w-8 h-8 text-olive" />,
-    title: "Beginner Friendly",
-    desc: "No prior experience or craft skills needed. Our warm instructors will help you step-by-step.",
+    title: "Games & Prizes",
+    desc: "Participate in quick-fire creative icebreakers, collaborative teamwork games, and win exciting prizes.",
   },
 ];
 
 export default function Highlights() {
   return (
-    <section id="highlights" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
+    <section id="highlights" className="py-16 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}

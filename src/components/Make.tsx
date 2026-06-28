@@ -1,60 +1,36 @@
 import { motion } from "framer-motion";
-import { ShoppingBag, Heart, Users, Sparkles, Layers, Gift } from "lucide-react";
+import { ShoppingBag, Heart, Users } from "lucide-react";
 
 const PROJECTS = [
   {
-    title: "Personalized Pouch or Waist Bag",
+    title: "Personalized Canvas Pouch",
     icon: ShoppingBag,
     iconColor: "text-terracotta",
     bgClass: "bg-[#FFFDFB]",
     tech: "Canvas Customization",
-    desc: "Design and personalize your own aesthetic canvas pouch or multi-purpose waist bag using modern textile paints, custom patches, and minimalist accents.",
+    desc: "Create and customize your own canvas pouch using acrylic paints, charms, beads, ribbons and creative accessories.",
   },
   {
-    title: "Two Friendship Bracelets",
+    title: "Two Handmade Bracelets",
     icon: Heart,
     iconColor: "text-terracotta",
     bgClass: "bg-[#FFFDFB]",
     tech: "Weaving & Beading",
-    desc: "Craft two unique friendship bracelets using a collection of premium lettering beads, colorful threads, metallic spacers, and tassels to wear or share.",
+    desc: "Design two personalized bracelets using beads, alphabet beads and charms.",
   },
   {
-    title: "Fun Interactive Mini Games",
+    title: "Fun Challenges",
     icon: Users,
     iconColor: "text-olive",
     bgClass: "bg-[#FFFDFB]",
-    tech: "Teamwork & Icebreakers",
-    desc: "Participate in engaging teamwork games and quick-fire creative tasks designed to help you connect and celebrate together.",
-  },
-  {
-    title: "Surprise Creative Activities",
-    icon: Sparkles,
-    iconColor: "text-olive",
-    bgClass: "bg-[#FFFDFB]",
-    tech: "Special Collaborations",
-    desc: "Enjoy mystery design rounds and cooperative crafting activities that spark spontaneous joy and laughter.",
-  },
-  {
-    title: "Aesthetic Photo Corner",
-    icon: Layers,
-    iconColor: "text-brown",
-    bgClass: "bg-[#FFFDFB]",
-    tech: "Pinterest Photo Booth",
-    desc: "Capture beautiful polaroids and aesthetic social photos of your handiwork and memories at our custom-designed photogenic corner.",
-  },
-  {
-    title: "Complimentary Surprises",
-    icon: Gift,
-    iconColor: "text-terracotta",
-    bgClass: "bg-[#FFFDFB]",
-    tech: "All Materials Included",
-    desc: "Every registration includes premium craft materials, step-by-step guidance, and lovely complimentary surprise gifts to take home.",
+    tech: "Mini Games & Fun",
+    desc: "Participate in exciting mini games throughout the workshop and have fun with your friends.",
   },
 ];
 
 export default function Make() {
   return (
-    <section id="make" className="py-24 px-4 bg-transparent border-t border-[#8C6A5C]/15">
+    <section id="make" className="py-16 px-4 bg-transparent border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}

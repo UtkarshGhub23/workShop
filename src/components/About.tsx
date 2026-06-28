@@ -2,7 +2,7 @@ import { CheckCircle2, Users } from "lucide-react";
 
 export default function About() {
   return (
-    <section id="about" className="py-24 px-4 bg-transparent relative border-t border-[#8C6A5C]/15">
+    <section id="about" className="py-16 px-4 bg-transparent relative border-t border-[#8C6A5C]/15">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
         
         {/* Left Side: Who Can Join card */}
