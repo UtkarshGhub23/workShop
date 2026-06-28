@@ -13,6 +13,28 @@ const LINKS = [
   { id: "contact", label: "Location" },
 ];
 
+const CORE_LINKS = [
+  { id: "about", label: "About" },
+  { id: "highlights", label: "Highlights" },
+  { id: "schedule", label: "Why Join" },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 15 } },
+};
+
 interface HeaderProps {
   currentView: "home" | "team" | "faq" | "register";
   onNavigate: (view: "home" | "team" | "faq" | "register") => void;
@@ -155,124 +177,159 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#8C6A5C]/15 py-3 shadow-sm"
-          : "bg-transparent py-5"
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl transition-all duration-300 rounded-full ${scrolled
+          ? "bg-[#FAF6F0]/80 backdrop-blur-xl border border-[#8C6A5C]/20 py-2.5 shadow-lg shadow-[#8C6A5C]/5"
+          : "bg-[#FAF6F0]/45 backdrop-blur-md border border-[#8C6A5C]/10 py-3.5 shadow-sm"
           }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="px-5 sm:px-6 flex items-center justify-between">
 
           {/* Logo */}
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
+            className="flex items-center gap-2 group cursor-pointer focus:outline-none shrink-0"
           >
-            <div className="w-9 h-9 rounded-full bg-terracotta/5 border border-terracotta/25 flex items-center justify-center group-hover:bg-terracotta/10 group-hover:border-terracotta/40 transition-all duration-500 shadow-sm">
-              <svg className="w-4.5 h-4.5 text-terracotta group-hover:rotate-45 transition-transform duration-500" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <div className="w-8 h-8 rounded-full bg-terracotta/5 border border-terracotta/25 flex items-center justify-center group-hover:bg-terracotta/10 group-hover:border-terracotta/40 transition-all duration-500 shadow-sm">
+              <svg className="w-4 h-4 text-terracotta group-hover:rotate-45 transition-transform duration-500" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                 <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10 0-5.523-4.477-10-10-10 5.523 0 10-4.477 10-10z" />
               </svg>
             </div>
-            <span className="font-display font-medium text-base tracking-[0.22em] text-[#2D1E1A] uppercase whitespace-nowrap">
-              Trayyaai<span className="text-terracotta/75 font-light mx-1.5">×</span>Ayra
+            <span className="font-display font-medium text-sm sm:text-base tracking-[0.18em] sm:tracking-[0.22em] text-[#2D1E1A] uppercase whitespace-nowrap">
+              Trayyaai<span className="text-terracotta/75 font-light mx-1 sm:mx-1.5">×</span>Ayra
             </span>
           </button>
 
-          {/* Desktop Nav */}
-          <nav className="hidden xl:flex items-center gap-3 xl:gap-4">
-            {LINKS.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollTo(link.id)}
-                className="text-xs font-semibold uppercase tracking-wider text-[#8C6A5C] hover:text-[#C87A53] cursor-pointer transition-colors focus:outline-none"
-              >
-                {link.label}
-              </button>
-            ))}
-
-            {/* PWA Install Button in Desktop Nav */}
-            {showInstallBtn && (
-              <button
-                onClick={handleInstallApp}
-                className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-full border border-terracotta/25 hover:border-terracotta/55 hover:bg-offwhite text-terracotta text-xs font-bold uppercase tracking-wider transition-all cursor-pointer focus:outline-none"
-              >
-                <Download className="w-3.5 h-3.5" />
-                Install App
-              </button>
-            )}
-
-            <button
-              onClick={() => scrollTo("register")}
-              className="px-5 py-2.5 rounded-full bg-terracotta hover:bg-brown text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
-            >
-              Register Now
-            </button>
-          </nav>
-
-          {/* Mobile Hamburger toggle */}
-          <div className="xl:hidden flex items-center gap-2">
-            {showInstallBtn && (
-              <button
-                onClick={handleInstallApp}
-                className="w-10 h-10 rounded-lg flex items-center justify-center border border-terracotta/25 bg-white hover:bg-slate-50 text-terracotta transition-colors focus:outline-none cursor-pointer"
-                aria-label="Install App"
-              >
-                <Download className="w-5 h-5" />
-              </button>
-            )}
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="w-10 h-10 rounded-lg flex items-center justify-center border border-terracotta/25 bg-white hover:bg-slate-50 text-terracotta transition-colors focus:outline-none"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-            >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Slide-in Drawer */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.25 }}
-              className="xl:hidden fixed inset-x-0 top-[70px] bg-[#FAF6F0]/98 backdrop-blur-xl border-b border-terracotta/15 py-6 px-4 flex flex-col gap-5 shadow-2xl z-40 max-h-[calc(100vh-70px)] overflow-y-auto"
-            >
-              {LINKS.map((link) => (
+          {/* Right Section (Core Links + Register + Hamburger Menu) */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            
+            {/* Core Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-5 mr-1">
+              {CORE_LINKS.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
-                  className="text-left py-2.5 text-base font-semibold text-[#8C6A5C] hover:text-[#C87A53] border-b border-slate-200/50 focus:outline-none"
+                  className="text-xs font-semibold uppercase tracking-wider text-[#8C6A5C] hover:text-[#C87A53] cursor-pointer transition-colors focus:outline-none"
                 >
                   {link.label}
                 </button>
               ))}
+            </nav>
 
-              {showInstallBtn && (
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleInstallApp();
-                  }}
-                  className="w-full py-3 rounded-xl border border-terracotta/25 text-[#8C6A5C] font-bold flex items-center justify-center gap-2"
-                >
-                  <Download className="w-5 h-5 text-terracotta" />
-                  Install App Shortcut
-                </button>
-              )}
+            {/* Register Now CTA */}
+            <button
+              onClick={() => scrollTo("register")}
+              className="px-4.5 py-2 rounded-full bg-terracotta hover:bg-brown text-white text-[11px] font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
+            >
+              Register
+            </button>
 
-              <button
-                onClick={() => scrollTo("register")}
-                className="w-full mt-2 py-3 rounded-xl bg-terracotta hover:bg-brown text-white font-bold text-center shadow-lg shadow-terracotta/15 focus:outline-none"
-              >
-                Register Now
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            {/* Premium Minimal Hamburger Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-9 h-9 rounded-full flex items-center justify-center border border-[#8C6A5C]/20 hover:border-terracotta bg-white/40 hover:bg-white text-terracotta transition-all duration-300 focus:outline-none cursor-pointer shadow-sm"
+              aria-label="Toggle menu"
+            >
+              <Menu className="w-4.5 h-4.5" />
+            </button>
+
+          </div>
+        </div>
       </header>
+
+      {/* Sleek Slide-over Navigation Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop Blur Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-[#2D1E1A]/20 backdrop-blur-md z-45 cursor-pointer"
+            />
+
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#FAF6F0] border-l border-[#8C6A5C]/15 z-50 p-8 flex flex-col justify-between shadow-2xl overflow-y-auto"
+            >
+              <div>
+                {/* Header inside Panel */}
+                <div className="flex items-center justify-between mb-12">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-terracotta/5 border border-terracotta/25 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-terracotta" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10 0-5.523-4.477-10-10-10 5.523 0 10-4.477 10-10z" />
+                      </svg>
+                    </div>
+                    <span className="font-display font-medium text-sm tracking-[0.2em] text-[#2D1E1A] uppercase">
+                      Trayyaai<span className="text-terracotta/75 font-light mx-1">×</span>Ayra
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center border border-[#8C6A5C]/20 hover:border-terracotta bg-white text-[#8C6A5C] hover:text-terracotta transition-all duration-300 focus:outline-none cursor-pointer shadow-sm"
+                    aria-label="Close menu"
+                  >
+                    <X className="w-4.5 h-4.5" />
+                  </button>
+                </div>
+
+                {/* Staggered Navigation Links */}
+                <motion.nav
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                  className="flex flex-col gap-6"
+                >
+                  {LINKS.map((link) => (
+                    <motion.button
+                      key={link.id}
+                      variants={itemVariants}
+                      onClick={() => {
+                        setIsOpen(false);
+                        scrollTo(link.id);
+                      }}
+                      className="text-left font-display text-2xl sm:text-3xl text-[#2D1E1A] hover:text-terracotta transition-all duration-300 flex items-center gap-3.5 group cursor-pointer focus:outline-none"
+                    >
+                      <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-terracotta font-serif text-lg leading-none">✦</span>
+                      <span className="group-hover:translate-x-1 transition-transform duration-300 font-medium">{link.label}</span>
+                    </motion.button>
+                  ))}
+                </motion.nav>
+              </div>
+
+              {/* Bottom Section with PWA button & Event Info */}
+              <div className="mt-12 pt-8 border-t border-[#8C6A5C]/10 flex flex-col gap-6">
+                {showInstallBtn && (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleInstallApp();
+                    }}
+                    className="w-full py-3 rounded-full border border-terracotta/25 hover:border-terracotta/55 bg-white hover:bg-[#FAF6F0] text-terracotta font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+                  >
+                    <Download className="w-4 h-4" />
+                    Install App Shortcut
+                  </button>
+                )}
+
+                <div className="flex flex-col gap-1 text-[11px] text-[#8C6A5C]/80 font-medium tracking-wide">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-terracotta animate-pulse" />
+                    <span>Friendship Day DIY Workshop</span>
+                  </div>
+                  <span>Mathura • Sunday, Aug 2, 2026</span>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Unified PWA Instructions Modal */}
       <AnimatePresence>
