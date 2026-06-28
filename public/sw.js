@@ -1,4 +1,4 @@
-const CACHE_NAME = "trayyaai-workshop-v11";
+const CACHE_NAME = "trayyaai-workshop-v12";
 const OFFLINE_URL = "/offline.html";
 
 const ASSETS_TO_CACHE = [

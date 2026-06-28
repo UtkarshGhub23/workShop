@@ -218,7 +218,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
             {/* Register Now CTA */}
             <button
               onClick={() => scrollTo("register")}
-              className="px-4.5 py-2 rounded-full bg-terracotta hover:bg-brown text-white text-[11px] font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
+              className="hidden sm:block px-4.5 py-2 rounded-full bg-terracotta hover:bg-brown text-white text-[11px] font-bold uppercase tracking-wider shadow-md shadow-terracotta/15 hover:shadow-terracotta/25 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
             >
               Register
             </button>
