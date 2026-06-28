@@ -178,7 +178,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
           </button>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden xl:flex items-center gap-3 xl:gap-4">
             {LINKS.map((link) => (
               <button
                 key={link.id}
@@ -209,7 +209,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
           </nav>
 
           {/* Mobile Hamburger toggle */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="xl:hidden flex items-center gap-2">
             {showInstallBtn && (
               <button
                 onClick={handleInstallApp}
@@ -238,7 +238,7 @@ export default function Header({ currentView, onNavigate }: HeaderProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.25 }}
-              className="lg:hidden fixed inset-x-0 top-[70px] bg-[#FAF6F0]/98 backdrop-blur-xl border-b border-terracotta/15 py-6 px-4 flex flex-col gap-5 shadow-2xl z-40 max-h-[calc(100vh-70px)] overflow-y-auto"
+              className="xl:hidden fixed inset-x-0 top-[70px] bg-[#FAF6F0]/98 backdrop-blur-xl border-b border-terracotta/15 py-6 px-4 flex flex-col gap-5 shadow-2xl z-40 max-h-[calc(100vh-70px)] overflow-y-auto"
             >
               {LINKS.map((link) => (
                 <button
