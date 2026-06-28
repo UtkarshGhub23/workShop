@@ -1080,7 +1080,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     </div>
 
                     <a
-                      href={`upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`}
+                      href={`upi://pay?pa=utkarshtripathi.rpt-1@oksbi&pn=Utkarsh Tripathi&am=${calculateTotalPrice()}&cu=INR`}
                       className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-terracotta to-rose text-white text-xs font-extrabold uppercase tracking-widest shadow-md shadow-terracotta/10 hover:shadow-lg flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0 transition-all text-center"
                     >
                       Open UPI App & Pay
@@ -1095,11 +1095,11 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     <div className="flex flex-col items-center gap-1 w-full">
                       <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#8C6A5C]/70">UPI ID</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
-                        <span>trayyaai@okaxis</span>
+                        <span>utkarshtripathi.rpt-1@oksbi</span>
                         <button
                           type="button"
                           onClick={() => {
-                            navigator.clipboard.writeText("trayyaai@okaxis");
+                            navigator.clipboard.writeText("utkarshtripathi.rpt-1@oksbi");
                             setCopiedUpi(true);
                             setTimeout(() => setCopiedUpi(false), 2000);
                             window.dispatchEvent(
@@ -1125,7 +1125,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                         <div className="relative p-2 bg-white rounded-xl border border-slate-100 shadow-inner">
                           <img
                             src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
-                              `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
+                              `upi://pay?pa=utkarshtripathi.rpt-1@oksbi&pn=Utkarsh Tripathi&am=${calculateTotalPrice()}&cu=INR`
                             )}`}
                             alt="UPI QR Code"
                             className="w-[130px] h-[130px] object-contain"
@@ -1140,7 +1140,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none pointer-events-none">
                       <img
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                          `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
+                          `upi://pay?pa=utkarshtripathi.rpt-1@oksbi&pn=Utkarsh Tripathi&am=${calculateTotalPrice()}&cu=INR`
                         )}`}
                         alt="UPI QR Code"
                         className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] object-contain"
@@ -1150,11 +1150,11 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8C6A5C]">UPI ID for Manual Transfer</span>
                       <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
-                        <span>trayyaai@okaxis</span>
+                        <span>utkarshtripathi.rpt-1@oksbi</span>
                         <button
                           type="button"
                           onClick={() => {
-                            navigator.clipboard.writeText("trayyaai@okaxis");
+                            navigator.clipboard.writeText("utkarshtripathi.rpt-1@oksbi");
                             setCopiedUpi(true);
                             setTimeout(() => setCopiedUpi(false), 2000);
                             window.dispatchEvent(
