@@ -600,16 +600,27 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                     </div>
 
                     {/* Barcode representation */}
-                    <div className="flex flex-col items-center gap-1 mt-3 pt-4 border-t border-[#8C6A5C]/10 w-full">
-                      <div className="h-9 flex gap-[2px] items-end justify-center opacity-70">
-                        {[1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 1, 2, 3, 1, 4, 2, 1, 3, 1, 2, 1, 3, 2, 1, 4].map((width, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-[#2D1E1A] h-full"
-                            style={{ width: `${width}px` }}
-                          />
-                        ))}
-                      </div>
+                    <div className="flex flex-col items-center gap-1.5 mt-3 pt-4 border-t border-[#8C6A5C]/10 w-full">
+                      <svg className="h-9 w-48 opacity-85" viewBox="0 0 100 36" preserveAspectRatio="none">
+                        {(() => {
+                          let currentX = 0;
+                          const pattern = [1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 1, 2, 3, 1, 4, 2, 1, 3, 1, 2, 1, 3, 2, 1, 4];
+                          return pattern.map((width, idx) => {
+                            const rectX = currentX;
+                            currentX += width + 2; // width + gap
+                            return (
+                              <rect
+                                key={idx}
+                                x={rectX}
+                                y="0"
+                                width={width}
+                                height="36"
+                                fill="#2D1E1A"
+                              />
+                            );
+                          });
+                        })()}
+                      </svg>
                       <span className="font-mono text-[9px] tracking-[0.25em] text-[#8C6A5C]">
                         {submittedData?.registrationId || "TR-00000"}
                       </span>

@@ -183,24 +183,53 @@
 }
 
 @media print {
+  /* Force background graphics, gradients, and colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  @page {
+    size: portrait;
+    margin: 0 !important;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    background: #FFFDFB !important;
+    overflow: hidden !important;
+  }
+
+  /* Hide all elements on the page */
   body * {
-    visibility: hidden;
+    visibility: hidden !important;
   }
+
+  /* Only make the ticket and its descendants visible */
   .print-ticket, .print-ticket * {
-    visibility: visible;
+    visibility: visible !important;
   }
+
   .print-ticket {
-    position: absolute;
-    left: 50%;
-    top: 20px;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 380px;
+    position: absolute !important;
+    left: 50% !important;
+    top: 30px !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 440px !important;
     border: 1px solid rgba(140, 106, 92, 0.2) !important;
     box-shadow: none !important;
     background: #FFFDFB !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
   }
+
   .no-print {
     display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
