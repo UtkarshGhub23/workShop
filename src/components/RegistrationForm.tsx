@@ -755,9 +755,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                           className="w-full pl-11 pr-10 py-3 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] appearance-none cursor-pointer shadow-sm"
                         >
                           <option value="Solo">Solo (1 Person)</option>
-                          <option value="Duo">Duo (2 People)</option>
-                          <option value="Trio">Trio (3 People)</option>
-                          <option value="Group">Group / Friends (4+ People)</option>
+                          <option value="Duo">Duo (2 People - Besties / Partners)</option>
                         </select>
                         <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60 pointer-events-none" />
                       </div>
@@ -1158,9 +1156,7 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                       <div className="flex flex-col items-center justify-center mt-3 gap-2">
                         <div className="relative p-2 bg-white rounded-xl border border-slate-100 shadow-inner">
                           <img
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
-                              `upi://pay?pa=utkarshtripathi.rpt-1@oksbi&pn=Utkarsh Tripathi&am=${calculateTotalPrice()}&cu=INR`
-                            )}`}
+                            src="/payment-qr.png"
                             alt="UPI QR Code"
                             className="w-[130px] h-[130px] object-contain"
                           />
@@ -1171,11 +1167,9 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                 ) : (
                   /* Standard QR Code Container for Desktop */
                   <div className="flex flex-col items-center justify-center p-6 rounded-3xl border border-[#8C6A5C]/15 bg-white shadow-sm mb-6 gap-4">
-                    <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none pointer-events-none">
+                    <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                          `upi://pay?pa=utkarshtripathi.rpt-1@oksbi&pn=Utkarsh Tripathi&am=${calculateTotalPrice()}&cu=INR`
-                        )}`}
+                        src="/payment-qr.png"
                         alt="UPI QR Code"
                         className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] object-contain"
                       />
