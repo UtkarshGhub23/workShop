@@ -46,6 +46,16 @@ interface RegistrationFormProps {
 }
 
 export default function RegistrationForm({ onBackToHome }: RegistrationFormProps) {
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      setIsMobileDevice(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent));
+    };
+    checkMobile();
+  }, []);
+
   const [step, setStep] = useState<1 | 2>(1);
   const [tempFormData, setTempFormData] = useState<InterestFormData | null>(null);
   const [paymentScreenshot, setPaymentScreenshot] = useState<string | null>(null);
@@ -1056,42 +1066,112 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                   </div>
                 </div>
 
-                {/* QR Code Container */}
-                <div className="flex flex-col items-center justify-center p-6 rounded-3xl border border-[#8C6A5C]/15 bg-white shadow-sm mb-6 gap-4">
-                  <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none pointer-events-none">
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                        `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
-                      )}`}
-                      alt="UPI QR Code"
-                      className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] object-contain"
-                    />
-                  </div>
+                {/* QR Code / Direct UPI App Container */}
+                {isMobileDevice ? (
+                  <div className="flex flex-col items-center justify-center p-6 rounded-3xl border border-[#8C6A5C]/15 bg-white shadow-sm mb-6 gap-4 text-center">
+                    <div className="w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center text-terracotta animate-pulse">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-display font-bold text-base text-[#2D1E1A]">Pay Directly via UPI Apps</h4>
+                      <p className="text-[11px] text-[#8C6A5C] mt-1.5 leading-relaxed">
+                        Tap the button below to pay directly using Google Pay, PhonePe, Paytm, or BHIM installed on your phone.
+                      </p>
+                    </div>
 
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8C6A5C]">UPI ID for Manual Transfer</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
-                      <span>trayyaai@okaxis</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText("trayyaai@okaxis");
-                          setCopiedUpi(true);
-                          setTimeout(() => setCopiedUpi(false), 2000);
-                          window.dispatchEvent(
-                            new CustomEvent("show-toast", {
-                              detail: { message: "UPI ID copied!", type: "success" },
-                            })
-                          );
-                        }}
-                        className="p-1 hover:bg-white rounded transition-colors text-terracotta hover:text-[#2D1E1A] focus:outline-none cursor-pointer border-0 bg-transparent"
-                        title="Copy UPI ID"
-                      >
-                        {copiedUpi ? <CheckCheck className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                      </button>
+                    <a
+                      href={`upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`}
+                      className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-terracotta to-rose text-white text-xs font-extrabold uppercase tracking-widest shadow-md shadow-terracotta/10 hover:shadow-lg flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0 transition-all text-center"
+                    >
+                      Open UPI App & Pay
+                    </a>
+
+                    <div className="w-full flex items-center justify-center gap-2 mt-2">
+                      <span className="w-full h-px bg-slate-100" />
+                      <span className="text-[9px] uppercase tracking-wider text-[#8C6A5C]/50 font-bold shrink-0">Or manual copy</span>
+                      <span className="w-full h-px bg-slate-100" />
+                    </div>
+
+                    <div className="flex flex-col items-center gap-1 w-full">
+                      <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#8C6A5C]/70">UPI ID</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
+                        <span>trayyaai@okaxis</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText("trayyaai@okaxis");
+                            setCopiedUpi(true);
+                            setTimeout(() => setCopiedUpi(false), 2000);
+                            window.dispatchEvent(
+                              new CustomEvent("show-toast", {
+                                  detail: { message: "UPI ID copied!", type: "success" },
+                              })
+                            );
+                          }}
+                          className="p-1 hover:bg-white rounded transition-colors text-terracotta hover:text-[#2D1E1A] focus:outline-none cursor-pointer border-0 bg-transparent"
+                          title="Copy UPI ID"
+                        >
+                          {copiedUpi ? <CheckCheck className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Collapsible reference QR */}
+                    <details className="w-full border-t border-slate-100 pt-3 mt-1">
+                      <summary className="text-[9px] font-extrabold uppercase tracking-widest text-[#8C6A5C] cursor-pointer hover:text-terracotta transition-colors select-none">
+                        Show QR Code (For another device)
+                      </summary>
+                      <div className="flex flex-col items-center justify-center mt-3 gap-2">
+                        <div className="relative p-2 bg-white rounded-xl border border-slate-100 shadow-inner">
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
+                              `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
+                            )}`}
+                            alt="UPI QR Code"
+                            className="w-[130px] h-[130px] object-contain"
+                          />
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+                ) : (
+                  /* Standard QR Code Container for Desktop */
+                  <div className="flex flex-col items-center justify-center p-6 rounded-3xl border border-[#8C6A5C]/15 bg-white shadow-sm mb-6 gap-4">
+                    <div className="relative p-3 bg-white rounded-2xl border-2 border-[#FAF6F0] shadow-inner select-none pointer-events-none">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                          `upi://pay?pa=trayyaai@okaxis&pn=Trayyaai Ayra&am=${calculateTotalPrice()}&cu=INR`
+                        )}`}
+                        alt="UPI QR Code"
+                        className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] object-contain"
+                      />
+                    </div>
+
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8C6A5C]">UPI ID for Manual Transfer</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#8C6A5C]/10 text-xs font-mono font-bold text-[#2D1E1A]">
+                        <span>trayyaai@okaxis</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText("trayyaai@okaxis");
+                            setCopiedUpi(true);
+                            setTimeout(() => setCopiedUpi(false), 2000);
+                            window.dispatchEvent(
+                              new CustomEvent("show-toast", {
+                                detail: { message: "UPI ID copied!", type: "success" },
+                              })
+                            );
+                          }}
+                          className="p-1 hover:bg-white rounded transition-colors text-terracotta hover:text-[#2D1E1A] focus:outline-none cursor-pointer border-0 bg-transparent"
+                          title="Copy UPI ID"
+                        >
+                          {copiedUpi ? <CheckCheck className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* File Uploader Container */}
                 <div className="flex flex-col gap-2 mb-6">

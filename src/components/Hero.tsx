@@ -61,27 +61,21 @@ export default function Hero({ onNavigate }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full border border-terracotta/20 bg-[#C87A53]/5 text-terracotta text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm hover:bg-[#C87A53]/10 transition-colors duration-300"
+            className="inline-flex items-center gap-2 px-4.5 py-2 rounded-full border border-terracotta/25 bg-gradient-to-r from-terracotta/10 to-rose/5 backdrop-blur-md text-terracotta text-[10px] sm:text-xs font-extrabold uppercase tracking-widest mb-6 shadow-sm hover:shadow hover:border-terracotta/40 transition-all duration-300"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C87A53] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C87A53]"></span>
-            </span>
-            Trayyaai × Ayra Friendship Day Special
+            <Sparkles className="w-3.5 h-3.5 text-terracotta animate-pulse" />
+            <span>Trayyaai × Ayra Friendship Day Special</span>
           </motion.div>
 
-          {/* Dynamic Greeting with line separator */}
-          <motion.div
+          {/* Dynamic Greeting */}
+          <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
-            className="flex items-center gap-3 mb-3"
+            className="text-[10px] sm:text-xs uppercase tracking-widest text-[#8C6A5C] font-extrabold mb-3"
           >
-            <span className="w-6 h-[1.5px] bg-[#8C6A5C]/35"></span>
-            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#8C6A5C] font-extrabold">
-              ✨ {getGreeting()}, Creator!
-            </p>
-          </motion.div>
+            ✨ {getGreeting()}, Creator!
+          </motion.p>
 
           {/* Hero Title */}
           <motion.h1
