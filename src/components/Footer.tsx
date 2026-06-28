@@ -32,14 +32,14 @@ export default function Footer() {
 
         {/* Left Column: Brand details */}
         <div className="md:col-span-5 flex flex-col items-start gap-4 text-left">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-terracotta to-brown flex items-center justify-center">
-              <svg className="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+          <div className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-full bg-terracotta/5 border border-terracotta/25 flex items-center justify-center group-hover:bg-terracotta/10 group-hover:border-terracotta/40 transition-all duration-500 shadow-sm">
+              <svg className="w-4.5 h-4.5 text-terracotta group-hover:rotate-45 transition-transform duration-500" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10 0-5.523-4.477-10-10-10 5.523 0 10-4.477 10-10z" />
               </svg>
             </div>
-            <span className="font-display font-bold text-lg tracking-widest text-[#2D1E1A] uppercase">
-              Trayyaai <span className="text-terracotta font-light">×</span> Ayra
+            <span className="font-display font-medium text-base tracking-[0.22em] text-[#2D1E1A] uppercase whitespace-nowrap">
+              Trayyaai<span className="text-terracotta/75 font-light mx-1.5">×</span>Ayra
             </span>
           </div>
           <p className="text-[#8C6A5C] text-xs sm:text-sm leading-relaxed max-w-sm">
