@@ -222,11 +222,14 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
   };
 
   const calculateTotalPrice = () => {
-    const count = getTicketCount();
     if (joiningAs === "Solo") {
-      return 699;
+      return 599;
     }
-    return count * 599;
+    if (joiningAs === "Duo") {
+      return 1000;
+    }
+    const count = getTicketCount();
+    return count * 500;
   };
 
   const onSubmit = (data: InterestFormData) => {
@@ -754,8 +757,8 @@ export default function RegistrationForm({ onBackToHome }: RegistrationFormProps
                           {...register("joiningAs")}
                           className="w-full pl-11 pr-10 py-3 rounded-xl bg-[#FAF6F0]/40 border border-[#8C6A5C]/20 text-[#2D1E1A] text-xs focus:bg-white focus:outline-none focus:border-terracotta focus:ring-4 focus:ring-terracotta/10 transition-all h-[48px] appearance-none cursor-pointer shadow-sm"
                         >
-                          <option value="Solo">Solo (1 Person)</option>
-                          <option value="Duo">Duo (2 People - Besties / Partners)</option>
+                          <option value="Solo">Solo - ₹599 (1 Person)</option>
+                          <option value="Duo">Duo - ₹1000 (2 People - Besties / Partners)</option>
                         </select>
                         <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C6A5C]/60 pointer-events-none" />
                       </div>
