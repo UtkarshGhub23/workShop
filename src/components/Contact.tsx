@@ -104,7 +104,7 @@ export default function Contact() {
               <div className="flex flex-col gap-4">
                 {[
                   { icon: <Phone className="w-5 h-5 text-olive" />, label: "Phone & WhatsApp Support", val: "+91 98765 43210" },
-                  { icon: <Mail className="w-5 h-5 text-terracotta" />, label: "Support Email Address", val: "hello@trayyaai.com" },
+                  { icon: <Mail className="w-5 h-5 text-terracotta" />, label: "Support Email Address", val: "rudratripathi526@gmail.com" },
                   { icon: <Instagram className="w-5 h-5 text-brown" />, label: "Instagram Links", val: "@trayyaai · @ayra" },
                   { icon: <MapPin className="w-5 h-5 text-olive" />, label: "Workshop Location", val: "Mathura, Uttar Pradesh (Venue details shared post-registration)" },
                 ].map((item) => (

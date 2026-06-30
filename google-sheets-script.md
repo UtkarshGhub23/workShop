@@ -266,7 +266,7 @@ function doPost(e) {
         '              </table>' +
         '              ' +
         '              <p style="color: #8C6A5C; font-size: 13px; line-height: 1.6; margin-bottom: 0;">' +
-        '                If you have any questions or would like to confirm your details, feel free to reply to this email or contact us at <a href="mailto:hello@trayyaai.com" style="color: #C87A53; text-decoration: none; font-weight: bold;">hello@trayyaai.com</a>.' +
+        '                If you have any questions or would like to confirm your details, feel free to reply to this email or contact us at <a href="mailto:rudratripathi526@gmail.com" style="color: #C87A53; text-decoration: none; font-weight: bold;">rudratripathi526@gmail.com</a>.' +
         '              </p>' +
         '            </td>' +
         '          </tr>' +
@@ -402,7 +402,7 @@ function doPost(e) {
       }
       
       try {
-        var adminEmail = "hello@trayyaai.com";
+        var adminEmail = "rudratripathi526@gmail.com";
         var activeUserEmail = Session.getActiveUser().getEmail();
         var adminRecipients = [adminEmail];
         
@@ -544,7 +544,7 @@ function doPost(e) {
       }
       
       try {
-        var adminEmail = "hello@trayyaai.com";
+        var adminEmail = "rudratripathi526@gmail.com";
         var activeUserEmail = Session.getActiveUser().getEmail();
         var adminRecipients = [adminEmail];
         
